@@ -8,7 +8,7 @@ RUN npm install
 
 COPY backend /app/backend
 
-EXPOSE 3000
+EXPOSE 1337
 
 WORKDIR /app/backend
 
