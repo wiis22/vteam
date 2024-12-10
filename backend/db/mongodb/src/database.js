@@ -13,7 +13,6 @@ let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSW
 const fs = require("fs");
 const path = require("path");
 const { error, log } = require("console");
-const common = require('mocha/lib/interfaces/common');
 
 
 const database = {
@@ -29,7 +28,7 @@ const database = {
      *
      * @return {string} Return the id.
      */
-    addOneCity: async function addOneCity(colName, data) {
+    addOne: async function addOne(colName, data) {
         const client  = await mongo.connect(dsn);
         const db = await client.db();
         const col = await db.collection(colName);
@@ -42,6 +41,49 @@ const database = {
         // As it allready gets converted to sting in the index.ejs.
     },
 
+
+    /**
+     * Get evrything from the collection
+     *
+     * @async
+     *
+     * @param {string} colName Name of collection.
+     * @param {string} data    Data to be inserted into Db.
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {Object|null} The resould in JSON format, or null if no doc found.
+     */
+    getAll: async function getAll(colName) {
+        try {
+            // console.log('DSN:', dsn);
+            const client  = await mongo.connect(dsn);
+            const db = await client.db();
+
+            // check if the collection exist
+            const collections = await db.listCollections().toArray();
+            const collectionNames = collections.map(col => col.name);
+
+            if (!collectionNames.includes(colName)) {
+                throw new Error("Collection does not exist");
+            }
+
+            const col = await db.collection(colName);
+            const result = await col.find().toArray();
+
+            await client.close();
+
+            // console.log(result);
+
+            return result;
+        } catch (err) {
+            console.log(err);
+            if (err.message == "Collection does not exist") {
+                throw err;
+            } // Could throw general error below here
+        }
+    },
+
 };
 
-module.exports = dbFunctions;
+module.exports = database;
