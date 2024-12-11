@@ -163,8 +163,54 @@ const database = {
 
 
         } catch (err) {
-            console.error("Error in updateOneDoc:", err.message);
-            throw new Error("Error updating a document");
+            console.error("Error in updateOne:", err.message);
+            throw new Error("Error updating");
+        }
+    },
+
+    /**
+     * Get one document from a collection in the database based on id.
+     *
+     * @async
+     *
+     * @param {string} colName Name of collection.
+     * @param {string} id    The id hexadecimal format to find in the db.
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {Object|null} The result in JSON format
+     */
+    getOne: async function getOne(colName, id) {
+        try {
+            // console.log('DSN:', dsn);
+            // console.log('ID:', id)
+
+            // throw error if id is not any of the following formats:
+            // string of length 24, integer or ObjectId
+            if (!((typeof id == 'string' && id.length == 24)
+                || Number.isInteger(id) || id instanceof ObjectId)) {
+                throw new Error("Error: id has invalid format");
+            }
+
+            const objectId = new ObjectId(id);
+            // console.log('objectId', objectId);
+
+            const client  = await mongo.connect(dsn);
+            const db = await client.db();
+            const col = await db.collection(colName);
+
+            const result = await col.findOne({ _id: objectId });
+
+            await client.close();
+
+            // console.log('result:', result);
+
+            return result;
+        } catch (err) {
+            console.log(err);
+            if (err.message == "Error: id has invalid format") {
+                throw err;
+            } // Could throw general error below here
         }
     },
 };
