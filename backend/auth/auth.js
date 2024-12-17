@@ -1,24 +1,21 @@
-const jwt = require('jsonwebtoken');
-const jwksClient = require('jwks-rsa');
+const jwt = require("express-jwt");
+const jwksRsa = require("jwks-rsa");
 
-const client = jwksClient({
-    jwksUri: 'https://YOUR_AUTH0_DOMAIN/.well-known/jwks.json'
+// Validating Auth0 tokens
+const verifyJwt = jwt({
+  // Get the signing keys from Auth0
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `https://YOUR_AUTH0_DOMAIN/.well-known/jwks.json`,
+  }),
+
+  audience: "YOUR_API_IDENTIFIER",
+  issuer: `https://YOUR_AUTH0_DOMAIN/`,
+  algorithms: ["RS256"], // Will probably use this one, have to make sure we're using this one though
 });
 
-const getKey = (header, callback) => {
-    client.getSigningKey(header.kid, (err, key) => {
-        const signingKey = key.getPublicKey();
-        callback(null, signingKey);
-    });
-};
+// Think response is 
 
-jwt.verify(token, getKey, {
-    audience: 'YOUR_CLIENT_ID',
-    issuer: 'https://YOUR_AUTH0_DOMAIN/',
-}, (err, decoded) => {
-    if (err) {
-        console.error('Token verification failed:', err);
-    } else {
-        console.log('Decoded token:', decoded);
-    }
-});
+module.exports = verifyJwt;
