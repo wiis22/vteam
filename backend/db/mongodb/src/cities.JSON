@@ -1,0 +1,34 @@
+{
+    "cities": [
+        {
+            "name": "Göteborg",
+            "geolocation": {
+                "latitude": 57.7089,
+                "longitude": 11.9746
+            },
+            "borders": [],
+            "chargingstaions": [{}, {}],
+            "zones": []
+        },
+        {
+            "name": "Karlskrona",
+            "geolocation": {
+                "latitude": 56.1612,
+                "longitude": 15.5869
+            },
+            "borders": [],
+            "chargingstaions": [{}, {}],
+            "zones": []
+        },
+        {
+            "name": "Härnösand",
+            "geolocation": {
+                "latitude": 62.6323,
+                "longitude": 17.9370
+            },
+            "borders": [],
+            "chargingstaions": [{}, {}],
+            "zones": []
+        }
+    ]
+}
