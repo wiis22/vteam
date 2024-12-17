@@ -1,5 +1,5 @@
 /**
- * Functions to manipulate the texteditor database.
+ * Functions to manipulate the database.
  */
 "use strict";
 
