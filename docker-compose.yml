@@ -1,8 +1,11 @@
+networks:
+  vteam:
 services:
   server:
-    build: 
+    build:
       context: .
       dockerfile: backend/Dockerfile
+      container_name: "server"
     working_dir: /app/backend
     volumes:
       - .:/app
@@ -10,3 +13,9 @@ services:
     ports:
       - "1337:1337"
     command: node server.js
+    networks:
+      vteam:
+    restart:
+      "always"
+  mobile_app:
+  web_interface:
