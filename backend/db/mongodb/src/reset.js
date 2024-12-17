@@ -1,5 +1,5 @@
 /**
- * Connect to the texteditor database and reset it
+ * Connect to the database and reset it
  */
 "use strict";
 
