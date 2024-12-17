@@ -1,5 +1,7 @@
-import database from "./db/mongodb/src/database.js";
+const database = require('./db/mongodb/src/database.js');
 
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 1337;
@@ -11,7 +13,7 @@ app.get('/', async (req,res) => {
         zones: [],
     }
 
-    const result = await dbFunctions.updateOneDoc("documents", data);
+    const result = await database.updateOneDoc("documents", data);
 
     if (!result) {
         return res.status(404).json({ error: 'No returned id when trying to add new document' });
@@ -21,6 +23,10 @@ app.get('/', async (req,res) => {
 
     res.send('Hello, this is from docker!')
 });
+
+app.get('/api/verify_token', async (req, res) => {
+    
+})
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
