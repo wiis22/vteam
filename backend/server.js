@@ -5,7 +5,7 @@ const verifyJwt = require("./auth/auth.js")
 
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 1337;
+const port = process.env.PORT_API || 1337;
 
 // This is how you should send
 // fetch("http://localhost:3000/protected", {
