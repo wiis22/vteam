@@ -1,15 +1,15 @@
 FROM node:18
 
-WORKDIR /app
+WORKDIR /backend
 
-COPY package*.json ./
+# COPY package*.json ./
+# 
+# RUN npm install
+# 
+# COPY backend /app/backend
 
-RUN npm install
+# EXPOSE 1337
 
-COPY backend /app/backend
-
-EXPOSE 1337
-
-WORKDIR /app/backend
+WORKDIR /backend
 
 CMD [ "node", "server.js" ]
