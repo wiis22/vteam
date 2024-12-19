@@ -2,11 +2,9 @@ FROM node:18
 
 WORKDIR /backend
 
-# COPY package*.json ./
-# 
-# RUN npm install
-# 
-# COPY backend /app/backend
+COPY package*.json ./
+
+RUN npm install
 
 # EXPOSE 1337
 

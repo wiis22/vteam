@@ -39,7 +39,7 @@ app.get('/test2', async (req, res) => {
     res.json(data)
 })
 
-app.get('/api/cities', verifyJwt, async (req, res) => {
+app.get('/api/cities', async (req, res) => {
     try {
         const result = await database.getAll("cities");
         console.log("res: ", result);
