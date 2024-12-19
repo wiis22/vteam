@@ -29,7 +29,17 @@ app.get('/test1', async (req,res) => {
     }
 });
 
-app.get('/api/cities', verifyJwt, async (req,res) => {
+app.get('/test2', async (req, res) => {
+    data = {
+        one: 1,
+        two: 2,
+        three: 3
+    }
+
+    res.json(data)
+})
+
+app.get('/api/cities', verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("cities");
         console.log("res: ", result);
@@ -40,7 +50,7 @@ app.get('/api/cities', verifyJwt, async (req,res) => {
     }
 });
 
-app.get('/api/city/:id', verifyJwt, async (req,res) => {
+app.get('/api/city/:id', verifyJwt, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -53,12 +63,12 @@ app.get('/api/city/:id', verifyJwt, async (req,res) => {
     }
 });
 
-app.post('/api/city', verifyJwt, async (req,res) => {
+app.post('/api/city', verifyJwt, async (req, res) => {
     const cityData = {
-        name: req.params.name,
-        area: req.params.area,
-        parkingStations: req.params.parkingStations,
-        chargingStations: req.params.chargingStations
+        name: req.body.name,
+        area: req.body.area,
+        parkingStations: req.body.parkingStations,
+        chargingStations: req.body.chargingStations
     }
 
     try {
@@ -71,7 +81,7 @@ app.post('/api/city', verifyJwt, async (req,res) => {
     }
 });
 
-app.get('/api/users', verifyJwt, async (req,res) => {
+app.get('/api/users', verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("users");
         console.log("res: ", result);
@@ -82,7 +92,7 @@ app.get('/api/users', verifyJwt, async (req,res) => {
     }
 });
 
-app.get('/api/user/:id', verifyJwt, async (req,res) => {
+app.get('/api/user/:id', verifyJwt, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -95,11 +105,14 @@ app.get('/api/user/:id', verifyJwt, async (req,res) => {
     }
 });
 
-app.post('/api/user', verifyJwt, async (req,res) => {
+app.post('/api/user', verifyJwt, async (req, res) => {
     const userData = {
-        email: req.params.email,
-        password: req.params.password,
-        role: req.params.role
+        email: req.body.email,
+        password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        role: "user",
+        balance: 0
     }
 
     try {
@@ -112,7 +125,7 @@ app.post('/api/user', verifyJwt, async (req,res) => {
     }
 });
 
-app.put('/api/user', verifyJwt, async (req,res) => {
+app.put('/api/user/:id', verifyJwt, async (req, res) => {
     const { id } = req.params;
 
     const updatedUserData = {
