@@ -213,6 +213,44 @@ const database = {
             } // Could throw general error below here
         }
     },
+
+    /**
+     * Retrieves docs from collection with optional filtering.
+     * 
+     * @async
+     * 
+     * @param {string} colName Name of the collection
+     * @param {object} [filter={}] Optional filter in JSON format
+     * 
+     * @throws Error when database operation fails.
+     *
+     * @return {Array} Array of documents in JSON format.
+     */
+    filterAll: async function filterAll(colName, filter = {}) {
+        try {
+            if (typeof filter !== "object" || Array.isArray(filter)) {
+                throw new Error("Filter must be a valid object");
+            }
+
+
+            const client  = await mongo.connect(dsn);
+            const db = await client.db();
+            const col = await db.collection(colName);
+
+            const result = await col.find(filter).toArray;
+
+            await client.close();
+
+            // console.log('documents:', result);
+
+            return result;
+
+        } catch (err) {
+            console.error("Error in filterAll", err.message);
+            throw new Error("Error retrieving data");
+            
+        }
+    }
 };
 
 module.exports = database;
