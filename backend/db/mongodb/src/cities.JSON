@@ -148,7 +148,14 @@
                 57.70655130294409
                 ]
             ],
-            "chargingstaions": [{ "latitide": 0, "longitude": 0 }, { "latitide": 0, "longitude": 0 }],
+            "chargingstaions": [
+                { "longitude": 11.965358263674887, "latitide": 57.702604443999405 },
+                { "longitude": 12.008112579908044, "latitide": 57.712500859974085 },
+                { "longitude": 11.999767357155577, "latitide": 57.69862116327889 },
+                { "longitude": 11.99994442287533, "latitide": 57.68209719039973 },
+                { "longitude": 11.963778993031525, "latitide": 57.68167614254938 }
+            ],
+            
             "zones": [[
                 { "latitide": 0, "longitude": 0 },
                 { "latitide": 0, "longitude": 0 },
