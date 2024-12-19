@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({debug: true});
 const database = require("./db/mongodb/src/database.js");
 // const jwt = require('jsonwebtoken');
 const verifyJwt = require("./auth/auth.js")

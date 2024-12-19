@@ -6,7 +6,7 @@
 require('dotenv').config();
 const mongo = require("mongodb").MongoClient;
 const { MongoClient, ObjectId } = require("mongodb"); 
-let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.twauw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0;`
+let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.twauw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 console.log("dsn: " + dsn)
 // const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
 
