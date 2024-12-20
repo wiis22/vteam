@@ -1,10 +1,8 @@
 require('dotenv').config({debug: true});
-const database = require("./db/mongodb/src/database.js");
-// const jwt = require('jsonwebtoken');
-const verifyJwt = require("./auth/auth_old.js")
+const database = require("./db/mongodb/src/database.js");;
+const auth = require('./auth/auth.js');
 
 const express = require('express');
-const auth = require('./auth/auth.js');
 const app = express();
 const port = process.env.PORT_API || 1337;
 
