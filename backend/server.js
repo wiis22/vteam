@@ -1,14 +1,15 @@
 require('dotenv').config({debug: true});
 const database = require("./db/mongodb/src/database.js");
 // const jwt = require('jsonwebtoken');
-const verifyJwt = require("./auth/auth.js")
+const verifyJwt = require("./auth/auth_old.js")
 
 const express = require('express');
+const auth = require('./auth/auth.js');
 const app = express();
 const port = process.env.PORT_API || 1337;
 
-// This is how you should send
-// fetch("http://localhost:3000/protected", {
+// Så här kan en fetch se ut med token. Fungerar på samma sätt med POST, PUT och DELETE routes
+// fetch("http://localhost:1337/api/cities", {
 //     method: "GET",
 //     headers: {
 //       Authorization: `Bearer ${token}`,
@@ -39,7 +40,48 @@ app.get('/test2', async (req, res) => {
     res.json(data)
 })
 
-app.get('/api/cities', async (req, res) => {
+app.post('/api/user', auth.verifyJwt, async (req, res) => {
+    const userData = {
+        email: req.body.email,
+        password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        role: "user",
+        balance: 0
+    }
+
+    try {
+        const result = await auth.register(userData);
+        console.log("res: ", result);
+        res.status(201).json({
+            success: true,
+            message: "User registered successfully"
+        });
+    } catch (error) {
+        console.error('Error registering user:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error', error: error.message
+        });
+    }
+});
+
+app.post('/api/login', auth.verifyJwt, async (req, res) => {
+    const loginData = {
+        email: req.body.email,
+        password: req.body.password
+    }
+
+    try {
+        const token = await auth.login(loginData);
+        res.status(200).json(token);
+    } catch (error) {
+        console.error('Failed to login:', error);
+        res.status(401).json({ message: 'Invalid email or password', error: error.message });
+    }
+});
+
+app.get('/api/cities', auth.verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("cities");
         console.log("res: ", result);
@@ -50,7 +92,7 @@ app.get('/api/cities', async (req, res) => {
     }
 });
 
-app.get('/api/city/:id', verifyJwt, async (req, res) => {
+app.get('/api/city/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -63,7 +105,7 @@ app.get('/api/city/:id', verifyJwt, async (req, res) => {
     }
 });
 
-app.post('/api/city', verifyJwt, async (req, res) => {
+app.post('/api/city', auth.verifyJwt, async (req, res) => {
     const cityData = {
         name: req.body.name,
         area: req.body.area,
@@ -81,7 +123,7 @@ app.post('/api/city', verifyJwt, async (req, res) => {
     }
 });
 
-app.get('/api/users', verifyJwt, async (req, res) => {
+app.get('/api/users', auth.verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("users");
         console.log("res: ", result);
@@ -92,7 +134,7 @@ app.get('/api/users', verifyJwt, async (req, res) => {
     }
 });
 
-app.get('/api/user/:id', verifyJwt, async (req, res) => {
+app.get('/api/user/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -105,27 +147,9 @@ app.get('/api/user/:id', verifyJwt, async (req, res) => {
     }
 });
 
-app.post('/api/user', verifyJwt, async (req, res) => {
-    const userData = {
-        email: req.body.email,
-        password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        role: "user",
-        balance: 0
-    }
 
-    try {
-        const result = await database.addOne("users", userData);
-        console.log("res: ", result);
-        res.json(result);
-    } catch (error) {
-        console.error('Error adding user:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
 
-app.put('/api/user/:id', verifyJwt, async (req, res) => {
+app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
 
     const updatedUserData = {
@@ -141,10 +165,6 @@ app.put('/api/user/:id', verifyJwt, async (req, res) => {
         console.error('Error updating user:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
-});
-
-app.get('/api/verify_token', async (req, res) => {
-    // this route might not be used and therefore not needed
 });
 
 app.listen(port, () => {

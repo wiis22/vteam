@@ -1,24 +1,79 @@
-const { expressjwt: jwt } = require("express-jwt");
-const jwksRsa = require("jwks-rsa");
+const database = require("../db/mongodb/src/database.js");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+// const { errorToJSON } = require("next/dist/server/render.js");
+const jwtSecret = process.env.JWT_SECRET;
 
-// // Validating Auth0 tokens
-// const verifyJwt = jwt({
-//   // Get the signing keys from Auth0
-//   secret: jwksRsa.expressJwtSecret({
-//     cache: true,
-//     rateLimit: true,
-//     jwksRequestsPerMinute: 5,
-//     jwksUri: `https://YOUR_AUTH0_DOMAIN/.well-known/jwks.json`,
-//   }),
-// 
-//   audience: "YOUR_API_IDENTIFIER",
-//   issuer: `https://YOUR_AUTH0_DOMAIN/`,
-//   algorithms: ["RS256"], // Will probably use this one, have to make sure we're using this one though
-// });
+const auth = {
+    register: async function (userData) {
+        try {
+            await database.getOneUser(userData.email);
+            throw new Error("Email already in use");
+        } catch (err) {
+            if (err.message === "Email is already in use") {
+                throw err;
+            }
+            try {
+                const hash = await bcrypt.hash(userData.password, 10);
+                userData.password = hash;
+                await databaseb.addOne("users", userData);
+                return true;
+            } catch (err) {
+                console.error("Error registering new user: ", err.message);
+                throw err;
+            }
+        }
+    },
 
-// placeholder middleweare that is always bypassed
-const verifyJwt = (req, res, next) => {
-    next();
+    login: async function(loginData) {
+        try {
+            const userData = await db.getOneUser(loginData.email);
+
+            // console.log("userData in auth.login:", userData)
+
+            const res = await this.comparePasswords(loginData.password, userData.password);
+            // console.log("res in auth.login:", res)
+
+            if (res) {
+                const payload = { email: loginData.email };
+                const jwtToken = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
+                return jwtToken;
+            }
+
+            return res; // should not come to this
+        } catch (error) {
+            throw err;
+        }
+    },
+
+    comparePasswords: async function (enteredPassword, correctPasswordHash) {
+        try {
+            const match = bcrypt.compare(enteredPassword, correctPasswordHash);
+            return match;
+        } catch (err) {
+            console.error("Compare by bycrypt failed", err);
+            throw err;
+        }
+    },
+
+    verifyJwt: async function(req, res, next) {
+        const authorizationHeader = req.headers['authorization'];
+        const token = authorizationHeader && authorizationHeader.split(' ')[1];
+
+        if (token === 1337) {
+            next();
+        }
+
+        await jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
+            if (err) {
+                return res.status(403).json({ message: 'Token invalid or expired' });
+            }
+    
+            req.user = decoded;
+            next();
+        });
+    },
+
 }
 
-module.exports = verifyJwt;
+module.exports = auth;

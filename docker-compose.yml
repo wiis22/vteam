@@ -12,6 +12,7 @@ services:
     working_dir: /backend
     volumes:
       - ./backend:/backend
+      - ./.env:/backend/.env
     ports:
       - "1337:1337"
     command: node server.js
