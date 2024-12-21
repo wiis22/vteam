@@ -6,6 +6,8 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT_API || 1337;
 
+app.use(express.json());
+
 // Så här kan en fetch se ut med token. Fungerar på samma sätt med POST, PUT och DELETE routes
 // fetch("http://localhost:1337/api/cities", {
 //     method: "GET",
@@ -165,14 +167,15 @@ app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
 });
 
 app.post('/api/bike', auth.verifyJwt, async (req, res) => {
+    console.log(req.body)
     const bikeData = {
         city: req.body.city,
-        operationalStatus: req.body.status,
+        charging: req.body.charging,
         position: req.body.position,
         location: "field",
+        available: true,
         operational: true,
-        batteryPercentage: 100,
-        charging: false
+        batteryPercentage: 100
     }
 
     try {
@@ -234,6 +237,18 @@ app.get('/api/bike/:id', auth.verifyJwt, async (req, res) => {
 });
 
 app.delete('/api/bike/:id', auth.verifyJwt, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await database.deleteOne("bikes", id);
+        console.log("res: ", result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error deleting bike:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.delete('/api/bikes', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
     try {
         const result = await database.deleteOne("bikes", id);
