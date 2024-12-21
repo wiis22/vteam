@@ -1,15 +1,16 @@
 FROM node:18
 
-WORKDIR /app
+WORKDIR /backend
 
 COPY package*.json ./
 
 RUN npm install
 
-COPY backend /app/backend
+# fungerar ej då Dockerfile inte har tillgång till filer ovanför mapppen man sätter som context
+# COPY ../.env ./
 
-EXPOSE 3000
+# EXPOSE 1337
 
-WORKDIR /app/backend
+WORKDIR /backend
 
 CMD [ "node", "server.js" ]

@@ -1,12 +1,39 @@
+networks:
+  vteam:
+    driver: bridge
+
 services:
-  app:
-    build: 
-      context: .
-      dockerfile: backend/Dockerfile
-    working_dir: /app/backend
+  server:
+    container_name: server
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      
+    working_dir: /backend
     volumes:
-      - .:/app
-      - /app/node_modules
+      - ./backend:/backend
+      - ./.env:/backend/.env
     ports:
-      - "3000:3000"
+      - "1337:1337"
     command: node server.js
+    networks:
+      vteam:
+    restart: always
+
+  mobile_app:
+    container_name: mobile_app
+    build:
+      context: ./frontend/mobileapp
+      dockerfile: Dockerfile
+    networks:
+      - vteam
+    restart: always
+
+  web_app:
+    container_name: web_app
+    build:
+      context: ./frontend/webapp
+      dockerfile: Dockerfile
+    networks:
+      - vteam
+    restart: always
