@@ -38,7 +38,7 @@ app.get('/test2', async (req, res) => {
     res.json(data)
 })
 
-app.post('/api/user', auth.verifyJwt, async (req, res) => {
+app.post('/api/user', async (req, res) => {
     const userData = {
         email: req.body.email,
         password: req.body.password,
@@ -64,7 +64,7 @@ app.post('/api/user', auth.verifyJwt, async (req, res) => {
     }
 });
 
-app.post('/api/login', auth.verifyJwt, async (req, res) => {
+app.post('/api/login', async (req, res) => {
     const loginData = {
         email: req.body.email,
         password: req.body.password
@@ -146,7 +146,6 @@ app.get('/api/user/:id', auth.verifyJwt, async (req, res) => {
 });
 
 
-
 app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
 
@@ -161,6 +160,77 @@ app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
         res.json(result);
     } catch (error) {
         console.error('Error updating user:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.post('/api/bike', auth.verifyJwt, async (req, res) => {
+    const bikeData = {
+        city: req.body.city,
+        operationalStatus: req.body.status,
+        position: req.body.position,
+        location: "field",
+        operational: true,
+        batteryPercentage: 100,
+        charging: false
+    }
+
+    try {
+        const result = await database.addOne("bikes", bikeData);
+        console.log("res: ", result);
+        res.status(201).json(result);
+    } catch (error) {
+        console.error('Error adding new bike to database:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.put('/api/bike/:id', auth.verifyJwt, async (req, res) => {
+    const { id } = req.params;
+
+    const updatedBikeData = {
+        ...{id: id},
+        ... req.body
+    }
+
+    try {
+        const result = await database.updateOne("bikes", updatedBikeData);
+        console.log("res: ", result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error updating bike data:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.get('/api/bikes/:city', auth.verifyJwt, async (req, res) => {
+    const { city } = req.params;
+
+    // Databasen har inte stöd för att filtrera på city än, så denna route returnerar alla cyklar
+
+    try {
+        const result = await database.getAll("bikes");
+        console.log("res: ", result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error retrieving bikes:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.get('/api/bike/:id', auth.verifyJwt, async (req, res) => {
+    const { id } = req.params;
+    // Behövs denna route?
+});
+
+app.delete('/api/bike/:id', auth.verifyJwt, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await database.deleteOne("bikes", id);
+        console.log("res: ", result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error deleting bike:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });
