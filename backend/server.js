@@ -206,10 +206,12 @@ app.put('/api/bike/:id', auth.verifyJwt, async (req, res) => {
 app.get('/api/bikes/:city', auth.verifyJwt, async (req, res) => {
     const { city } = req.params;
 
-    // Databasen har inte stöd för att filtrera på city än, så denna route returnerar alla cyklar
+    const cityFilter = {
+        city: city
+    }
 
     try {
-        const result = await database.getAll("bikes");
+        const result = await database.filterAll("bikes", cityFilter);
         console.log("res: ", result);
         res.status(200).json(result);
     } catch (error) {
@@ -220,7 +222,15 @@ app.get('/api/bikes/:city', auth.verifyJwt, async (req, res) => {
 
 app.get('/api/bike/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
-    // Behövs denna route?
+
+    try {
+        const result = await database.getOne("bikes", id);
+        console.log("res: ", result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error retrieving one bike:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
 });
 
 app.delete('/api/bike/:id', auth.verifyJwt, async (req, res) => {
