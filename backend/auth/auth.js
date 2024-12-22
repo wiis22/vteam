@@ -27,7 +27,7 @@ const auth = {
 
     login: async function(loginData) {
         try {
-            const userData = await database.filterAll("users", {email: logindata.email});
+            const userData = await database.filterAll("users", {email: loginData.email});
 
             // console.log("userData in auth.login:", userData)
 
