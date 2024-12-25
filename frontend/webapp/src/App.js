@@ -11,6 +11,8 @@ import Users from "./components/users";
 import MapView from "./components/map";
 import BikeList from "./components/bike-list";
 import City from "./components/city";
+import Register from "./components/register";
+import Login from "./components/login";
 
 export default function App() {
   return (
@@ -18,7 +20,11 @@ export default function App() {
       {/* All routes */}
       <Routes>
         <Route path="/" element={<Navbar />}>
+
           <Route index element={<Home />} />
+
+          <Route path="/login" element={<Login  />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/balance" element={<Balance />} />
           <Route path="/details" element={<Details />} />
           <Route path="/history" element={<History />} />
