@@ -1,16 +1,22 @@
 import React, { useState } from 'react'
 import authModel from '../models/auth';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleLogin = async (event) => {
         event.preventDefault();
 
         const result = await authModel.login(email, password);
-
-        return result;
+        if (result === "not ok") {
+            setErrorMessage("Skrivit fel lösenord eller användarnamn.");
+        }
+        navigate("/");
+        return console.log(result);
     }
 
 
@@ -21,7 +27,6 @@ export default function Login() {
 
             <form onSubmit={handleLogin}>
 
-                <div>
                 <p><label>E-mail/Användarnamn: </label></p>
                 <input className='textarea'
                         type="email"
@@ -30,9 +35,7 @@ export default function Login() {
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
-                </div>
 
-                <div>
                 <p><label>Password: </label></p>
                 <input className='textarea'
                         type="password"
@@ -41,12 +44,13 @@ export default function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                </div>
 
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 <button className='button green-button' type="submit">
-                    Register
+                    Log in
                 </button>
             </form>
+            <Link to="/register">Registera ny användare</Link>
         </div>
     )
 }

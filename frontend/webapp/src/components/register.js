@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import authModel from '../models/auth';
 
 export default function Register() {
@@ -8,6 +9,7 @@ export default function Register() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleRegister = async (event) => {
         event.preventDefault();
@@ -21,9 +23,10 @@ export default function Register() {
 
         if (result !== "ok") {
             setErrorMessage("Registrering misslyckades. Försök igen.");
-        } else {
+        } else {//If loggin succeed change route to homepage.
             setErrorMessage('');
             alert("Registrering lyckades!");
+            navigate("/");
         }
     }
 
@@ -33,7 +36,6 @@ export default function Register() {
         <h1>Registrera ny användare</h1>
 
             <form onSubmit={handleRegister}>
-                <div>
                 <p><label>Namn: </label></p>
                 <input className='textarea'
                         type="text"
@@ -42,9 +44,7 @@ export default function Register() {
                         onChange={(e) => setFirstName(e.target.value)}
                         required
                     />
-                </div>
 
-                <div>
                 <p><label>Efternamn: </label></p>
                 <input className='textarea'
                         type="text"
@@ -53,9 +53,7 @@ export default function Register() {
                         onChange={(e) => setLastName(e.target.value)}
                         required
                     />
-                </div>
 
-                <div>
                 <p><label>E-mail: </label></p>
                 <input className='textarea'
                         type="email"
@@ -65,9 +63,7 @@ export default function Register() {
                         // readOnly={!!email}
                         required
                     />
-                </div>
 
-                <div>
                 <p><label>Password: </label></p>
                 <input className='textarea'
                         type="password"
@@ -76,9 +72,7 @@ export default function Register() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                </div>
 
-                <div>
                 <p><label>Confirm Password: </label></p>
                 <input className='textarea'
                         type="password"
@@ -87,13 +81,14 @@ export default function Register() {
                         onChange={(e) => setPassword2(e.target.value)}
                         required
                     />
-                </div>
 
-                {/* {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} */}
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
 
+                <p>
                 <button className='button green-button' type="submit">
                     Register
                 </button>
+                </p>
             </form>
         </div>
     );

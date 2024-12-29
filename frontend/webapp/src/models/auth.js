@@ -3,6 +3,10 @@ import { serverURL } from "../utils";
 //Module with auth functions.
 const auth = {
     token: "",
+    username: "",
+    name: "",
+    role: "",
+    balance: 0,
 
     login: async function login (username, password) {
         const user = {
@@ -19,9 +23,10 @@ const auth = {
         });
 
         const result = await response.json();
-
+        //status code 200?
         if (result.data.type === "success") {
             auth.token = result.data.token;
+            auth.username = username
             console.log(auth.token);
             return "ok";
         }
@@ -52,6 +57,13 @@ const auth = {
         }
 
         return "not ok";
+    },
+    resetSession: function resetSession () {
+        auth.token = "";
+        auth.username = "";
+        auth.name = "";
+        auth.role = "";
+        auth.balance = 0;
     },
 };
 
