@@ -35,4 +35,10 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# Ignore build output
+android/
+webapp/
+
+.idea/
+
 app-example
