@@ -1,12 +1,71 @@
 require('dotenv').config({debug: true});
 const database = require("./db/mongodb/src/database.js");;
 const auth = require('./auth/auth.js');
-
+const { Server } = require('socket.io');
+const http = require("http");
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
 const port = process.env.PORT_API || 1337;
-
 app.use(express.json());
+const httpserver = http.createServer(app);
+
+const webAppURL = process.env.WEB_APP_URL || 'http://localhost:3000';
+const mobileAppURL = process.env.MOBILE_APP_URL || 'http://localhost:3001';
+
+app.use(cors({
+    origin: [webAppURL, mobileAppURL],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
+
+const io = new Server(httpserver, {
+    cors: {
+        origin: mobileAppURL,
+        methods: ['GET', 'POST'],
+        credentials: true
+    }
+});
+
+io.sockets.on('connection', (socket) => {
+    console.log('Client connected to sockets');
+
+    // used by mobile app and bike to join a room
+    socket.on('joinRoom', (roomName) => { // Använda userId och bikeId som roomName?
+        socket.join(roomName);
+        console.log(`Socket ${socket.id} joined room: ${roomName}`);
+    }),
+
+    // used by mobile app when user starts a ride
+    socket.on("startRide", (bikeId, userId) => {
+        io.to(bikeId).emit("startRide", userId);
+    });
+
+    // used by mobile app when user ends the ride
+    socket.on("userEndRide", (bikeId) => {
+        io.to(bikeId).emit("endRide");
+    });
+
+    // used by bike when bike ends the ride (beacuse of low battery etc.)
+    socket.on("bikeEndRide", (userId) => {
+        io.to(userId).emit("endRide");
+    });
+
+    // used by bike when ride is saved
+    socket.on("rideDone", (userId) => {
+        io.to(userId).emit("rideDone");
+    });
+
+    socket.on("leaveRoom", (roomName) => {
+        socket.leave(roomName);
+        console.log(`Socket ${socket.id} left room: ${roomName}`);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected from sockets');
+    });
+});
 
 // Så här kan en fetch se ut med token. Fungerar på samma sätt med POST, PUT och DELETE routes
 // fetch("http://localhost:1337/api/cities", {
@@ -260,6 +319,9 @@ app.delete('/api/bikes', auth.verifyJwt, async (req, res) => {
     }
 });
 
-app.listen(port, () => {
+const server = httpserver.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
+
+// export of server is for testing
+module.exports = server;
