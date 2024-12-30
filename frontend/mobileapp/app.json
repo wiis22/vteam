@@ -9,19 +9,13 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "This app uses your location to show your position on the map."
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "ACCESS_FINE_LOCATION"
-      ],
       "package": "com.josf23.mobileapp"
     },
     "web": {
@@ -38,12 +32,6 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
-        }
-      ],
-      [
-        "react-native-auth0",
-        {
-          "domain": "dev-mmhhjrhtltu1l74y.eu.auth0.com"
         }
       ]
     ],
