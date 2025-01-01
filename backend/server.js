@@ -131,6 +131,8 @@ app.post('/api/login', async (req, res) => {
         password: req.body.password
     }
 
+    // console.log("loginData: ", loginData);
+
     try {
         const token = await auth.login(loginData);
         res.status(200).json(token);
