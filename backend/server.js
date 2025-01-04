@@ -134,8 +134,8 @@ app.post('/api/login', async (req, res) => {
     // console.log("loginData: ", loginData);
 
     try {
-        const token = await auth.login(loginData);
-        res.status(200).json(token);
+        const userInfo = await auth.login(loginData);
+        res.status(200).json(userInfo);
     } catch (error) {
         console.error('Failed to login:', error);
         res.status(401).json({ message: 'Invalid email or password', error: error.message });
@@ -207,7 +207,6 @@ app.get('/api/user/:id', auth.verifyJwt, async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });
-
 
 app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
@@ -317,6 +316,19 @@ app.delete('/api/bikes', auth.verifyJwt, async (req, res) => {
         res.status(200).json(result);
     } catch (error) {
         console.error('Error deleting bike:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.get('/api/rides', auth.verifyJwt, async (req, res) => {
+    const { rideFilter } = req.body;
+
+    try {
+        const result = await database.filterAll("bikes", cityFilter);
+        console.log("res: ", result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error retrieving bikes:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });
