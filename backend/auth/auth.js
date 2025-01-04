@@ -47,7 +47,15 @@ const auth = {
             if (res) {
                 const payload = { email: loginData.email };
                 const jwtToken = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
-                return jwtToken;
+
+                const userInfo = {
+                    _id: userData._id,
+                    role: userData.role,
+                    balance : userData.balance,
+                    jwtToken: jwtToken
+                };
+
+                return userInfo;
             }
 
             return res; // should not come to this
