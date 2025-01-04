@@ -27,12 +27,22 @@ const auth = {
 
     login: async function(loginData) {
         try {
-            const userData = await database.filterAll("users", {email: loginData.email});
+            let userData = await database.filterAll("users", {email: loginData.email});
+
+            if (userData.length === 0) {
+                throw new Error("User not found");
+            }
+
+            if (userData.length > 1) {
+                throw new Error("Multiple users found");
+            }
+
+            userData = userData[0];
 
             // console.log("userData in auth.login:", userData)
 
             const res = await this.comparePasswords(loginData.password, userData.password);
-            // console.log("res in auth.login:", res)
+            console.log("res from comparePasswords in auth.login:", res)
 
             if (res) {
                 const payload = { email: loginData.email };
@@ -42,7 +52,7 @@ const auth = {
 
             return res; // should not come to this
         } catch (error) {
-            throw err;
+            throw error;
         }
     },
 

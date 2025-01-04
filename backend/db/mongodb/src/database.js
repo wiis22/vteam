@@ -232,12 +232,11 @@ const database = {
                 throw new Error("Filter must be a valid object");
             }
 
-
             const client  = await mongo.connect(dsn);
             const db = await client.db();
             const col = await db.collection(colName);
 
-            const result = await col.find(filter).toArray;
+            const result = await col.find(filter).toArray();
 
             await client.close();
 
