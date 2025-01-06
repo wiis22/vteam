@@ -1,0 +1,10 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    background-color: whitesmoke;
+}
