@@ -16,8 +16,8 @@ const auth = {
             try {
                 const hash = await bcrypt.hash(userData.password, 10);
                 userData.password = hash;
-                await database.addOne("users", userData);
-                return true;
+                const result = await database.addOne("users", userData);
+                return result; // should be _id of the new user
             } catch (err) {
                 console.error("Error registering new user: ", err.message);
                 throw err;
