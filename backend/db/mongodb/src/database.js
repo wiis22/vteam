@@ -118,7 +118,7 @@ const database = {
      * @async
      *
      * @param {string} colName Name of collection.
-     * @param {object} data    Data containing: _id in hexadecimal format and other fields to update sould be in json format.
+     * @param {object} data    Data containing: id in hexadecimal format and other fields to update sould be in json format.
      *
      * @throws Error when database operation fails.
      *
@@ -134,12 +134,12 @@ const database = {
             // console.log("id", data._id)
             // ObjectId: Needs to be super sure
             // that id is in a correct format else it wont work.
-            const objectId = new ObjectId(String(data._id)); // this should only be done if it's a string. in api/doc-add-user it's already an ObjectId as it becomes a string when its converted to json
+            const objectId = new ObjectId(String(data.id)); // this should only be done if it's a string. in api/doc-add-user it's already an ObjectId as it becomes a string when its converted to json
             // console.log("id", data._id)
             // console.log("objectId", objectId)
             // console.log("here 1")
 
-            const {_id, ...updateFields } = data;
+            const {id, ...updateFields } = data;
 
             if (Object.keys(updateFields).length === 0) {
                 throw new Error("No fields provided to update")
