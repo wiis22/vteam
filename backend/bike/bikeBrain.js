@@ -1,3 +1,5 @@
+const geolib = require('geolib');
+const io = require('socket.io-client');
 
 class bikeBrain {
     constructor(bikeData) {
@@ -169,3 +171,5 @@ class bikeBrain {
     }
 
 }
+
+module.exports = bikeBrain;
