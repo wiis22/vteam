@@ -9,7 +9,7 @@ const city = args[0];
 const numBikes = parseInt(args[1]);
 
 if (!city || isNaN(numBikes)) {
-    console.error('Please provide valid arguments: city and amountOfBikes');
+    console.error('Please provide valid arguments: city and numBikes');
     process.exit(1);
 }
 

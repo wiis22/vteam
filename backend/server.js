@@ -28,6 +28,10 @@ const io = new Server(httpserver, {
     }
 });
 
+// updateBike (från cyklen, spara till databasen)
+// fixa till i saveRide (spara till databasen)
+// updatePosition (till cykeln)
+
 io.sockets.on('connection', (socket) => {
     console.log('Client connected to sockets');
 
@@ -53,7 +57,8 @@ io.sockets.on('connection', (socket) => {
     });
 
     // used by bike when ride is saved
-    socket.on("rideDone", (userId) => {
+    socket.on("saveRide", (userId) => {
+        // save ride to database!!
         io.to(userId).emit("rideDone");
     });
 
@@ -110,11 +115,12 @@ app.post('/api/user', async (req, res) => {
     }
 
     try {
-        const result = await auth.register(userData);
-        console.log("res: ", result);
+        const userId = await auth.register(userData);
+        console.log("result: ", result);
         res.status(201).json({
             success: true,
-            message: "User registered successfully"
+            message: "User registered successfully",
+            userId: userId
         });
     } catch (error) {
         console.error('Error registering user:', error);
