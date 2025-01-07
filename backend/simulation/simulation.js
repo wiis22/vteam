@@ -39,8 +39,6 @@ async function simulation(numUsers) {
 
 }
 
-
-
 const addUsers = async (numUsers) => {
     const users = [];
 

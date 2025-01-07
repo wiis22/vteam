@@ -25,8 +25,11 @@ class User {
         this.socket.on('bikeEndRide', (userId) => {
             this.endRide();
         });
-        this.socket.on('rideDone', (userId) => {
-            // This happens when ride is done and saved to the database by the bike
+        this.socket.on('rideDone', () => {
+            // This happens when ride is done and saved to the database by the bike/API
+        });
+        this.socket.on('bikeEndRide', () => {
+            this.endRide(bikeId);
         });
     }
 
