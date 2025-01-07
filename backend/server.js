@@ -116,7 +116,7 @@ app.post('/api/user', async (req, res) => {
 
     try {
         const userId = await auth.register(userData);
-        console.log("result: ", result);
+        console.log("result: ", userId);
         res.status(201).json({
             success: true,
             message: "User registered successfully",

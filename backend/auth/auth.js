@@ -7,11 +7,10 @@ const jwtSecret = process.env.JWT_SECRET;
 const auth = {
     register: async function (userData) {
         try {
-            await database.filterAll("users", {email: userData.email});
-            throw new Error("Email already in use");
-        } catch (err) {
-            if (err.message === "Email is already in use") {
-                throw err;
+            const res = await database.filterAll("users", {email: userData.email});
+            console.log("res: ", res);
+            if (res.length >= 1) {
+                throw new Error("Email is already in use");
             }
             try {
                 const hash = await bcrypt.hash(userData.password, 10);
@@ -22,6 +21,11 @@ const auth = {
                 console.error("Error registering new user: ", err.message);
                 throw err;
             }
+        } catch (err) {
+            if (err.message === "Email is already in use") {
+                throw err;
+            }
+            console.error("i auth 28: ",err.message);
         }
     },
 
