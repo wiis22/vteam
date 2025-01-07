@@ -8,7 +8,7 @@ const auth = {
     register: async function (userData) {
         try {
             await database.filterAll("users", {email: userData.email});
-            throw new Error("Email already in use");
+            throw new Error("Email is already in use");
         } catch (err) {
             if (err.message === "Email is already in use") {
                 throw err;
