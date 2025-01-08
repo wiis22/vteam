@@ -14,6 +14,7 @@ import City from "./components/city";
 import Register from "./components/register";
 import Login from "./components/login";
 import Logout from "./components/logout";
+import ChangePassword from "./components/change-password";
 
 export default function Router() {
     return (
@@ -26,6 +27,7 @@ export default function Router() {
             <Route path="/login" element={<Login  />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/change-password" element={<ChangePassword />} />
             {/* User routes */}
             <Route path="/balance" element={<Balance />} />
             <Route path="/details" element={<Details />} />

@@ -10,6 +10,7 @@ export default function Register() {
     const [lastName, setLastName] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    document.title = 'Register';
 
     const handleRegister = async (event) => {
         event.preventDefault();
@@ -19,7 +20,7 @@ export default function Register() {
             return;
         }
 
-        const result = await authModel.register(firstName, lastName, email, password, password2);
+        const result = await authModel.register(firstName, lastName, email, password);
 
         if (result !== "ok") {
             setErrorMessage("Registrering misslyckades. Försök igen.");

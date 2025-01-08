@@ -4,8 +4,8 @@ import { serverURL } from "../utils";
 const auth = {
     token: "",
     username: "",
-    name: "",
     role: "",
+    userId: "",
     balance: 0,
 
     login: async function login (username, password) {
@@ -24,17 +24,21 @@ const auth = {
 
         const result = await response.json();
         //status code 200?
-        if (result.data.type === "success") {
-            auth.token = result.data.token;
-            auth.username = username
-            console.log(auth.token);
+        if (result.message !== "Invalid email or password") {
+            auth.token = result.jwtToken;
+            auth.username = username;
+            auth.role = result.role;
+            auth.userId = result._id;
+            auth.balance = result.balance;
+
+            console.log(result);
             return "ok";
         }
 
         return "not ok";
     },
 
-    register: async function register (firstName, lastName, email, password, password2) {
+    register: async function register (firstName, lastName, email, password) {
         const user = {
             email: email,
             password: password,
@@ -52,7 +56,8 @@ const auth = {
 
         const result = await response.json();
 
-        if (result.data.message === "User registered successfully") {
+        if (result.success) {
+            console.log(result)
             return "ok";
         }
 
@@ -61,7 +66,7 @@ const auth = {
     resetSession: function resetSession () {
         auth.token = "";
         auth.username = "";
-        auth.name = "";
+        auth.userId = "";
         auth.role = "";
         auth.balance = 0;
     },

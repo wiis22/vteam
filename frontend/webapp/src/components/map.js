@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import cityModel from "../models/city-models";
 // import '../style/Map.css';
 
 export default function Map() {
-
     const location = useLocation();
-    const { city } = location.state || {};
+    const [city, setCity] = useState(null);
+    //get city id
+    useEffect(() => {
+        const fetchCity = async () => {
+            try {
+                const cityData = await cityModel.getOneCity(location.state.cityId);
+                setCity(cityData);
+            } catch (error) {
+                console.error("Error fetching city data:", error);
+            }
+        };
+
+        fetchCity();
+    }, [location.state.cityId]);
+
+    console.log(city.geolocation);
 
     return (
         <div>

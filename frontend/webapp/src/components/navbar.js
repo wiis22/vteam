@@ -11,7 +11,7 @@ export default function Navbar() {
     }
     
     return (
-        <>
+        <div>
             <nav className="navbar">
                 <Link to="/">Home</Link> |{" "}
                 <Link to="/balance">Balance</Link> |{" "}
@@ -22,6 +22,6 @@ export default function Navbar() {
             </nav>
 
             <Outlet />
-        </>
+        </div>
     );
 };
