@@ -2,10 +2,10 @@ import { serverURL } from "../utils";
 
 //Module with auth functions.
 const auth = {
-    token: "",
-    username: "",
-    role: "",
-    userId: "",
+    token: null,
+    username: null,
+    role: null,
+    userId: null,
     balance: 0,
 
     login: async function login (username, password) {
@@ -24,7 +24,7 @@ const auth = {
 
         const result = await response.json();
         //status code 200?
-        if (result.message !== "Invalid email or password") {
+        if (result !== false) {
             auth.token = result.jwtToken;
             auth.username = username;
             auth.role = result.role;
@@ -56,7 +56,7 @@ const auth = {
 
         const result = await response.json();
 
-        if (result.success) {
+        if (result.success === true) {
             console.log(result)
             return "ok";
         }
@@ -64,10 +64,10 @@ const auth = {
         return "not ok";
     },
     resetSession: function resetSession () {
-        auth.token = "";
-        auth.username = "";
-        auth.userId = "";
-        auth.role = "";
+        auth.token = null;
+        auth.username = null;
+        auth.userId = null;
+        auth.role = null;
         auth.balance = 0;
     },
 };

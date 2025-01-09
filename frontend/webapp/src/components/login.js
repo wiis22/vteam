@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import authModel from '../models/auth';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -9,13 +9,20 @@ export default function Login() {
     const navigate = useNavigate();
     document.title = 'Login';
 
+    //changes route when mounting
+    useEffect(() => {
+        navigate("/login");
+    }, []);
+
     const handleLogin = async (event) => {
         event.preventDefault();
 
         const result = await authModel.login(email, password);
         if (result === "not ok") {
             setErrorMessage("Skrivit fel lösenord eller användarnamn.");
+            return;
         }
+        alert("Login lyckades!");
         navigate("/");
         return console.log(result);
     }

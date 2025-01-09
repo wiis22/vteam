@@ -1,4 +1,4 @@
-// import React from 'react'
+import React, { useEffect } from 'react'
 import authModel from '../models/auth';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,15 +6,8 @@ import { useNavigate } from 'react-router-dom';
 export default function Logout() {
     const navigate = useNavigate();
 
-    const handleLogout = (event) => {
-        event.preventDefault();
-
+    useEffect(() => {
         authModel.resetSession();
         navigate("/");
-    }
-
-
-    return (
-        handleLogout
-    );
+    }, []);
 };

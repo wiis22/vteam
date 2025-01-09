@@ -4,7 +4,7 @@ import Login from './login';
 
 export default function Home() {
     //Login component if not logged in.
-    if(!authModel.username) {
+    if(!authModel.token) {
         return (
             <Login  />
         );

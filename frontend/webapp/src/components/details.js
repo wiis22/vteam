@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import userModel from "../models/user";
 import { Link } from 'react-router-dom';
+import authModel from "../models/auth";
+import Login from './login';
 
 export default function AccountDetails() {
     //all user details.
-    const [name, setName] = useState(null);
-    const [account, setAccount] = useState(null);
-    const [role, setRole] = useState(null);
-    const [balance, setBalance] = useState(null);
+    const [userDetails, setUserDetails] = useState("");
     document.title = 'Användare';
 
     useEffect(() => {
@@ -15,10 +14,12 @@ export default function AccountDetails() {
         const fetchUser = async () => {
             try {
                 const userData = await userModel.getOneUser();
-                setName(`${userData.firstName} ${userData.lastName}`);
-                setAccount(`${userData.email}`);
-                setRole(`${userData.role}`);
-                setBalance(`${userData.balance}`);
+                setUserDetails({
+                    name: `${userData.firstName} ${userData.lastName}`,
+                    email: userData.email,
+                    role: userData.role,
+                    balance: userData.balance
+                });
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
@@ -27,17 +28,24 @@ export default function AccountDetails() {
         fetchUser();
     }, []);
 
+    //Check if logged in.
+    if(!authModel.token) {
+        return (
+            <Login  />
+        );
+    }
+
     return (
         <div>
             <h1>Användar-uppgifter</h1>
 
-            <p>Namn: {name}</p>
+            <p>Namn: {userDetails.name}</p>
 
-            <p>Användarnamn: {account}</p>
+            <p>Användarnamn: {userDetails.email}</p>
 
-            <p>Status: {role}</p>
+            <p>Status: {userDetails.role}</p>
 
-            <p>Nuvarande saldo: {balance}</p>
+            <p>Nuvarande saldo: {userDetails.balance}</p>
 
             <Link to="/change-password">Ändra lösenord</Link>
         </div>
