@@ -1,0 +1,21 @@
+.toast {
+    position: fixed;
+    bottom: 30%;
+    right: 0;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: opacity 500ms, transform 500ms;
+}
+
+.toast.visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast-body {
+    margin: 28px;
+    padding: 20px 24px;
+    background-color: rgb(147, 233, 255);
+    color: rgb(58, 58, 58);
+    border-radius: 4px;
+}
