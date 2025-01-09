@@ -1,6 +1,7 @@
-require('dotenv').config({debug: true});
+require('dotenv').config({ debug: true });
 const database = require("./db/mongodb/src/database.js");;
 const auth = require('./auth/auth.js');
+const ride = require('./ride/ride.js');
 const { Server } = require('socket.io');
 const http = require("http");
 const express = require('express');
@@ -28,38 +29,69 @@ const io = new Server(httpserver, {
     }
 });
 
-// updateBike (från cyklen, spara till databasen)
-// fixa till i saveRide (spara till databasen)
-// updatePosition (till cykeln)
-
 io.sockets.on('connection', (socket) => {
     console.log('Client connected to sockets');
 
     // used by mobile app and bike to join a room
-    socket.on('joinRoom', (roomName) => { // Använda userId och bikeId som roomName?
-        socket.join(roomName);
-        console.log(`Socket ${socket.id} joined room: ${roomName}`);
+    socket.on('joinRoom', (data) => {
+        socket.join(data.roomName);
+        console.log(`Socket ${socket.id} joined room: ${data.roomName}`);
     }),
 
-    // used by mobile app when user starts a ride
-    socket.on("startRide", (bikeId, userId) => {
-        io.to(bikeId).emit("startRide", userId);
-    });
+        // used by mobile app when user starts a ride
+        socket.on("startRide", (data) => {
+            io.to(data.bikeId).emit("startRide", { userId: data.userId });
+        });
 
     // used by mobile app when user ends the ride
-    socket.on("userEndRide", (bikeId) => {
-        io.to(bikeId).emit("endRide");
+    socket.on("userEndRide", (data) => {
+        io.to(data.bikeId).emit("endRide");
     });
 
     // used by bike when bike ends the ride (beacuse of low battery etc.)
-    socket.on("bikeEndRide", (userId) => {
-        io.to(userId).emit("endRide");
+    socket.on("bikeEndRide", (data) => {
+        io.to(data.userId).emit("endRide");
     });
 
-    // used by bike when ride is saved
-    socket.on("saveRide", (userId) => {
-        // save ride to database!!
-        io.to(userId).emit("rideDone");
+    // used by bike when ride is ended and should be saved to database
+    socket.on("saveRide", async (data) => {
+        try {
+            const price = ride.getPrice(data.log.startLocation, data.log.endLocation, data.log.startTime, data.log.endTime);
+
+            const rideData = {
+                userId: data.userId,
+                bikeId: data.bikeId,
+                startTime: data.log.startTime,
+                endTime: data.log.endTime,
+                startPosition: data.log.startLocation,
+                endPosition: data.log.endLocation,
+                startLocation: data.log.startLocation,
+                endLocation: data.log.endLocation,
+                rideLengthSeconds: rideLengthSeconds,
+                price: price
+            }
+
+            const result = await database.addOne("rides", rideData);
+            io.to(data.userId).emit("rideDone");
+        } catch (error) {
+            console.error('Error saving ride:', error);
+            socket.to(data.userId).emit("rideSaveErorr", { error: error.message });
+        }
+    });
+
+    // used by mobile app to update it's position to the bike
+    socket.on('updatePosition', (data) => {
+        socket.to(data.bikeId).emit('updatePosition', { position: data.position });
+    });
+
+    // used by bike to save updated values to database
+    socket.on('updateBike', async (data) => {
+        try {
+            const result = await database.updateOne("bikes", data);
+            console.log("result: ", result);
+        } catch (error) {
+            console.error('Error updating bike:', error);
+        }
     });
 
     socket.on("leaveRoom", (roomName) => {
@@ -80,7 +112,7 @@ io.sockets.on('connection', (socket) => {
 //     },
 // })
 
-app.get('/test1', async (req,res) => {
+app.get('/test1', async (req, res) => {
     const data = {
         city_name: "test_City",
         bikes: [12345, 54321],
@@ -218,8 +250,8 @@ app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
 
     const updatedUserData = {
-        ...{id: id},
-        ... req.body
+        ...{ id: id },
+        ...req.body
     }
 
     try {
@@ -258,8 +290,8 @@ app.put('/api/bike/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
 
     const updatedBikeData = {
-        ...{id: id},
-        ... req.body
+        ...{ id: id },
+        ...req.body
     }
 
     try {
@@ -326,15 +358,32 @@ app.delete('/api/bikes', auth.verifyJwt, async (req, res) => {
     }
 });
 
-app.get('/api/rides', auth.verifyJwt, async (req, res) => {
-    const { rideFilter } = req.body;
+app.get('/api/user/rides/:id', auth.verifyJwt, async (req, res) => {
+    const { id } = req.params;
+
+    const ridesFilter = { userId: id };
 
     try {
-        const result = await database.filterAll("bikes", cityFilter);
-        console.log("res: ", result);
+        const result = await database.filterAll("rides", ridesFilter);
+        console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
-        console.error('Error retrieving bikes:', error);
+        console.error('Error filtering rides on user id:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.get('/api/bike/rides/:id', auth.verifyJwt, async (req, res) => {
+    const { id } = req.params;
+
+    const ridesFilter = { bikeId: id };
+
+    try {
+        const result = await database.filterAll("rides", ridesFilter);
+        console.log("result: ", result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error filtering rides on user id:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });

@@ -21,25 +21,23 @@ class User {
 
     setupSocket() {
         this.socket = io(API_URL);
-        this.socket.emit('joinRoom', this.userId);
-        this.socket.on('bikeEndRide', (userId) => {
+        this.socket.emit('joinRoom', { userId: this.userId });
+        this.socket.on('bikeEndRide', () => {
             this.endRide();
         });
         this.socket.on('rideDone', () => {
             // This happens when ride is done and saved to the database by the bike/API
-        });
-        this.socket.on('bikeEndRide', () => {
-            this.endRide(bikeId);
+            // not sure yet what will happen here in the simulation
         });
     }
 
     async startRide(bikeId) {
         this.bikeId = bikeId;
-        this.socket.emit('startRide', this.bikeId, this.userId);
+        this.socket.emit('startRide', { userId: this.userId, bikeId: this.bikeId });
     }
 
     async endRide() {
-        this.socket.emit('endRide', this.bikeId);
+        this.socket.emit('endRide', { bikeId: this.bikeId });
         this.bikeId = null;
     }
 }
