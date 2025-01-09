@@ -7,21 +7,25 @@ const jwtSecret = process.env.JWT_SECRET;
 const auth = {
     register: async function (userData) {
         try {
-            await database.filterAll("users", {email: userData.email});
-            throw new Error("Email already in use");
-        } catch (err) {
-            if (err.message === "Email is already in use") {
-                throw err;
+            const res = await database.filterAll("users", {email: userData.email});
+            console.log("res: ", res);
+            if (res.length >= 1) {
+                throw new Error("Email is already in use");
             }
             try {
                 const hash = await bcrypt.hash(userData.password, 10);
                 userData.password = hash;
-                await database.addOne("users", userData);
-                return true;
+                const result = await database.addOne("users", userData);
+                return result; // should be _id of the new user
             } catch (err) {
                 console.error("Error registering new user: ", err.message);
                 throw err;
             }
+        } catch (err) {
+            if (err.message === "Email is already in use") {
+                throw err;
+            }
+            console.error("i auth 28: ",err.message);
         }
     },
 
@@ -47,7 +51,15 @@ const auth = {
             if (res) {
                 const payload = { email: loginData.email };
                 const jwtToken = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
-                return jwtToken;
+
+                const userInfo = {
+                    _id: userData._id,
+                    role: userData.role,
+                    balance : userData.balance,
+                    jwtToken: jwtToken
+                };
+
+                return userInfo;
             }
 
             return res; // should not come to this

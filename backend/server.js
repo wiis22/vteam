@@ -28,6 +28,10 @@ const io = new Server(httpserver, {
     }
 });
 
+// updateBike (från cyklen, spara till databasen)
+// fixa till i saveRide (spara till databasen)
+// updatePosition (till cykeln)
+
 io.sockets.on('connection', (socket) => {
     console.log('Client connected to sockets');
 
@@ -53,7 +57,8 @@ io.sockets.on('connection', (socket) => {
     });
 
     // used by bike when ride is saved
-    socket.on("rideDone", (userId) => {
+    socket.on("saveRide", (userId) => {
+        // save ride to database!!
         io.to(userId).emit("rideDone");
     });
 
@@ -110,11 +115,12 @@ app.post('/api/user', async (req, res) => {
     }
 
     try {
-        const result = await auth.register(userData);
-        console.log("res: ", result);
+        const userId = await auth.register(userData);
+        console.log("result: ", userId);
         res.status(201).json({
             success: true,
-            message: "User registered successfully"
+            message: "User registered successfully",
+            userId: userId
         });
     } catch (error) {
         console.error('Error registering user:', error);
@@ -134,8 +140,8 @@ app.post('/api/login', async (req, res) => {
     // console.log("loginData: ", loginData);
 
     try {
-        const token = await auth.login(loginData);
-        res.status(200).json(token);
+        const userInfo = await auth.login(loginData);
+        res.status(200).json(userInfo);
     } catch (error) {
         console.error('Failed to login:', error);
         res.status(401).json({ message: 'Invalid email or password', error: error.message });
@@ -207,7 +213,6 @@ app.get('/api/user/:id', auth.verifyJwt, async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });
-
 
 app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
@@ -317,6 +322,19 @@ app.delete('/api/bikes', auth.verifyJwt, async (req, res) => {
         res.status(200).json(result);
     } catch (error) {
         console.error('Error deleting bike:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.get('/api/rides', auth.verifyJwt, async (req, res) => {
+    const { rideFilter } = req.body;
+
+    try {
+        const result = await database.filterAll("bikes", cityFilter);
+        console.log("res: ", result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error retrieving bikes:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });
