@@ -1,0 +1,40 @@
+.bottom-nav {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 7.5%;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    background-color: $base-color;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: 999;
+}
+
+.bottom-nav a {
+    color: $font-color;
+    text-decoration: none;
+    height: 100%;
+    width: 100%;
+    align-content: center;
+    border-right: 1px solid $base-alt-color;
+    border-left: 1px solid $base-alt-color;
+    border-radius: 10px;
+}
+
+// @media (max-width: 550px) {
+//     .bottom-nav a {
+//         font-size: 0.8em;
+//     }
+// }
+
+// @media (max-width: 400px) {
+//     .bottom-nav a {
+//         font-size: 0.6em;
+//     }
+// }
+

@@ -1,0 +1,50 @@
+* {
+    color: $light-grey;
+    font-family: serif;
+}
+
+button {
+    font-family: $font-headings;
+}
+
+body {
+    width: 100%;
+}
+
+// @media screen and (max-width: 600px) {
+//     body {
+//         font-size: 14px;
+//     }
+// }
+
+// @media screen and (max-width: 400px) {
+//     body {
+//         font-size: 10px;
+//     }
+// }
+
+p {
+    font-family: $font-body;
+    color: $dark-grey;
+}
+
+h1 {
+    font-family: $font-headings;
+    color: $dark-grey;
+}
+
+h2 {
+    font-family: $font-headings;
+    color: $dark-grey;
+}
+
+h3 {
+    font-family: $font-headings;
+    color: $dark-grey;
+}
+
+h4 {
+    font-family: $font-headings;
+    color: $dark-grey;
+}
+
