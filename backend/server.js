@@ -72,7 +72,7 @@ io.sockets.on('connection', (socket) => {
             }
 
             const result = await database.addOne("rides", rideData);
-            io.to(data.userId).emit("rideDone");
+            io.to(data.userId).emit("rideDone", { ride: rideData });
         } catch (error) {
             console.error('Error saving ride:', error);
             socket.to(data.userId).emit("rideSaveErorr", { error: error.message });
@@ -261,6 +261,27 @@ app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
     } catch (error) {
         console.error('Error updating user:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.put('/api/user/password/:id', auth.verifyJwt, async (req, res) => {
+    const { id } = req.params;
+    const newPassword = req.body.newPassword;
+
+    try {
+        const result = await auth.updatePassword(id, newPassword);
+        console.log("result: ", result);
+        res.status(201).json({
+            success: true,
+            message: "Password updated successfully"
+        });
+        console.log("Password updated successfully and route returned success");
+    } catch (error) {
+        console.error('Error updating password:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error', error: error.message
+        });
     }
 });
 
