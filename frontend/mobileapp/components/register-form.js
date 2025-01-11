@@ -1,7 +1,7 @@
 import authModel from "../models/auth.js";
 import { toast } from "../utils.js";
 
-export default class LoginForm extends HTMLElement {
+export default class RegisterForm extends HTMLElement {
     constructor() {
         super();
         this.credentials = {

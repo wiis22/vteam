@@ -9,21 +9,39 @@ const auth = {
             password: password
         };
 
-        const response = await fetch(`${baseURL}/login`, {
+        const response = await fetch(`${baseURL}/api/login`, {
             body: JSON.stringify(user),
-            // headers: {
-            //     'content-type': "application/json",
-            // },
+            headers: {
+                'content-type': "application/json",
+            },
             "method": "POST",
         });
 
         const result = await response.json();
 
-        if ("errors" in result) {
-            return result.errors.detail;
+        console.log("Result of login request: " + JSON.stringify(result));
+        if ("error" in result) {
+            return result.message;
         } else {
-            auth.token = result.data.token;
-            console.log(auth.token);
+            const returnedUser = {
+                id: result._id,
+                role: result.role,
+                email: result.email,
+                balance: result.balance,
+                email: user.email
+                // firstName: result.user.firstName,    This is currently not returned from login route
+                // lastName: result.user.lastName          -||-
+            };
+            localStorage.setItem("user", JSON.stringify(returnedUser));
+            localStorage.setItem("jwtToken", result.jwtToken);
+
+            auth.token = result.jwtToken;
+            console.log("jwtToken: " + localStorage.getItem("jwtToken"));
+            console.log("All local storage items:");
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                console.log(`${key}: ${localStorage.getItem(key)}`);
+            }
             return "ok";
         }
     },
@@ -36,7 +54,7 @@ const auth = {
             lastName: lastName
         };
 
-        const response = await fetch(`${baseURL}/auth/register`, {
+        const response = await fetch(`${baseURL}/api/user`, {
             body: JSON.stringify(user),
             headers: {
                 'content-type': "application/json",
@@ -45,13 +63,19 @@ const auth = {
         });
 
         const result = await response.json();
+        console.log(result);
 
-        if (result.data.message === "User successfully registered.") {
-            auth.token = result.data.token;
-            console.log(auth.token);
-            return "ok";
+        if (result.message === "User successfully registered.") {
+            return auth.login(username, password);
         }
-        return result.data.message;
+        return result.message;
+    },
+
+    logout: function logout() {
+        localStorage.clear();
+        sessionStorage.clear();
+        auth.token = "";
+        location.hash = "login";
     },
 };
 

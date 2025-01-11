@@ -1,4 +1,4 @@
-export default class LagerTitle extends HTMLElement {
+export default class PageHeader extends HTMLElement {
     constructor() {
         super();
     }

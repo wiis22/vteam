@@ -9,14 +9,24 @@ export default class Router extends HTMLElement {
             "": {
                 view: "<map-view></map-view>",
                 name: "Map",
+                hidden: true,
             },
-            "login": {
-                view: "<login-view></login-view>",
+            "map": {
+                view: "<map-view></map-view>",
+                name: "Map",
+            },
+            "account": {
+                view: "<account-view></account-view>",
                 name: "Account",
             },
             "register": {
                 view: "<register-view></register-view>",
                 name: "Register",
+                hidden: true,
+            },
+            "login": {
+                view: "<login-view></login-view>",
+                name: "Login",
                 hidden: true,
             },
         };
@@ -64,7 +74,7 @@ export default class Router extends HTMLElement {
             if (this.wildcard) {
                 html = html.replace("$wildcard", this.wildcard);
             }
-            console.log(html);
+            console.log("View rendering: " + html);
         }
         this.innerHTML = html;
     }

@@ -1,4 +1,4 @@
-const baseURL = "http://localhost:1337/api";
+const baseURL = "http://localhost:1337";
 
 
 function toast(message) {
