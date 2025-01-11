@@ -242,4 +242,7 @@ router-outlet {
   height: 92.5vh;
   width: 100%; }
 
+.padded-main {
+  padding: 1em; }
+
 /*# sourceMappingURL=style.css.map */
