@@ -18,9 +18,9 @@ export default function Map() {
             const cityData = await cityModel.getOneCity(location.state.cityId);
             setCity({
                 borders: cityData.borders,
-                chargingStations: cityData.chargingstaions,
+                chargingStations: cityData.chargingStations,
                 geolocation: cityData.geolocation,
-                zones: cityData.zones
+                parkingZones: cityData.parkingZones
             });
             if (cityData.borders && cityData.zones) {
                 const borderArray = cityData.borders.map(border => [border[1], border[0]]);
@@ -64,7 +64,7 @@ export default function Map() {
             chargingStations.push(
                 <LayerGroup>
                 <Circle
-                    center={[element.latitide, element.longitude]}
+                    center={[element.latitude, element.longitude]}
                     pathOptions={yellowOptions}
                     radius={100}
                     />
