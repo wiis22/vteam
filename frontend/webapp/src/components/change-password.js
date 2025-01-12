@@ -1,0 +1,70 @@
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import userModel from '../models/user';
+
+export default function ChangePassword() {
+    const [password, setPassword] = useState('');
+    const [password2, setPassword2] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
+    document.title = 'Ändra lösenord';
+
+    const handleChangePassword = async (event) => {
+        event.preventDefault();
+
+        if (password !== password2) {
+            setErrorMessage("Lösenorden matchar inte!");
+            return;
+        }
+
+        const newPassword = {
+            password: password
+        };
+
+        const result = await userModel.updateUser(newPassword);
+
+        if (result.status < 300) {
+            setErrorMessage('');
+            alert("Lösenordet har ändrats!");
+            navigate("/details");
+        };
+
+        setErrorMessage("Registrering misslyckades. Försök igen.");
+    }
+
+    return (
+        <div>
+
+        <h1>Ändra lösenord</h1>
+
+            <form onSubmit={handleChangePassword}>
+
+                <p><label>Lösenord: </label></p>
+                <input className='textarea'
+                        type="password"
+                        value={password}
+                        placeholder='******'
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+
+                <p><label>Upprepa lösenordet: </label></p>
+                <input className='textarea'
+                        type="password"
+                        value={password2}
+                        placeholder='******'
+                        onChange={(e) => setPassword2(e.target.value)}
+                        required
+                    />
+
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
+                <p>
+                <button className='button green-button' type="submit">
+                    Ändra lösenordet
+                </button>
+                </p>
+            </form>
+        </div>
+    );
+};
