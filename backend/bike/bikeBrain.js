@@ -12,7 +12,6 @@ class bikeBrain {
         this.operational = bikeData.operational;
         this.batteryPercentage = bikeData.batteryPercentage;
         this.customerCurrent = null;
-        this.inMaintenace = false;
         this.log = [];
         this.cityData = bikeData.cityData;
 
@@ -32,7 +31,7 @@ class bikeBrain {
     }
 
     startRide(customer){
-        if(!this.available || this.charging || this.inMaintenace){
+        if(!this.available || this.charging || !this.operational){
             console.log("Bike aint available");
             return;
         }
@@ -67,8 +66,6 @@ class bikeBrain {
             }
             this.log.push(endLog);
 
-            
-
             //rensa loggen
             this.socket.emit("saveRide", {bikeId: this.id, log: this.log, userId: this.customerCurrent});
             console.log(`Cykeln ${this.id} återlämnas av ${this.customerCurrent}. Resan är loggad.`);
@@ -102,9 +99,8 @@ class bikeBrain {
             // endRide();
         }
 
-        if (this.batteryPercentage < 0){
-            this.batteryPercentage = 0;
-        }
+
+        this.batteryPercentage = Math.max(this.batteryPercentage, 0);
 
         console.log(`Hastighet på cyckeln: ${this.id} och har hastiheten: ${speed}km/h. Batterinivå: ${this.batteryPercentage.toFixed(1)}%`);
         this.socket.emit("updateBike", {id: this.id, batteryPercentage: this.batteryPercentage});
@@ -124,7 +120,7 @@ class bikeBrain {
     findLocation() {
         if (this.locationInDistance(this.cityData.chargingStations)) {
             this.updateLocation("chargingStation");
-            setTimeout(this.chargingBattery(), 600000)
+            setTimeout(() => this.chargingBattery, 60000)
             return;
         }
         if (this.locationInDistance(this.cityData.parkingZones)) {

@@ -2,3 +2,4 @@
 **/package-lock.json
 backend/db/mongodb/src/reset.js
 **/.env
+**/coverage
