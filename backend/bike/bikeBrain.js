@@ -11,22 +11,24 @@ class bikeBrain {
         this.available = bikeData.available;
         this.operational = bikeData.operational;
         this.batteryPercentage = bikeData.batteryPercentage;
+
         this.customerCurrent = null;
+
         this.log = [];
         this.cityData = bikeData.cityData;
 
         this.batteryDrainInter = null;
 
         this.socket = io();
-        this.socket.emit('joinRoom', this.id);
-        this.socket.on('startRide', (userId) => {
-            this.startRide(userId);
+        this.socket.emit('joinRoom', {roomName: this.id});
+        this.socket.on('startRide', (data) => {
+            this.startRide(data.userId);
         })
         this.socket.on('endRide', () => {
             this.endRide();
         })
-        this.socket.on('updatePosition', (position) => {
-            this.updatePosition(position);
+        this.socket.on('updatePosition', (data) => {
+            this.updatePosition(data.position);
         })
     }
 
@@ -36,13 +38,13 @@ class bikeBrain {
             return;
         }
 
-        this.customerCurrent = customer;
+        this.currentCustomer = customer;
         this.available = false;
 
         const startLog = {
             customer,
-            startingPosition: this.position,
-            startingLocation: this.location,
+            startPosition: this.position,
+            startLocation: this.location,
             startTime: new Date().toISOString(),
         };
         this.log.push(startLog);
@@ -56,7 +58,7 @@ class bikeBrain {
     }
 
     endRide() {
-        if (this.customerCurrent) {
+        if (this.currentCustomer) {
             this.findLocation();
 
             const endLog = {
@@ -67,16 +69,15 @@ class bikeBrain {
             this.log.push(endLog);
 
             //rensa loggen
-            this.socket.emit("saveRide", {bikeId: this.id, log: this.log, userId: this.customerCurrent});
-            console.log(`Cykeln ${this.id} återlämnas av ${this.customerCurrent}. Resan är loggad.`);
+            this.socket.emit("saveRide", {bikeId: this.id, log: this.log, userId: this.currentCustomer});
+            console.log(`Cykeln ${this.id} återlämnas av ${this.currentCustomer}. Resan är loggad.`);
             //en update till db att availavble = true
-            // this.socket.emit("rideDone", this.customerCurrent);
             this.updateAvailable(true)
             if (this.batteryDrainInter) {
                 clearInterval(this.batteryDrainInter)
                 this.batteryDrainInter = null;
             }
-            this.customerCurrent = null;
+            this.currentCustomer = null;
         } else {
             console.log("Cykeln är inte i bruk.");
         }
@@ -95,8 +96,8 @@ class bikeBrain {
 
         if (this.batteryPercentage <= 10) {
             console.log("Cykeln måste laddas och stängs av.");
-            this.socket.emit("bikeEndRide", this.customerCurrent)
-            // endRide();
+            this.socket.emit("bikeEndRide", { userId: this.currentCustomer})
+            // this.endRide(); // not used here as bike gets emit above and will end it like normal
         }
 
 

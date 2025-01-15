@@ -1,0 +1,32 @@
+.full-width {
+    width: 100%;
+}
+
+* {
+    font-family: $base-font;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+main {
+    margin: auto;
+}
+
+.pushleft {
+    margin-left: 1em;
+}
+
+.pushtop {
+    margin-top: 1em;
+}
+
+router-outlet {
+    height: 100%;
+}

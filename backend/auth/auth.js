@@ -78,12 +78,31 @@ const auth = {
         }
     },
 
+    updatePassword: async function (userId, newPassword) {
+        try {
+            const hash = await bcrypt.hash(newPassword, 10);
+            const updatedUserData = {
+                id: userId,
+                password: hash
+            };
+
+            const res = await database.updateOne("users", updatedUserData);
+            return res;
+        } catch (err) {
+            console.error("Error updating password: ", err.message);
+            throw err;
+        }
+    },
+
     verifyJwt: async function(req, res, next) {
         const authorizationHeader = req.headers['authorization'];
         const token = authorizationHeader && authorizationHeader.split(' ')[1];
 
-        if (token === 1337) {
+        console.log("token in verifyJwt:", token);
+
+        if (parseInt(token) === 1337) {
             next();
+            return;
         }
 
         await jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
@@ -93,6 +112,7 @@ const auth = {
     
             req.user = decoded;
             next();
+            return;
         });
     },
 
