@@ -3,6 +3,9 @@ import { useLocation } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline, Polygon, LayerGroup, Circle} from 'react-leaflet';
 // import 'leaflet/dist/leaflet.css';
 import cityModel from "../models/city-models";
+import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 // import '../style/Map.css';
 
 export default function Map() {
@@ -10,7 +13,17 @@ export default function Map() {
     const [city, setCity] = useState(null);
     const [borders, setBorders] = useState(null);
     const [parkingZones, setParkingZones] = useState(null);
+    const [zones, setZones] = useState(null);
     const [bikes, setBikes] = useState(null);
+
+    let DefaultIcon = L.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow
+    });
+
+    L.Marker.prototype.options.icon = DefaultIcon;
+
+    console.log(DefaultIcon)
 
     //Fetch city and get data
     const fetchCity = async () => {
@@ -20,18 +33,19 @@ export default function Map() {
                 borders: cityData.borders,
                 chargingStations: cityData.chargingStations,
                 geolocation: cityData.geolocation,
-                parkingZones: cityData.parkingZones
+                parkingZones: cityData.parkingZones,
+                zones: cityData.zones
             });
             if (cityData.borders && cityData.zones) {
                 const borderArray = cityData.borders.map(border => [border[1], border[0]]);
                 setBorders(borderArray);
                 //Setting up parking zones
-                const parkingZones = [];
+                const zones = [];
                 cityData.zones.forEach(element => {
-                    parkingZones.push(element.map(border => [border[1], border[0]]));
+                    zones.push(element.map(border => [border[1], border[0]]));
                 });
-                // console.log(parkingZones)
-                setParkingZones(parkingZones);
+                // console.log(zones)
+                setZones(zones);
             }
             // console.log(cityData)
         } catch (error) {
@@ -103,7 +117,7 @@ export default function Map() {
             const bikeOperational = bike.operational ? "Yes" : "No";
             //Add marker and popup to bikes array
             allBikes.push(
-            <Marker position={[bike.position[0], bike.position[1]]}>
+            <Marker position={[bike.position.latitude, bike.position.longitude]}>
                 <Popup>
                 <p>ID: {bike._id}</p>
                 Charging: {bikeCharging}<br/>
@@ -144,7 +158,7 @@ export default function Map() {
 
             {/* draw borders in city */}
             <Polyline pathOptions={blackOptions} positions={borders} />
-            <Polygon pathOptions={greenOptions} positions={parkingZones} />
+            <Polygon pathOptions={greenOptions} positions={zones} />
             {renderChargingStations()}
             {renderBikes()}
             </MapContainer>
@@ -155,9 +169,10 @@ export default function Map() {
         <div>
             <h1>Map</h1>
             <p>Svartalinjegränsen: hela användningsområdet</p>
-            <p>Grönt-område: parkerings-zoner</p>
+            <p>Grönt-område: zoner</p>
             <p>Gula cirklar: ladd-zoner</p>
-            {city && borders && parkingZones ? (
+            <p>Blå cirklar: parkerings-zoner</p>
+            {city && borders && zones ? (
                 renderMap()
             ) : (
                 <p>Laddar karta över staden...</p>
