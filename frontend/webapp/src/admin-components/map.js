@@ -69,6 +69,9 @@ export default function Map() {
 
     //render charging zones
     const renderChargingStations = () => {
+        if(!city.chargingStations){
+            return
+        }
         const chargingStations = [];
         const yellowOptions = { color: 'yellow' }
         city.chargingStations.forEach((element) => {
@@ -87,6 +90,9 @@ export default function Map() {
 
     //render charging zones
     const renderParkingZones = () => {
+        if(!city.parkingZones){
+            return
+        }
         const parkingZones = [];
         const blueOptions = { color: 'blue' }
         city.parkingZones.forEach((element) => {
