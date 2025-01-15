@@ -12,7 +12,6 @@ export default function Map() {
     const location = useLocation();
     const [city, setCity] = useState(null);
     const [borders, setBorders] = useState(null);
-    const [parkingZones, setParkingZones] = useState(null);
     const [zones, setZones] = useState(null);
     const [bikes, setBikes] = useState(null);
 
@@ -22,8 +21,6 @@ export default function Map() {
     });
 
     L.Marker.prototype.options.icon = DefaultIcon;
-
-    console.log(DefaultIcon)
 
     //Fetch city and get data
     const fetchCity = async () => {
@@ -86,6 +83,24 @@ export default function Map() {
             );
         });
         return chargingStations;
+    };
+
+    //render charging zones
+    const renderParkingZones = () => {
+        const parkingZones = [];
+        const blueOptions = { color: 'blue' }
+        city.parkingZones.forEach((element) => {
+            parkingZones.push(
+                <LayerGroup>
+                <Circle
+                    center={[element.latitude, element.longitude]}
+                    pathOptions={blueOptions}
+                    radius={100}
+                    />
+                </LayerGroup>
+            );
+        });
+        return parkingZones;
     };
 
     //render charging zones
@@ -161,6 +176,7 @@ export default function Map() {
             <Polygon pathOptions={greenOptions} positions={zones} />
             {renderChargingStations()}
             {renderBikes()}
+            {renderParkingZones()}
             </MapContainer>
         );
     };
