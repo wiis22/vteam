@@ -113,14 +113,14 @@ export default function Map() {
         }
         //Button that toggles bike on and off.
         const  handleClick = async (bike) => {
-            if (bike.operational === true) {
-                const result = await cityModel.changeOperational(false, bike._id);
-                alert("Operational ändrades till false!");
+            if (bike.operational !== true) {
+                const result = await cityModel.changeOperational(true, bike._id);
+                alert("Operational ändrades till true!");
                 console.log(result)
                 return
             }
-            const result = await cityModel.changeOperational(true, bike._id);
-            alert("Operational ändrades till true!");
+            const result = await cityModel.changeOperational(false, bike._id);
+            alert("Operational ändrades till false!");
             console.log(result)
             return
         };

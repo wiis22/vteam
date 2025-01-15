@@ -44,6 +44,7 @@ const city = {
             body: JSON.stringify(newOperationalStatus),
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
+                'Content-Type': 'application/json'
             },
             method: 'PUT'
         });
