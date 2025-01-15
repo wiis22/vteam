@@ -120,7 +120,7 @@ class bikeBrain {
     findLocation() {
         if (this.locationInDistance(this.cityData.chargingStations)) {
             this.updateLocation("chargingStation");
-            setTimeout(() => this.chargingBattery, 60000)
+            setTimeout(() => this.chargingBattery(), 60000)
             return;
         }
         if (this.locationInDistance(this.cityData.parkingZones)) {
