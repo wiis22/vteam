@@ -15,6 +15,7 @@ export default class LoginForm extends HTMLElement {
 
         if (result === "ok") {
             console.log("Logged in");
+            localStorage.setItem("setItem", true);
             document.body.classList.add("slide-out");
             setTimeout(() => {
                 document.body.classList.remove("slide-out");
@@ -27,6 +28,12 @@ export default class LoginForm extends HTMLElement {
     }
 
     connectedCallback() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user) {
+            location.hash = "account";
+            return;
+        }
+
         let form = document.createElement("form");
 
         form.classList.add("login-form");

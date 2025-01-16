@@ -245,4 +245,23 @@ router-outlet {
 .padded-main {
   padding: 1em; }
 
+.table {
+  box-sizing: border-box;
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse; }
+  .table th {
+    text-align: left; }
+  .table td {
+    border-top: 1px solid #ccc; }
+  .table th,
+  .table td {
+    white-space: nowrap;
+    padding: 0.2rem 0.8rem; }
+  .table .number-cell {
+    text-align: right; }
+
+.table-striped tr:nth-of-type(2n) {
+  background-color: #eee; }
+
 /*# sourceMappingURL=style.css.map */
