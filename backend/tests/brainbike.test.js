@@ -9,7 +9,7 @@ jest.mock('socket.io-client', () => {
 });
 
 const mockBikeData = {
-    _id: '1234567890',
+    _id: '123456789000000987654321',
     city: "Test",
     charging: false,
     position: { lat: 1, lon: 0},
@@ -44,16 +44,18 @@ describe('bikeBrain', () => {
 
     it('sould start a ride and update the available status', () => {
         const customer = 'testUser1';
-
+        bike.available = true;
         const intervalSpy = jest.spyOn(global, 'setInterval').mockImplementationOnce((callback, delay) => {
             callback();
             return 1;
         });
 
-
         bike.startRide(customer); // denna sätter interval på 60000
 
-        expect(bike.customerCurrent).toBe(customer);
+        console.log("bike: ",bike);
+        
+
+        expect(bike.currentCustomer).toBe(customer);
         expect(bike.available).toBe(false);
         // check if the drainBattery have been called at the start of evry min.
         expect(intervalSpy).toHaveBeenCalledTimes(1);
@@ -67,7 +69,7 @@ describe('bikeBrain', () => {
 
         bike.startRide(customer); // denna sätter interval på 60000
 
-        expect(bike.customerCurrent).toBe(null);
+        expect(bike.currentCustomer).toBe(null);
         expect(bike.available).toBe(false);
     });
 
@@ -89,7 +91,7 @@ describe('bikeBrain', () => {
 
         expect(timeOutSpy).toHaveBeenCalledTimes(1);
 
-        expect(bike.customerCurrent).toBe(null);
+        expect(bike.currentCustomer).toBe(null);
         expect(bike.available).toBe(true);
 
         intervalSpy.mockRestore();

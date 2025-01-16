@@ -12,7 +12,7 @@ class bikeBrain {
         this.operational = bikeData.operational;
         this.batteryPercentage = bikeData.batteryPercentage;
 
-        this.customerCurrent = null;
+        this.currentCustomer = null;
 
         this.log = [];
         this.cityData = bikeData.cityData;
