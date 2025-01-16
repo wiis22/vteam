@@ -37,13 +37,13 @@ const addBikes = async (cityData, numBikes) => {
         let charging = false;
 
         if (remainingChargingStations > 0) {
-            const chargingStations = cityData.chargingStations;
+            const {chargingStations} = cityData.chargingStations;
             const randomIndex = Math.floor(Math.random() * chargingStations.length);
             position = chargingStations[randomIndex];
             charging = true;
             remainingChargingStations--;
         } else if (remainingParkingZones > 0) {
-            const parkingZones = cityData.parkingZones;
+            const {parkingZones} = cityData.parkingZones;
             const randomIndex = Math.floor(Math.random() * parkingZones.length);
             position = parkingZones[randomIndex];
             remainingParkingZones--;
