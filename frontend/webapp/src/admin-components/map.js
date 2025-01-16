@@ -131,9 +131,9 @@ export default function Map() {
         //Put all bikes markers in a array
         const allBikes = [];
         bikes.forEach((bike) => {
-            const bikeCharging = bike.charging ? "Yes" : "No";
-            const bikeAvailable = bike.available ? "Yes" : "No";
-            const bikeOperational = bike.operational ? "Yes" : "No";
+            const bikeCharging = bike.charging ? "Ja" : "Nej";
+            const bikeAvailable = bike.available ? "Ja" : "Nej";
+            const bikeOperational = bike.operational ? "Ja" : "Nej";
             //Add marker and popup to bikes array
             allBikes.push(
             <Marker position={[bike.position.latitude, bike.position.longitude]}>
