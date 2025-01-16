@@ -23,7 +23,7 @@ services:
   bikes:
     container_name: bikes
     build:
-      context: ./bike
+      context: ./backend/bike
       dockerfile: Dockerfile
     working_dir: /backend/bike
     volumes:
