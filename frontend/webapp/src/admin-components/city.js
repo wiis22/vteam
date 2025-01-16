@@ -8,13 +8,13 @@ export default function City() {
 
     useEffect(() => {
         if (city === "goteborg") {
-            setCityId('676592ac888b2f6f00866c55');
+            setCityId('6783d9507857ca45566e04fd');
             setCityName('Göteborg');
         } else if (city === "karlskrona") {
-            setCityId('676592ac888b2f6f00866c56');
+            setCityId('6783d9507857ca45566e04fe');
             setCityName('Karlskrona');
         } else if (city === "harnosand") {
-            setCityId('676592ac888b2f6f00866c57');
+            setCityId('6783d9507857ca45566e04ff');
             setCityName('Härnösand');
         }
     }, [city]);
