@@ -25,6 +25,17 @@ const city = {
         const result = await response.json();
         return result;
         },
+    getOneBike: async function getOneBike(bikeId) {
+        const response = await fetch(`${serverURL}/api/bike/${bikeId}`, {
+            headers: {
+                'Authorization': `Bearer ${authModel.token}`,
+            },
+            method: 'GET'
+        });
+        
+        const result = await response.json();
+        return result;
+        },
     changeOperational: async function changeOperational(setNewStatus, bikeId) {
         const newOperationalStatus = {
             "operational": setNewStatus

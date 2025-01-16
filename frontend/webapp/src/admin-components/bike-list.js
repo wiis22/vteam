@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import cityModel from "../models/city-models";
 import ResponsivePagination from 'react-responsive-pagination';
 import 'react-responsive-pagination/themes/classic.css';
@@ -122,9 +122,9 @@ export default function BikeList() {
                 <p>Bike id:{bike._id}</p>
                 <p>På laddning: {bike.charging ? "Ja" : "Nej"}, Batteri: {bike.batteryPercentage}%</p>
                 <p>Plats: {bike.location}, Tillgänglig: {bike.available ? "Ja" : "Nej"}, Operativ: {bike.operational ? "Ja" : "Nej"}</p>
-                <button>
-                    Inställningar & Historik
-                </button>
+                <Link to={`/admin/${ location.state.cityName }/single-bike`} state={{
+                    bikeId: `${ bike._id }` 
+                    }} className="button" >Inställningar & Historik</Link>
                 </div>        
             ))}
         <ResponsivePagination

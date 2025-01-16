@@ -15,6 +15,7 @@ import Register from "./components/register";
 import Login from "./components/login";
 import Logout from "./components/logout";
 import ChangePassword from "./components/change-password";
+import SingleBike from "./admin-components/single-bike";
 
 export default function Router() {
     return (
@@ -38,6 +39,7 @@ export default function Router() {
                 <Route path="users" element={<Users />} />
                 <Route path="map" element={<MapView />} />
                 <Route path="list" element={<BikeList />} />
+                <Route path="single-bike" element={<SingleBike />} />
                 </Route>
             </Route>
             </Route>
