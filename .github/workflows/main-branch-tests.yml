@@ -24,6 +24,9 @@ jobs:
           npm install
 
       - name: Run tests
+        env:
+          ATLAS_USERNAME: ${{ secrets.ATLAS_USERNAME }}
+          ATLAS_PASSWORD: ${{ secrets.ATLAS_PASSWORD }}
         run: |
           cd backend
           npm test
