@@ -20,6 +20,19 @@ services:
       vteam:
     restart: always
 
+  bikes:
+    container_name: bikes
+    build:
+      context: ./bike
+      dockerfile: Dockerfile
+    working_dir: /backend/bike
+    volumes:
+      - ./backend:/backend
+      - ./.env:/backend/.env
+    networks:
+      - vteam
+    restart: always
+
   mobile_app:
     container_name: mobile_app
     build:
