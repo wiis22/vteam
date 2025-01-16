@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline, Polygon, LayerGroup, Circle} from 'react-leaflet';
-// import 'leaflet/dist/leaflet.css';
 import cityModel from "../models/city-models";
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-// import '../style/Map.css';
 
 export default function Map() {
     const location = useLocation();
