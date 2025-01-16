@@ -21,7 +21,10 @@ class bikeBrain {
         this.socket = io();
         this.socket.emit('joinRoom', {roomName: this.id});
         this.socket.on('startRide', (data) => {
-            this.startRide(data.userId);
+            this.socket.emit('bikeStartRideResponse', {userId: data.userId, bikeId: this.id, started: this.available})
+            if (this.available) {
+                this.startRide(data.userId);
+            }
         })
         this.socket.on('endRide', () => {
             this.endRide();

@@ -98,7 +98,7 @@ const auth = {
         const authorizationHeader = req.headers['authorization'];
         const token = authorizationHeader && authorizationHeader.split(' ')[1];
 
-        console.log("token in verifyJwt:", token);
+        // console.log("token in verifyJwt:", token);
 
         if (parseInt(token) === 1337) {
             next();
