@@ -7,7 +7,7 @@ require('dotenv').config();
 const mongo = require("mongodb").MongoClient;
 const { MongoClient, ObjectId } = require("mongodb"); 
 let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.twauw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
-console.log("dsn: " + dsn)
+// console.log("dsn: " + dsn)
 // const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
 
 const fs = require("fs");
@@ -32,7 +32,7 @@ const database = {
         const client  = await mongo.connect(dsn);
         const db = await client.db();
         const col = await db.collection(colName);
-        console.log("data i addOne:", data, ", collection name: ", colName);
+        // console.log("data i addOne:", data, ", collection name: ", colName);
         const result = await col.insertOne(data);
 
         await client.close();
@@ -55,9 +55,10 @@ const database = {
      * @return {Object|null} The resould in JSON format, or null if no doc found.
      */
     getAll: async function getAll(colName) {
+        let client;
         try {
             // console.log('DSN:', dsn);
-            const client  = await mongo.connect(dsn);
+            client  = await mongo.connect(dsn);
             const db = await client.db();
 
             // check if the collection exist
@@ -81,6 +82,10 @@ const database = {
             if (err.message == "Collection does not exist") {
                 throw err;
             } // Could throw general error below here
+        } finally {
+            if (client) {
+                await client.close(); // Ensure the client is closed even if an error occurs
+            }
         }
     },
 
@@ -125,6 +130,7 @@ const database = {
      * @return {Object|null} The resould in JSON format
      */
     updateOne: async function updateOne(colName, data) {
+        let client;
         try {
             // if (!ObjectId.isValid(String(data.id))) {
             //     throw new Error("ID format is not valid");
@@ -146,7 +152,7 @@ const database = {
             }
             //console.log("updateFields", updateFields);
 
-            const client  = await mongo.connect(dsn);
+            client  = await mongo.connect(dsn);
             const db = await client.db();
             const col = await db.collection(colName);
             // console.log("here 2")
@@ -165,6 +171,10 @@ const database = {
         } catch (err) {
             console.error("Error in updateOne:", err.message);
             throw new Error("Error updating");
+        } finally {
+            if (client) {
+                await client.close(); // Ensure the client is closed even if an error occurs
+            }
         }
     },
 
@@ -181,6 +191,7 @@ const database = {
      * @return {Object|null} The result in JSON format
      */
     getOne: async function getOne(colName, id) {
+        let client;
         try {
             // console.log('DSN:', dsn);
             // console.log('ID:', id)
@@ -195,7 +206,7 @@ const database = {
             const objectId = new ObjectId(id);
             // console.log('objectId', objectId);
 
-            const client  = await mongo.connect(dsn);
+            client  = await mongo.connect(dsn);
             const db = await client.db();
             const col = await db.collection(colName);
 
@@ -211,6 +222,10 @@ const database = {
             if (err.message == "Error: id has invalid format") {
                 throw err;
             } // Could throw general error below here
+        } finally {
+            if (client) {
+                await client.close(); // Ensure the client is closed even if an error occurs
+            }
         }
     },
 
@@ -227,12 +242,13 @@ const database = {
      * @return {Array} Array of documents in JSON format.
      */
     filterAll: async function filterAll(colName, filter = {}) {
+        let client
         try {
             if (typeof filter !== "object" || Array.isArray(filter)) {
                 throw new Error("Filter must be a valid object");
             }
 
-            const client  = await mongo.connect(dsn);
+            client  = await mongo.connect(dsn);
             const db = await client.db();
             const col = await db.collection(colName);
 
@@ -248,6 +264,10 @@ const database = {
             console.error("Error in filterAll", err.message);
             throw new Error("Error retrieving data");
             
+        } finally {
+            if (client) {
+                await client.close(); // Ensure the client is closed even if an error occurs
+            }
         }
     }
 };
