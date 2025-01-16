@@ -10,18 +10,31 @@ class User {
         this.socket = null;
         this.userId = null;
         this.bikeId = null;
-
-        this.setupSocket();
     }
 
     async register() {
         const userId = await fetchRegister(this.userIndex);
+        this.setUserId(userId);
+    }
+
+    getRegisterPromise() {
+        const promise = fetchRegister(this.userIndex, returnPromise = true)
+        return promise;
+    }
+
+    setUserId(userId) {
         this.userId = userId;
+        this.setupSocket();
     }
 
     setupSocket() {
         this.socket = io(API_URL);
         this.socket.emit('joinRoom', { userId: this.userId });
+        this.socket.on('bikeStartRideResponse', (data) => {
+            if (data.started) {
+                this.rideStarted(data.bikeId)
+            }
+        })
         this.socket.on('bikeEndRide', () => {
             this.endRide();
         });
@@ -31,24 +44,61 @@ class User {
         });
     }
 
-    async startRide(bikeId) {
-        this.bikeId = bikeId;
-        this.socket.emit('startRide', { userId: this.userId, bikeId: this.bikeId });
+    startRide(bikeId) {
+        this.socket.emit('startRide', { userId: this.userId, bikeId: bikeId });
     }
 
-    async endRide() {
+    rideStarted(bikeId) {
+        this.bikeId = bikeId
+    }
+
+    sendPosition(position) {
+        this.socket.emit('updatePosition', { bikeId: this.bikeId, position, position })
+    }
+
+    endRide() {
         this.socket.emit('endRide', { bikeId: this.bikeId });
         this.bikeId = null;
     }
+
+    delete() {
+        this.socket.disconnect();
+        const deletePromise = fetchDelete(this.userId);
+        return deletePromise;
+    }
 }
 
-async function fetchRegister(userIndex) {
+async function fetchDelete(userId) {
+    const promise = fetch(`${API_URL}/api/user/${userId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer 1337`
+        }
+    })
+
+    return promise;
+}
+
+async function fetchRegister(userIndex, returnPromise = false) {
     const registerData = {
         email: `user${userIndex}@gmail.com`,
         password: `password${userIndex}`,
         firstName: `John${userIndex}`,
         lastName: `Doe${userIndex}`,
     };
+
+    if (returnPromise) {
+        const promise = fetch(`${API_URL}/api/user`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer 1337`
+            },
+            body: JSON.stringify(registerData)
+        })
+        return promise;
+    }
 
     const response = await fetch(`${API_URL}/api/user`, {
         method: 'POST',

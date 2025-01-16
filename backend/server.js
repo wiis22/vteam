@@ -38,10 +38,15 @@ io.sockets.on('connection', (socket) => {
         console.log(`Socket ${socket.id} joined room: ${data.roomName}`);
     }),
 
-        // used by mobile app when user starts a ride
-        socket.on("startRide", (data) => {
-            io.to(data.bikeId).emit("startRide", { userId: data.userId });
-        });
+    // used by mobile app when user starts a ride
+    socket.on("startRide", (data) => {
+        io.to(data.bikeId).emit("startRide", { userId: data.userId });
+    });
+
+    // used by bike to confirm if ride was started or not
+    socket.on("bikeStartRideResponse", (data) => {
+        io.to(data.bikeId).emit("bikeStartRideResponse", { bikeId: data.bikeId, started: data.started, }) // started is boolean
+    })
 
     // used by mobile app when user ends the ride
     socket.on("userEndRide", (data) => {
@@ -413,5 +418,4 @@ const server = httpserver.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
 
-// export of server is for testing
 module.exports = server;

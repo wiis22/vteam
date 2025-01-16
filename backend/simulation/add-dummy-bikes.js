@@ -29,7 +29,8 @@ const addBikes = async (cityData, numBikes) => {
     let remainingParkingZones = parseInt(numBikes * ratioParkingZones)
     const cityPolygon = cityData.borders;
     const turfPolygon = turf.polygon([cityPolygon]);
-    const bikes = [];
+    let bikePromises = [];
+    let bikes = [];
 
     // Generate bike data and add to database
     for (let i = 0; i < numBikes; i++) {
@@ -67,8 +68,8 @@ const addBikes = async (cityData, numBikes) => {
             };
         }
 
-        // Add bike to database
-        const bike = await fetch('http://localhost:1337/api/bike', {
+        // API request
+        const bikePromise = fetch('http://localhost:1337/api/bike', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,12 +82,19 @@ const addBikes = async (cityData, numBikes) => {
             })
         })
         .then(response => response.json())
-        .then(data => console.log('Bike added:', data))
+        .then(data => {
+            // console.log('Bike added:', data);
+            bikes.push(data);
+        })
         .catch(error => console.error('Error:', error));
 
-        // Add bike to array
-        bikes.push(bike);
+        // Add the API request to the array
+        bikePromises.push(bikePromise);
     }
+
+    // resolve all promises in the array
+    await Promise.all(bikePromises);
+    console.log("All bikes added to database");
 }
 
 addBikes(cityData, numBikes);

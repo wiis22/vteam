@@ -1,0 +1,1 @@
+skapa admins, kan vara ett skript som skapar nån/några admins
