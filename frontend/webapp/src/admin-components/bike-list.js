@@ -98,7 +98,7 @@ export default function BikeList() {
 
     return  (
         <div>
-        <h1>{heading}</h1>
+        <h1>{heading} (antal: {bikes.length})</h1>
         <button onClick={showAllBikes}>
             Visa alla cyklar
         </button>
@@ -119,7 +119,7 @@ export default function BikeList() {
         </button>
         {currentBikes.map((bike) => (
                 <div className="bike-list">
-                <p>Bike id:{bike._id}</p>
+                <p>Bike id: {bike._id}</p>
                 <p>På laddning: {bike.charging ? "Ja" : "Nej"}, Batteri: {bike.batteryPercentage}%</p>
                 <p>Plats: {bike.location}, Tillgänglig: {bike.available ? "Ja" : "Nej"}, Operativ: {bike.operational ? "Ja" : "Nej"}</p>
                 <Link to={`/admin/${ location.state.cityName }/single-bike`} state={{
