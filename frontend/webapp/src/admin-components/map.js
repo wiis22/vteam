@@ -187,7 +187,7 @@ export default function Map() {
 
     return (
         <div>
-            <h1>Map</h1>
+            <h1>Map vy över {location.state.cityName}</h1>
             <p>Svartalinjegränsen: hela användningsområdet</p>
             <p>Grönt-område: zoner</p>
             <p>Gula cirklar: ladd-zoner</p>

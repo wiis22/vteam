@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import cityModel from "../models/city-models";
+import city from "../models/city-models";
 
 export default function SingleBike() {
     const location = useLocation();
@@ -58,6 +59,23 @@ export default function SingleBike() {
         return
     };
 
+    //handle location submit
+    const handleLocationSubmit = async (event) => {
+        event.preventDefault();
+
+        //put request to change location status
+        const result = await cityModel.changeLocation(newLocation, bikeDetails.id);
+
+        //Check if request "ok"
+        if (!result.ok) {
+            alert("Plats ändringen lyckades inte");
+            return
+        }
+        alert(`Plats har nu ändrats till ${newLocation}`);
+        setNewLocation("");
+        fetchBike();
+    }
+
     useEffect(() => {
         fetchBike();
     }, [location.state]);
@@ -73,12 +91,12 @@ export default function SingleBike() {
             <form onSubmit={handleLocationSubmit}>
                 <input className='textarea'
                             type="text"
-                            value={location}
+                            value={newLocation}
                             placeholder='Ange ny plats'
                             onChange={(e) => setNewLocation(e.target.value)}
                             required
                         />
-                <input type="submit" value="Submit"/>
+                <input type="submit" value="Ändra"/>
             </form>
 
             <p>På laddning: {bikeDetails.charging ? "Ja": "Nej"}</p>

@@ -66,6 +66,21 @@ const city = {
 
         return result;
         },
+    changeLocation: async function changeLocation(setNewLocation, bikeId) {
+        const newLocationStatus = {
+            "location": setNewLocation
+        };
+        const result = await fetch(`${serverURL}/api/bike/${bikeId}`, {
+            body: JSON.stringify(newLocationStatus),
+            headers: {
+                'Authorization': `Bearer ${authModel.token}`,
+                'Content-Type': 'application/json'
+            },
+            method: 'PUT'
+        });
+
+        return result;
+        },
 };
 
 export default city;

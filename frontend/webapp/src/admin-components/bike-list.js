@@ -39,7 +39,7 @@ export default function BikeList() {
         // console.log(bikes)
     }, [location.state]);
 
-    //Button funktions
+    //Button functions
     const filterLowBattery = () => {
         setBikes(
             allBikes.filter((bike) => (
@@ -98,7 +98,9 @@ export default function BikeList() {
 
     return  (
         <div>
-        <h1>{heading} (antal: {bikes.length})</h1>
+        <h1>{location.state.cityName}s</h1>
+        <h2>{heading} (antal: {bikes.length})</h2>
+
         <button onClick={showAllBikes}>
             Visa alla cyklar
         </button>
@@ -117,6 +119,7 @@ export default function BikeList() {
         <button onClick={filterNotAvailable}>
             Otillgängliga cyklar
         </button>
+
         {currentBikes.map((bike) => (
                 <div className="bike-list">
                 <p>Bike id: {bike._id}</p>
