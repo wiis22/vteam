@@ -8,6 +8,10 @@ export default function SingleBike() {
     const [newLocation, setNewLocation] = useState("");
     document.title = 'Cykel inställningar & historik';
 
+    useEffect(() => {
+        fetchBike();
+    }, [location.state]);
+
     //fetch and sets all bike details.
     const fetchBike = async () => {
         try {
@@ -74,10 +78,6 @@ export default function SingleBike() {
         setNewLocation("");
         fetchBike();
     }
-
-    useEffect(() => {
-        fetchBike();
-    }, [location.state]);
 
     return (
         <div>

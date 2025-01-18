@@ -13,6 +13,11 @@ export default function Users() {
     const itemsPerPage = 20;
     document.title = "Användare"
 
+    useEffect(() => {
+        //fetching data
+        fetchUsers();
+    }, []);
+
     //sets start index
     const startIndex = (currentPage - 1) * itemsPerPage;
     //sets current users per page
@@ -33,11 +38,6 @@ export default function Users() {
             console.error("Error fetching users data:", error);
         }
     };
-
-    useEffect(() => {
-        //fetching data
-        fetchUsers();
-    }, []);
 
     //handle search submit
     const handleSearchSubmit = async (event) => {

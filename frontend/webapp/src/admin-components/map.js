@@ -14,6 +14,12 @@ export default function Map() {
     const [zones, setZones] = useState(null);
     const [bikes, setBikes] = useState(null);
 
+    useEffect(() => {
+        //fetching data
+        fetchBikes();
+        fetchCity();
+    }, [location.state]);
+
     let DefaultIcon = L.icon({
         iconUrl: icon,
         shadowUrl: iconShadow
@@ -59,13 +65,6 @@ export default function Map() {
             console.error("Error fetching city data:", error);
         }
     };
-
-    useEffect(() => {
-        //fetching data
-        fetchBikes();
-        fetchCity();
-    }, [location.state]);
-
 
     //render charging zones
     const renderChargingStations = () => {
