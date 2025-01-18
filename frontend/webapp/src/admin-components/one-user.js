@@ -63,10 +63,10 @@ const OneUser = ({ user }) => {
 
         //Check if request "ok"
         if (!result.ok) {
-            alert(`Användar status ändrades ej`);
+            alert(`Användar-status ändrades ej`);
             return
         }
-        alert(`Användar status har ändrats till ${setNewRoll}`);
+        alert(`Användar-status har ändrats till ${setNewRoll}`);
         setUserData({
             ...userData,
             role: setNewRoll

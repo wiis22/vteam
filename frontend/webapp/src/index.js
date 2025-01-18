@@ -5,6 +5,8 @@ import './style/css/style.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

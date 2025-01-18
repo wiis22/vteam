@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline, Polygon, LayerGroup, Circle} from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import cityModel from "../models/city-models";
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -107,10 +108,8 @@ export default function Map() {
         return parkingZones;
     };
 
-    //render charging zones
+    //render bikes zones
     const renderBikes = () => {
-        //update new bike position.
-        fetchBikes();
 
         if (!bikes || bikes.length === 0) {
             return null;
@@ -179,7 +178,9 @@ export default function Map() {
             <Polyline pathOptions={blackOptions} positions={borders} />
             <Polygon pathOptions={greenOptions} positions={zones} />
             {renderChargingStations()}
-            {renderBikes()}
+            <MarkerClusterGroup>
+                {renderBikes()}
+            </MarkerClusterGroup>
             {renderParkingZones()}
             </MapContainer>
         );

@@ -22,10 +22,6 @@ export default function Users() {
         setCurrentPage(page);
     };
 
-    useEffect(() => {
-        console.log("Current users:", currentUsers);
-    }, [currentUsers]);
-
     //Fetch users and get data
     const fetchUsers = async () => {
         try {
