@@ -66,6 +66,7 @@ export default function Map() {
         fetchCity();
     }, [location.state]);
 
+
     //render charging zones
     const renderChargingStations = () => {
         if(!city.chargingStations){
@@ -186,6 +187,11 @@ export default function Map() {
         );
     };
 
+    const handleClickUpdate = async () => {
+        await fetchBikes(); // Hämta ny cykeldata
+        alert("Cykelpositioner har uppdaterats!");
+    }
+
     return (
         <div>
             <h2>Map vy över {location.state.cityName}</h2>
@@ -193,6 +199,13 @@ export default function Map() {
             <p>Grönt-område: zoner</p>
             <p>Gula cirklar: ladd-zoner</p>
             <p>Blå cirklar: parkerings-zoner</p>
+
+            <p>
+            <button onClick={handleClickUpdate}>
+                Uppdatera cykel positioner
+            </button>
+            </p>
+
             {city && borders && zones ? (
                 renderMap()
             ) : (
