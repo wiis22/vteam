@@ -22,6 +22,10 @@ export default function Users() {
         setCurrentPage(page);
     };
 
+    useEffect(() => {
+        console.log("Current users:", currentUsers);
+    }, [currentUsers]);
+
     //Fetch users and get data
     const fetchUsers = async () => {
         try {
@@ -39,60 +43,23 @@ export default function Users() {
         fetchUsers();
     }, []);
 
-    //Button functions
-    const filterAdmins = async () => {
-        await fetchUsers();
-        setUsers(
-            allUsers.filter((user) => (
-                user.role === "admin"
-            ))
-        );
-        console.log(users)
-        setHeading("Admin användare");
-        setCurrentPage(1);
-    }
-
-    const filterBannedUsers = async () => {
-        await fetchUsers();
-        setUsers(
-            allUsers.filter((user) => (
-                user.role === "banned"
-            ))
-        );
-        setHeading("Bannade användare")
-        setCurrentPage(1);
-    }
-
-    const filterNonAdmin = async () => {
-        await fetchUsers();
-        setUsers(
-            allUsers.filter((user) => (
-                user.role !== "admin"
-            ))
-        );
-        setHeading("Icke admin användare")
-        setCurrentPage(1);
-    }
-
-    const showAllUsers = () => {
-        setUsers(allUsers);
-        setHeading("Alla användare")
-        setCurrentPage(1);
-    }
-
     //handle search submit
     const handleSearchSubmit = async (event) => {
         event.preventDefault();
+
+        //fetch user for new status updates.
+        await fetchUsers();
 
         setUsers(
             allUsers.filter((user) => (
                 //Search on string that includes full name and email
                 user.firstName.toLowerCase().includes(searchedUsers.toLowerCase()) ||
                 user.lastName.toLowerCase().includes(searchedUsers.toLowerCase()) ||
-                user.email.toLowerCase().includes(searchedUsers.toLowerCase())
+                user.email.toLowerCase().includes(searchedUsers.toLowerCase()) ||
+                user.role.toLowerCase().includes(searchedUsers.toLowerCase())
             ))
         );
-        setHeading(`Sök på användare "${searchedUsers}"`);
+        setHeading(`Sök på "${searchedUsers}"`);
         setSearchedUsers("");
         setCurrentPage(1);
     }
@@ -103,33 +70,17 @@ export default function Users() {
 
         <p>   
         <form onSubmit={handleSearchSubmit}>
-            <p><label>Sök användare: </label></p>
+            <p><label>Sök på användarnamn, namn eller användarstatus(banned, user, admin): </label></p>
             <input className='textarea'
                     type="text"
                     value={searchedUsers}
-                    placeholder='Sök på användare eller namn'
+                    placeholder='Sök användare, namn eller status'
                     onChange={(e) => setSearchedUsers(e.target.value)}
                     required
             />
             <input type="submit" value="Sök"/>
         </form>
         </p>
-
-        <button onClick={showAllUsers}>
-            Alla användare
-        </button>
-
-        <button onClick={filterNonAdmin}>
-            Icke admin användare
-        </button>
-
-        <button onClick={filterBannedUsers}>
-            Bannade användare
-        </button>
-
-        <button onClick={filterAdmins}>
-            Admins
-        </button>
 
         {currentUsers.map((user) => <OneUser user={user} />)}
         <ResponsivePagination

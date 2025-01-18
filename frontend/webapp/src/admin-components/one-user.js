@@ -6,6 +6,11 @@ const OneUser = ({ user }) => {
     const [buttons, setButtons] = useState(null);
     const [userData, setUserData] = useState(user);
 
+    //secure changes to userdata
+    useEffect(() => {
+        setUserData(user);
+    }, [user]);
+
     const changeButtonsFunction = () => {
         //Checks user status and sets buttons according
         if (userData.role === "banned") {
