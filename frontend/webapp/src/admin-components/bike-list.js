@@ -29,7 +29,7 @@ export default function BikeList() {
             setBikes(bikesData);
             // console.log(bikesData)
         } catch (error) {
-            console.error("Error fetching city data:", error);
+            console.error("Error fetching bikes data:", error);
         }
     };
 
@@ -98,24 +98,30 @@ export default function BikeList() {
 
     return  (
         <div>
-        <h1>{location.state.cityName}s</h1>
-        <h2>{heading} (antal: {bikes.length})</h2>
+
+        <h2>{location.state.cityName}s</h2>
+        <h3>{heading} (antal: {bikes.length})</h3>
 
         <button onClick={showAllBikes}>
             Visa alla cyklar
         </button>
+
         <button onClick={filterLowBattery}>
             Cyklar med låg batterinivå
         </button>
+
         <button onClick={filterOperational}>
             Operativa cyklar
         </button>
+
         <button onClick={filterNotOperational}>
             Icke operativa cyklar
         </button>
+
         <button onClick={filterAvailable}>
             Tillgängliga cyklar
         </button>
+
         <button onClick={filterNotAvailable}>
             Otillgängliga cyklar
         </button>

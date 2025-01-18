@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import cityModel from "../models/city-models";
-import city from "../models/city-models";
 
 export default function SingleBike() {
     const location = useLocation();
@@ -82,7 +81,7 @@ export default function SingleBike() {
 
     return (
         <div>
-            <h1>Cykel information och settings</h1>
+            <h2>Cykel information och settings</h2>
 
             <p>Id: {bikeDetails.id}</p>
 
@@ -90,12 +89,12 @@ export default function SingleBike() {
 
             <form onSubmit={handleLocationSubmit}>
                 <input className='textarea'
-                            type="text"
-                            value={newLocation}
-                            placeholder='Ange ny plats'
-                            onChange={(e) => setNewLocation(e.target.value)}
-                            required
-                        />
+                        type="text"
+                        value={newLocation}
+                        placeholder='Ange ny plats'
+                        onChange={(e) => setNewLocation(e.target.value)}
+                        required
+                    />
                 <input type="submit" value="Ändra"/>
             </form>
 

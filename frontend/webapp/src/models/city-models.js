@@ -81,6 +81,32 @@ const city = {
 
         return result;
         },
+    getUsers: async function getAllUsers() {
+        const response = await fetch(`${serverURL}/api/users`, {
+            headers: {
+                'Authorization': `Bearer ${authModel.token}`,
+            },
+            method: 'GET'
+        });
+        
+        const result = await response.json();
+        return result;
+        },
+    updateUserRole: async function updateUserRole(setNewRoll, userId) {
+        const newRole = {
+            "role": setNewRoll
+        };
+        const result = await fetch(`${serverURL}/api/user/${userId}`, {
+            body: JSON.stringify(newRole),
+            headers: {
+                'Authorization': `Bearer ${authModel.token}`,
+                'Content-Type': 'application/json'
+            },
+            method: 'PUT'
+        });
+
+        return result;
+        },
 };
 
 export default city;
