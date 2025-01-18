@@ -59,7 +59,7 @@ export default function Users() {
                 user.role.toLowerCase().includes(searchedUsers.toLowerCase())
             ))
         );
-        setHeading(`Sök på "${searchedUsers}"`);
+        setHeading(`Sökt på "${searchedUsers}"`);
         setSearchedUsers("");
         setCurrentPage(1);
     }
@@ -76,7 +76,6 @@ export default function Users() {
                     value={searchedUsers}
                     placeholder='Sök användare, namn eller status'
                     onChange={(e) => setSearchedUsers(e.target.value)}
-                    required
             />
             <input type="submit" value="Sök"/>
         </form>
