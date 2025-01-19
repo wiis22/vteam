@@ -1,5 +1,5 @@
 // User class
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 const io = require('socket.io-client'); 
 
 const API_URL = 'http://localhost:1337';
@@ -18,7 +18,7 @@ class User {
     }
 
     getRegisterPromise() {
-        const promise = fetchRegister(this.userIndex, returnPromise = true)
+        const promise = fetchRegister(this.userIndex, true)
         return promise;
     }
 
