@@ -39,7 +39,10 @@ class bikeBrain {
 
     startRide(customer){
         if(!this.available || this.charging || !this.operational){
+<<<<<<< HEAD
             //borde lägga till en emit här
+=======
+>>>>>>> dcd3543 (Fixed some errors)
             console.log("Bike not available");
             return;
         }
@@ -92,17 +95,27 @@ class bikeBrain {
     }
 
     drainBattery() {
+<<<<<<< HEAD
         if (!this.operational || this.batteryPercentage <= 10) {
+=======
+        if (!this.operational || this.batteryPercentage <= 0) {
+>>>>>>> dcd3543 (Fixed some errors)
             console.log("Bike not available");
             return;
         }
         const speed = 15;
+<<<<<<< HEAD
         const batteryLoss = (speed / 15) / 10;
         this.batteryPercentage -= Number(batteryLoss.toPrecision(2));
+=======
+        const batteryLoss = speed / 15;
+        this.batteryPercentage  = this.batteryPercentage - Number(batteryLoss.toPrecision(2));
+>>>>>>> dcd3543 (Fixed some errors)
 
         if (this.batteryPercentage <= 10) {
             console.log("Cykeln måste laddas och stängs av.");
             this.socket.emit("bikeEndRide", { userId: this.currentCustomer})
+<<<<<<< HEAD
             this.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
 
             //tar bort intervallet så att den inte fortsätter att dra batteri
@@ -114,6 +127,12 @@ class bikeBrain {
             // this.endRide(); // not used here as mobile app/user gets emit above and will end it like normal
         }
 
+=======
+            this.socket.updateAvailable(false);
+            // this.endRide(); // not used here as mobile app/user gets emit above and will end it like normal
+        }
+
+>>>>>>> dcd3543 (Fixed some errors)
         this.batteryPercentage = Math.max(this.batteryPercentage, 0);
 
         console.log(`Cykel ${this.id}. Batterinivå: ${this.batteryPercentage.toFixed(1)}%`);
