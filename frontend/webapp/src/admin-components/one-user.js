@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import adminModel from "../models/city-models";
+import adminModel from "../models/admin-models";
 
 const OneUser = ({ user }) => {
     const [buttons, setButtons] = useState(null);

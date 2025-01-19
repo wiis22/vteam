@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import adminModel from "../models/city-models";
+import adminModel from "../models/admin-models";
 
 export default function SingleBike() {
     const location = useLocation();

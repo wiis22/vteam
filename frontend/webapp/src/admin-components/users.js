@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import adminModel from "../models/city-models";
+import adminModel from "../models/admin-models";
 import ResponsivePagination from 'react-responsive-pagination';
 import 'react-responsive-pagination/themes/classic.css';
 import OneUser from "./one-user";
