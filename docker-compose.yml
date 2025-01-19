@@ -27,7 +27,7 @@ services:
       dockerfile: Dockerfile
     working_dir: /backend/bike
     volumes:
-      - ./backend:/backend
+      - ./backend:/backend/dir
       - ./.env:/backend/.env
     networks:
       - vteam
