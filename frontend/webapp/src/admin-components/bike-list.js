@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { useLocation, Link } from "react-router-dom";
-import cityModel from "../models/city-models";
+import adminModel from "../models/admin-models";
 import ResponsivePagination from 'react-responsive-pagination';
 import 'react-responsive-pagination/themes/classic.css';
 
@@ -31,7 +31,7 @@ export default function BikeList() {
     //Fetch bikes and get data
     const fetchBikes = async () => {
         try {
-            const bikesData = await cityModel.getBikes(location.state.cityName);
+            const bikesData = await adminModel.getBikes(location.state.cityName);
             setAllBikes(bikesData);
             setBikes(bikesData);
             // console.log(bikesData)

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import cityModel from "../models/city-models";
+import adminModel from "../models/city-models";
 import ResponsivePagination from 'react-responsive-pagination';
 import 'react-responsive-pagination/themes/classic.css';
 import OneUser from "./one-user";
@@ -30,7 +30,7 @@ export default function Users() {
     //Fetch users and get data
     const fetchUsers = async () => {
         try {
-            const usersData = await cityModel.getUsers();
+            const usersData = await adminModel.getUsers();
             setAllUsers(usersData);
             setUsers(usersData);
 

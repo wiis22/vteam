@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import cityModel from "../models/city-models";
+import adminModel from "../models/city-models";
 
 const OneUser = ({ user }) => {
     const [buttons, setButtons] = useState(null);
@@ -59,7 +59,7 @@ const OneUser = ({ user }) => {
     const handleRollChange = async (setNewRoll, userId) => {
 
         //put request to change location status
-        const result = await cityModel.updateUserRole(setNewRoll, userId);
+        const result = await adminModel.updateUserRole(setNewRoll, userId);
 
         //Check if request "ok"
         if (!result.ok) {

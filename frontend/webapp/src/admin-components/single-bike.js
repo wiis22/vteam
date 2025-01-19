@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import cityModel from "../models/city-models";
+import adminModel from "../models/city-models";
 
 export default function SingleBike() {
     const location = useLocation();
@@ -15,7 +15,7 @@ export default function SingleBike() {
     //fetch and sets all bike details.
     const fetchBike = async () => {
         try {
-            const bikeData = await cityModel.getOneBike(location.state.bikeId);
+            const bikeData = await adminModel.getOneBike(location.state.bikeId);
             setBikeDetails({
                 id: bikeData._id,
                 location: bikeData.location,
@@ -33,13 +33,13 @@ export default function SingleBike() {
     //Button that toggles operational on and off.
     const  handleClickOperational = async (bikeId) => {
         if (bikeDetails.operational !== true) {
-            const result = await cityModel.changeOperational(true, bikeId);
+            const result = await adminModel.changeOperational(true, bikeId);
             alert("Operational ändrades till true!");
             console.log(result)
             fetchBike();
             return
         }
-        const result = await cityModel.changeOperational(false, bikeId);
+        const result = await adminModel.changeOperational(false, bikeId);
         alert("Operational ändrades till false!");
         console.log(result);
         fetchBike();
@@ -49,13 +49,13 @@ export default function SingleBike() {
     //Button that toggles available on and off.
     const  handleClickAvailable = async (bikeId) => {
         if (bikeDetails.available !== true) {
-            const result = await cityModel.changeAvailable(true, bikeId);
+            const result = await adminModel.changeAvailable(true, bikeId);
             alert("Available ändrades till true!");
             console.log(result);
             fetchBike();
             return
         }
-        const result = await cityModel.changeAvailable(false, bikeId);
+        const result = await adminModel.changeAvailable(false, bikeId);
         alert("Available ändrades till false!");
         console.log(result);
         fetchBike();
@@ -67,7 +67,7 @@ export default function SingleBike() {
         event.preventDefault();
 
         //put request to change location status
-        const result = await cityModel.changeLocation(newLocation, bikeDetails.id);
+        const result = await adminModel.changeLocation(newLocation, bikeDetails.id);
 
         //Check if request "ok"
         if (!result.ok) {
