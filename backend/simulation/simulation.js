@@ -66,7 +66,7 @@ const simulateCity = async (users, city) => {
         }
     }
 
-    // Sumulate all users
+    // Simulate all users
     for (const user of users) {
         simulateUser(user);
     }
@@ -74,9 +74,12 @@ const simulateCity = async (users, city) => {
 
 // Simulate one ride
 const simulateRide = async (user, bikeId, route) => {
-    console.log(`Starting ride. UserId: ${user.userId}. BikeId: ${bikeId}`)
+    // Seconds between each position update (10 sec results in reasonable speed)
+    intervalSec = 2
+    console.log(`Starting ride. UserId: ${user.userId}. BikeId: ${bikeId}. The ride should take ${intervalSec * route.length} seconds.`)
+    console.log(``)
     // Start the ride
-    user.startRide()
+    user.startRide(bikeId);
     // Sleep for 10 sec
     await new Promise(resolve => setTimeout(resolve, 10 * 1000))
     // Check if user has bike, i.e. if ride was started
@@ -86,7 +89,7 @@ const simulateRide = async (user, bikeId, route) => {
     // Update positions from route on loop
     for (const position of route) {
         user.sendPosition(position);
-        await new Promise(resolve => setTimeout(resolve, 10 * 1000)) // Pause 10 sec
+        await new Promise(resolve => setTimeout(resolve, intervalSec * 1000)) // Pause intervalSec sec
     }
     console.log(`Ending ride. UserId: ${user.userId}. BikeId: ${bikeId}`)
     // End ride
@@ -96,7 +99,8 @@ const simulateRide = async (user, bikeId, route) => {
 // Get the route array of positions between two positions
 const getRoute = (startPosition, endPosition) => {
     // 20km/h = 200m/min = 33.33m/10sec
-    const interval = 33
+    // const interval = 33
+    const interval = 200
     const turfStart = turf.point([startPosition.longitude, startPosition.latitude]);
     const turfEnd = turf.point([endPosition.longitude, endPosition.latitude]);
     const line = turf.lineString([turfStart.geometry.coordinates, turfEnd.geometry.coordinates]);

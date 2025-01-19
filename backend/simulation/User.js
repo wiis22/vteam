@@ -29,8 +29,10 @@ class User {
 
     setupSocket() {
         this.socket = io(API_URL);
-        this.socket.emit('joinRoom', { userId: this.userId });
+        this.socket.emit('joinRoom', { roomName: this.userId });
         this.socket.on('bikeStartRideResponse', (data) => {
+            console.log("User retreived data from socket route bikeStartRideResponse")
+            console.log(data)
             if (data.started) {
                 this.rideStarted(data.bikeId)
             }
@@ -45,10 +47,12 @@ class User {
     }
 
     startRide(bikeId) {
+        console.log("startRide() in User called with bikeId", bikeId)
         this.socket.emit('startRide', { userId: this.userId, bikeId: bikeId });
     }
 
     rideStarted(bikeId) {
+        console.log("rideStarted() called with bikeId", bikeId)
         this.bikeId = bikeId
     }
 
@@ -57,7 +61,7 @@ class User {
     }
 
     endRide() {
-        this.socket.emit('endRide', { bikeId: this.bikeId });
+        this.socket.emit('userEndRide', { bikeId: this.bikeId });
         this.bikeId = null;
     }
 

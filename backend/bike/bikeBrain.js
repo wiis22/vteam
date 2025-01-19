@@ -1,6 +1,8 @@
 const geolib = require('geolib');
 const io = require('socket.io-client');
 
+const API_URL = 'http://localhost:1337';
+
 class bikeBrain {
     constructor(bikeData) {
         this.id = bikeData._id;
@@ -19,7 +21,7 @@ class bikeBrain {
 
         this.batteryDrainInter = null;
 
-        this.socket = io();
+        this.socket = io(API_URL);
         this.socket.emit('joinRoom', {roomName: this.id});
         this.socket.on('startRide', (data) => {
             this.socket.emit('bikeStartRideResponse', {userId: data.userId, bikeId: this.id, started: this.available})
@@ -37,7 +39,7 @@ class bikeBrain {
 
     startRide(customer){
         if(!this.available || this.charging || !this.operational){
-            console.log("Bike aint available");
+            console.log("Bike not available");
             return;
         }
 
@@ -53,8 +55,9 @@ class bikeBrain {
         this.log.push(startLog);
 
         //en update till db att availavble = false
-        console.log(`Cyckeln ${this.id} är uthyrd till ${customer}.`);
+        console.log(`bikeId ${this.id} rented by userId ${customer}.`);
 
+        // Drain battery every minute
         this.batteryDrainInter = setInterval(() => {
             this.drainBattery();
         }, 60000);
@@ -89,20 +92,19 @@ class bikeBrain {
 
     drainBattery() {
         if (!this.operational || this.batteryPercentage <= 0) {
-            console.log("Bike aint available");
+            console.log("Bike not available");
             return;
         }
         const speed = 15;
-
-        const batteryLoss = speed / 25;
-        this.batteryPercentage  = Number(batteryLoss.toPrecision(2));
+        const batteryLoss = speed / 15;
+        this.batteryPercentage  = this.batteryPercentage - Number(batteryLoss.toPrecision(2));
 
         if (this.batteryPercentage <= 10) {
             console.log("Cykeln måste laddas och stängs av.");
             this.socket.emit("bikeEndRide", { userId: this.currentCustomer})
-            // this.endRide(); // not used here as bike gets emit above and will end it like normal
+            this.socket.updateAvailable(false);
+            // this.endRide(); // not used here as mobile app/user gets emit above and will end it like normal
         }
-
 
         this.batteryPercentage = Math.max(this.batteryPercentage, 0);
 
@@ -135,6 +137,7 @@ class bikeBrain {
     }
 
     updatePosition(newPosition) {
+        console.log("Bike: updatePosition() called with newPosition: ", newPosition)
         this.position = newPosition;
         this.socket.emit("updateBike", {id: this.id, position: this.position});
         console.log(`Cykeln ${this.id} position uppdaterad till ${newPosition}`);
