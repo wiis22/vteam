@@ -185,6 +185,18 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+app.delete('/api/user/:id', auth.verifyJwt, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await database.deleteOne("users", id);
+        console.log("res: ", result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
 app.get('/api/cities', auth.verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("cities");
@@ -372,14 +384,13 @@ app.delete('/api/bike/:id', auth.verifyJwt, async (req, res) => {
     }
 });
 
-app.delete('/api/bikes', auth.verifyJwt, async (req, res) => {
-    const { id } = req.params;
+app.get('/api/rides', auth.verifyJwt, async (req, res) => {
     try {
-        const result = await database.deleteOne("bikes", id);
-        console.log("res: ", result);
+        const result = await database.getAll("rides");
+        console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
-        console.error('Error deleting bike:', error);
+        console.error('Error retrieving all rides', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });

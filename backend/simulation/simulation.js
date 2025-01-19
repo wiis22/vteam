@@ -1,25 +1,21 @@
 // This script simulates users in the system
 const turf = require('@turf/turf');
+const path = require('path');
+const fs = require('fs');
 const User = require('./User.js');
-const { timeout } = require('../server.js');
+require('dotenv').config();
 
 // Get the arguments from the command line
 const args = process.argv.slice(2);
-const city = args[0];
-const numUsers = parseInt(args[1]);
-const lengthInMinutes = args[2] | 5
+const numUsers = parseInt(args[0]);
+const lengthInMinutes = args[1] | 5
 const API_URL = 'http://localhost:1337';
 
 // Make sure arguments are passed correctly
-if (!city || isNaN(numUsers)) {
-    console.error('Please provide valid arguments: city, numUsers & lengthInMinutes');
+if (isNaN(numUsers) | isNaN(lengthInMinutes)) {
+    console.error('Please provide valid arguments:numUsers & lengthInMinutes');
     process.exit(1);
 }
-
-console.log(`Adding ${numUsers} users in ${city}`);
-
-// Run the simulation
-simulation(numUsers, lengthInMinutes);
 
 // The full simulation
 async function simulation(numUsers, lengthInMinutes) {
@@ -33,8 +29,8 @@ async function simulation(numUsers, lengthInMinutes) {
     const karlskronaUsers = users.slice(halfUsersLength + quarterUsersLength);
     // Simulate each city
     simulateCity(goteborgUsers, "Göteborg");
-    simulateCity(harnosandUsers, "Härnösand");
-    simulateCity(karlskronaUsers, "Karlskrona");
+    // simulateCity(harnosandUsers, "Härnösand");
+    // simulateCity(karlskronaUsers, "Karlskrona");
     // Delete users after set minutes
     setTimeout(() => {
         deleteUsers(users);
@@ -51,12 +47,7 @@ const simulateCity = async (users, city) => {
     const citiesData = JSON.parse(fs.readFileSync(citiesFilePath, 'utf8')).cities;
     const cityData = citiesData.find(c => c.name.toLowerCase() === city.toLowerCase());
     const cityPolygon = cityData.borders;
-    const turfPolygon = turf.polygon([cityPolygon]);
-    
-    // Sumulate all users
-    for (const user of users) {
-        simulateUser(user);
-    }
+
 
     // Simulate a user completing rides on loop
     const simulateUser = async (user) => {
@@ -68,16 +59,22 @@ const simulateCity = async (users, city) => {
             // Remove picked bike from available bikes
             availableBikes.splice(randomIndex, 1);
             // Get a random end position of the ride
-            const endPosition = randomPositionInPolygon(turfPolygon);
+            const endPosition = randomPositionInPolygon(cityPolygon);
             const route = getRoute(bike.position, endPosition);
             // Simulate the ride
             await simulateRide(user, bike._id, route)
         }
     }
+
+    // Sumulate all users
+    for (const user of users) {
+        simulateUser(user);
+    }
 }
 
 // Simulate one ride
 const simulateRide = async (user, bikeId, route) => {
+    console.log(`Starting ride. UserId: ${user.userId}. BikeId: ${bikeId}`)
     // Start the ride
     user.startRide()
     // Sleep for 10 sec
@@ -91,6 +88,7 @@ const simulateRide = async (user, bikeId, route) => {
         user.sendPosition(position);
         await new Promise(resolve => setTimeout(resolve, 10 * 1000)) // Pause 10 sec
     }
+    console.log(`Ending ride. UserId: ${user.userId}. BikeId: ${bikeId}`)
     // End ride
     user.endRide();
 }
@@ -120,7 +118,7 @@ const getRoute = (startPosition, endPosition) => {
 }
 
 // Get all available bikes for a city
-const getAvailableBikesCity = async (city0) => {
+const getAvailableBikesCity = async (city) => {
     const response = await fetch(`${API_URL}/api/bikes/${city}`, {
         method: 'GET',
         headers: {
@@ -130,7 +128,7 @@ const getAvailableBikesCity = async (city0) => {
     })
 
     const bikes = await response.json();
-    const availableBikes = bikes.filter(bike => bike.available)
+    const availableBikes = bikes.filter(bike => bike.available);
     return availableBikes
 }
 
@@ -143,8 +141,13 @@ const addUsers = async (numUsers) => {
         const user = new User(i);
         users.push(user);
         return user.getRegisterPromise()
-            .then(userId => {
-                user.setUserId(userId);
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                console.log("data", data)
+                console.log("setUserId() called with ", data.userId)
+                user.setUserId(data.userId);
             })
             .catch(error => {
                 console.error(`Error registering user ${i}:`, error);
@@ -170,7 +173,8 @@ const deleteUsers = async (users) => {
 }
 
 // Get "random" position in polygon
-const randomPositionInPolygon = (turfPolygon) => {
+const randomPositionInPolygon = (cityPolygon) => {
+    const turfPolygon = turf.polygon([cityPolygon]);
     let position;
     do {
         const point1 = cityPolygon[Math.floor(Math.random() * cityPolygon.length)];
@@ -191,3 +195,6 @@ const randomPositionInPolygon = (turfPolygon) => {
 
     return position
 }
+
+// Run the simulation
+simulation(numUsers, lengthInMinutes);
