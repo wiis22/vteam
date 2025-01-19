@@ -20,8 +20,11 @@ export default function Users() {
 
     //sets start index
     const startIndex = (currentPage - 1) * itemsPerPage;
+    let currentUsers = [];
     //sets current users per page
-    const currentUsers = users.slice(startIndex, startIndex + itemsPerPage);
+    if(users.length !== 0) {
+        currentUsers = users.slice(startIndex, startIndex + itemsPerPage);
+    }
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
