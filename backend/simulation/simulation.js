@@ -8,7 +8,7 @@ require('dotenv').config();
 // Get the arguments from the command line
 const args = process.argv.slice(2);
 const numUsers = parseInt(args[0]);
-const lengthInMinutes = parseInt(args[1])
+const lengthInMinutes = args[1] | 5
 const API_URL = 'http://localhost:1337';
 
 let globalUsers = [];
