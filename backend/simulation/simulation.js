@@ -18,7 +18,11 @@ const setupGracefulShutdown = () => {
         console.log("\nShutting down simulation...");
         try {
             for (const user of globalUsers) {
+<<<<<<< HEAD
                 if (user.bikeId !== null) {
+=======
+                if (user.bike !== null) {
+>>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
                     console.log(`ending ride for user: ${user.userId}`);
                     await user.endRide();
                 }
@@ -233,6 +237,8 @@ const addUsers = async (numUsers) => {
     }
 
     console.log("All users registered");
+
+    globalUsers = users;
 
     globalUsers = users;
 
