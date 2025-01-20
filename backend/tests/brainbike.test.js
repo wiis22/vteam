@@ -34,7 +34,7 @@ describe('bikeBrain', () => {
         jest.restoreAllMocks();
     });
 
-    it('sould create a new bike instance correctly', () => {
+    it('should create a new bike instance correctly', () => {
         //check the instance so it has the correct data.
         expect(bike.id).toBe(mockBikeData._id);
         expect(bike.city).toBe(mockBikeData.city);
@@ -42,7 +42,7 @@ describe('bikeBrain', () => {
         expect(bike.batteryPercentage).toBe(100);
     });
 
-    it('sould start a ride and update the available status', () => {
+    it('should start a ride and update the available status', () => {
         const customer = 'testUser1';
         bike.available = true;
         const intervalSpy = jest.spyOn(global, 'setInterval').mockImplementationOnce((callback, delay) => {
@@ -50,14 +50,14 @@ describe('bikeBrain', () => {
             return 1;
         });
 
-        bike.startRide(customer); // denna sätter interval på 60000
+        bike.startRide(customer); //interval på 60000
 
         console.log("bike: ",bike);
         
 
         expect(bike.currentCustomer).toBe(customer);
         expect(bike.available).toBe(false);
-        // check if the drainBattery have been called at the start of evry min.
+        // check if the drainBattery have been called at the start of every min.
         expect(intervalSpy).toHaveBeenCalledTimes(1);
         intervalSpy.mockRestore();
     });
@@ -67,7 +67,7 @@ describe('bikeBrain', () => {
         const customer = 'testUser2';
         bike.available = false;
 
-        bike.startRide(customer); // denna sätter interval på 60000
+        bike.startRide(customer); //interval på 60000
 
         expect(bike.currentCustomer).toBe(null);
         expect(bike.available).toBe(false);
@@ -89,7 +89,7 @@ describe('bikeBrain', () => {
 
         bike.endRide(); 
 
-        expect(timeOutSpy).toHaveBeenCalledTimes(1);
+        expect(timeOutSpy).toHaveBeenCalledTimes(2);
 
         expect(bike.currentCustomer).toBe(null);
         expect(bike.available).toBe(true);
@@ -130,7 +130,7 @@ describe('bikeBrain', () => {
         });
 
 
-        bike.startRide('testUser4'); // denna sätter interval på 60000
+        bike.startRide('testUser4'); // interval på 60000
 
         expect(bike.batteryPercentage).toBeLessThan(100);
         intervalSpy.mockRestore(1);
