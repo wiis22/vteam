@@ -68,10 +68,14 @@ class bikeBrain {
         this.batteryDrainInter = setInterval(() => {
             this.drainBattery();
 <<<<<<< HEAD
+<<<<<<< HEAD
         }, 6000);
 =======
         }, 60000);
 >>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
+=======
+        }, 6000);
+>>>>>>> 5a6524b (Simulation now shutsdown correctly and adds users in batches)
         return;
     }
 
@@ -117,6 +121,9 @@ class bikeBrain {
         }
         const speed = 15;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5a6524b (Simulation now shutsdown correctly and adds users in batches)
         const batteryLoss = (speed / 15) / 10;
         this.batteryPercentage -= Number(batteryLoss.toPrecision(2));
 =======
