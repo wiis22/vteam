@@ -51,12 +51,17 @@ describe('bikeBrain', () => {
     });
 
     it('should create a new bike instance correctly', () => {
+<<<<<<< HEAD
+=======
+        //check the instance so it has the correct data.
+>>>>>>> f307cc3 (Fixed an error with bikeBrain.test)
         expect(bike.id).toBe(mockBikeData._id);
         expect(bike.city).toBe(mockBikeData.city);
         expect(bike.available).toBe(true);
         expect(bike.batteryPercentage).toBe(100);
     });
 
+<<<<<<< HEAD
     
     it('should join room when a bike instance is created', () => {
         expect(bike.socket.emit).toHaveBeenCalledWith('joinRoom', { roomName: mockBikeData._id });
@@ -71,6 +76,8 @@ describe('bikeBrain', () => {
     });
 
 
+=======
+>>>>>>> f307cc3 (Fixed an error with bikeBrain.test)
     it('should start a ride and update the available status', () => {
         const customer = 'testUser1';
         bike.available = true;
@@ -118,8 +125,11 @@ describe('bikeBrain', () => {
 
         bike.endRide();
 
+<<<<<<< HEAD
         expect(intervalSpy).toHaveBeenCalledTimes(1);
 
+=======
+>>>>>>> f307cc3 (Fixed an error with bikeBrain.test)
         expect(timeOutSpy).toHaveBeenCalledTimes(2);
 
         expect(bike.currentCustomer).toBe(null);
