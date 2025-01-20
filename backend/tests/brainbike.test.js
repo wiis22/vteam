@@ -52,9 +52,12 @@ describe('bikeBrain', () => {
 
     it('should create a new bike instance correctly', () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         //check the instance so it has the correct data.
 >>>>>>> f307cc3 (Fixed an error with bikeBrain.test)
+=======
+>>>>>>> d623c05 (made some changes to bikebrain and fixed test for better coverage.)
         expect(bike.id).toBe(mockBikeData._id);
         expect(bike.city).toBe(mockBikeData.city);
         expect(bike.available).toBe(true);
@@ -62,6 +65,9 @@ describe('bikeBrain', () => {
     });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d623c05 (made some changes to bikebrain and fixed test for better coverage.)
     
     it('should join room when a bike instance is created', () => {
         expect(bike.socket.emit).toHaveBeenCalledWith('joinRoom', { roomName: mockBikeData._id });
@@ -76,8 +82,11 @@ describe('bikeBrain', () => {
     });
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> f307cc3 (Fixed an error with bikeBrain.test)
+=======
+>>>>>>> d623c05 (made some changes to bikebrain and fixed test for better coverage.)
     it('should start a ride and update the available status', () => {
         const customer = 'testUser1';
         bike.available = true;
@@ -124,6 +133,11 @@ describe('bikeBrain', () => {
         bike.startRide('testUser3');
 
         bike.endRide();
+<<<<<<< HEAD
+=======
+
+        expect(intervalSpy).toHaveBeenCalledTimes(1);
+>>>>>>> d623c05 (made some changes to bikebrain and fixed test for better coverage.)
 
 <<<<<<< HEAD
         expect(intervalSpy).toHaveBeenCalledTimes(1);
@@ -139,6 +153,7 @@ describe('bikeBrain', () => {
         // timeOutSpy.mockRestore();
     });
 
+<<<<<<< HEAD
     it('should change battery %', () => {
         expect(bike.operational).toBe(true);
         bike.batteryPercentage = 11;
@@ -147,6 +162,16 @@ describe('bikeBrain', () => {
         // expect(bike.socket.emit).toHaveBeenCalledWith("bikeEndRide", { userId: bike.currentCustomer });
         expect(bike.batteryPercentage).toBe(10.9);
         // expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, operational: false });
+=======
+    it('should emit bikeEndRide if battery gets <= 10% after called', () => {
+
+        bike.batteryPercentage = 11;
+        bike.drainBattery();
+
+        expect(bike.socket.emit).toHaveBeenCalledWith("bikeEndRide", { userId: bike.currentCustomer });
+        expect(bike.operational).toBe(false);
+        expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, operational: false });
+>>>>>>> d623c05 (made some changes to bikebrain and fixed test for better coverage.)
     });
 
     it('should update position correctly', () => {

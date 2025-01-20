@@ -133,10 +133,14 @@ class bikeBrain {
             this.socket.emit("bikeEndRide", { userId: this.currentCustomer})
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             this.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
 =======
             this.socket.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
 >>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
+=======
+            this.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
+>>>>>>> d623c05 (made some changes to bikebrain and fixed test for better coverage.)
 
             //tar bort intervallet så att den inte fortsätter att dra batteri
             clearInterval(this.batteryDrainInter)
@@ -200,10 +204,14 @@ class bikeBrain {
     updateLocation(newLocation) {
         this.location = newLocation;
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (this.location == "chargingStation") {
 =======
         if (this.location === "chargingStation") {
 >>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
+=======
+        if (this.location == "chargingStation") {
+>>>>>>> d623c05 (made some changes to bikebrain and fixed test for better coverage.)
             this.updateCharging(true);
             setTimeout(() => this.chargingBattery(), 60000);
         }
