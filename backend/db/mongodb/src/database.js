@@ -14,7 +14,6 @@ const fs = require("fs");
 const path = require("path");
 const { error, log } = require("console");
 
-
 const database = {
     /**
      * Insert one into the collection

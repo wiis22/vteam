@@ -309,7 +309,6 @@ app.put('/api/user/password/:id', auth.verifyJwt, async (req, res) => {
 });
 
 app.post('/api/bike', auth.verifyJwt, async (req, res) => {
-    console.log(req.body)
     const bikeData = {
         city: req.body.city,
         position: req.body.position,
