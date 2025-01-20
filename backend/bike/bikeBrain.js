@@ -60,7 +60,7 @@ class bikeBrain {
         // Drain battery every minute
         this.batteryDrainInter = setInterval(() => {
             this.drainBattery();
-        }, 60000);
+        }, 6000);
         return;
     }
 
@@ -97,7 +97,7 @@ class bikeBrain {
             return;
         }
         const speed = 15;
-        const batteryLoss = speed / 15;
+        const batteryLoss = (speed / 15) / 10;
         this.batteryPercentage -= Number(batteryLoss.toPrecision(2));
 
         if (this.batteryPercentage <= 10) {
@@ -116,11 +116,11 @@ class bikeBrain {
 
         this.batteryPercentage = Math.max(this.batteryPercentage, 0);
 
-        console.log(`Hastighet på cyckeln: ${this.id} och har hastiheten: ${speed}km/h. Batterinivå: ${this.batteryPercentage.toFixed(1)}%`);
+        console.log(`Cykel ${this.id}. Batterinivå: ${this.batteryPercentage.toFixed(1)}%`);
+        console.log("userId", this.currentCustomer);
         this.socket.emit("updateBike", {id: this.id, batteryPercentage: this.batteryPercentage});
         return;
     }
-
 
     locationInDistance(refPoint) {
         for (let point of refPoint) {

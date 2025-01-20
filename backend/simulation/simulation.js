@@ -8,7 +8,7 @@ require('dotenv').config();
 // Get the arguments from the command line
 const args = process.argv.slice(2);
 const numUsers = parseInt(args[0]);
-const lengthInMinutes = args[1] | 5
+const lengthInMinutes = parseInt(args[1])
 const API_URL = 'http://localhost:1337';
 
 let globalUsers = [];
@@ -18,7 +18,7 @@ const setupGracefulShutdown = () => {
         console.log("\nShutting down simulation...");
         try {
             for (const user of globalUsers) {
-                if (user.bike !== null) {
+                if (user.bikeId !== null) {
                     console.log(`ending ride for user: ${user.userId}`);
                     await user.endRide();
                 }
@@ -67,10 +67,28 @@ async function simulation(numUsers, lengthInMinutes) {
     simulateCity(goteborgUsers, "Göteborg");
     // simulateCity(harnosandUsers, "Härnösand");
     // simulateCity(karlskronaUsers, "Karlskrona");
-    // Delete users after set minutes
-    setTimeout(() => {
-        deleteUsers(users);
-    }, lengthInMinutes * 60 * 1000)
+
+    const lengthInMilliseconds = lengthInMinutes * 60 * 1000
+    // End all rides and delete all users after set minutes
+    setTimeout(async () => {
+        console.log("setTimeout started")
+        try {
+            for (const user of users) {
+                if (user.bikeId !== null) {
+                    console.log(`Ending ride for user: ${user.userId}`);
+                    user.endRide();
+                }
+            }
+            console.log("All rides ended successfully");
+        } catch (error) {
+            console.error("Error ending all rides", error)
+        }
+
+        await deleteUsers(users);
+        process.exit(0);
+    }, lengthInMilliseconds);
+
+    console.log("lengthInMilliseconds", lengthInMilliseconds)
 }
 
 // Simulation for one city
@@ -84,11 +102,10 @@ const simulateCity = async (users, city) => {
     const cityData = citiesData.find(c => c.name.toLowerCase() === city.toLowerCase());
     const cityPolygon = cityData.borders;
 
-
     // Simulate a user completing rides on loop
     const simulateUser = async (user) => {
         while (true) {
-            setTimeout(() => {}, 60 * 1000 * Math.random()) // Random pause 0-60 sec before each ride
+            await new Promise(resolve => setTimeout(resolve, 60 * 1000 * Math.random())) // Random pause 0-60 sec before each ride
             // Pick a random bike
             const randomIndex = Math.floor(Math.random() * availableBikes.length);
             const bike = availableBikes[randomIndex];
@@ -111,9 +128,8 @@ const simulateCity = async (users, city) => {
 // Simulate one ride
 const simulateRide = async (user, bikeId, route) => {
     // Seconds between each position update (10 sec results in reasonable speed)
-    intervalSec = 2
+    const intervalSec = 20
     console.log(`Starting ride. UserId: ${user.userId}. BikeId: ${bikeId}. The ride should take ${intervalSec * route.length} seconds.`)
-    console.log(``)
     // Start the ride
     user.startRide(bikeId);
     // Sleep for 10 sec
@@ -136,7 +152,7 @@ const simulateRide = async (user, bikeId, route) => {
 const getRoute = (startPosition, endPosition) => {
     // 20km/h = 56m/10sec
     // const interval = 56
-    const interval = 500
+    const interval = 1000
     const turfStart = turf.point([startPosition.longitude, startPosition.latitude]);
     const turfEnd = turf.point([endPosition.longitude, endPosition.latitude]);
     const line = turf.lineString([turfStart.geometry.coordinates, turfEnd.geometry.coordinates]);
@@ -194,8 +210,17 @@ const addUsers = async (numUsers) => {
             });
     });
 
-    await Promise.all(registerPromises)
-    console.log("All users registered successfully")
+    for (let i = 0; i < Math.ceil(registerPromises.length / 100); i++) {
+        if (i !== 0) {
+            console.log("Batch of 100 users registered");
+        }
+        const start = i * 100;
+        const end = start + 100;
+        const promisesChunk = registerPromises.slice(start, end);
+        await Promise.all(promisesChunk);
+    }
+
+    console.log("All users registered");
 
     globalUsers = users;
 
@@ -210,7 +235,12 @@ const deleteUsers = async (users) => {
         deletePromises.push(user.delete());
     }
 
-    await Promise.all(deletePromises);
+    for (let i = 0; i < Math.ceil(deletePromises.length / 100); i++) {
+        const start = i * 100;
+        const end = start + 100;
+        const promisesChunk = deletePromises.slice(start, end);
+        await Promise.all(promisesChunk);
+    }
     console.log("All users deleted successfully")
 }
 
