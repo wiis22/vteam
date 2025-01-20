@@ -1,4 +1,6 @@
-// function to calculate values for a ride
+/**
+ * Functions to calculate values for a ride.
+ */
 
 const ride = {
     getPrice: function (startLocation, endLocation, startTime, endTime) {
@@ -20,6 +22,10 @@ const ride = {
     },
 
     getLengthSeconds: function (startTime, endTime) {
-        return (endTime - startTime) / 1000;
+        const startDate = new Date(startTime);
+        const endDate = new Date(endTime);
+        return (endDate - startDate) / 1000;
     }
 }
+
+module.exports = ride;
