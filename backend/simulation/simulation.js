@@ -11,6 +11,42 @@ const numUsers = parseInt(args[0]);
 const lengthInMinutes = args[1] | 5
 const API_URL = 'http://localhost:1337';
 
+let globalUsers = [];
+
+const setupGracefulShutdown = () => {
+    const shutdown = async () => {
+        console.log("\nShutting down simulation...");
+        try {
+            for (const user of globalUsers) {
+                if (user.bike !== null) {
+                    console.log(`ending ride for user: ${user.userId}`);
+                    await user.endRide();
+                }
+            }
+            console.log("All rides ended successfully");
+            process.exit(0);
+        } catch (error) {
+            console.error("Error ending rides", error);
+            process.exit(1);
+        }
+    };
+
+    // Handle shutdown signals Ctrl+C and SIGTERM(avslutade signaler)
+    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', shutdown);
+
+    // Handle uncaught exceptions
+    process.on('uncaughtException', async (error) => {
+        console.error("Uncaught exception", error);
+        await shutdown();
+    });
+
+    process.on('unhandledRejection', async (reason, promise) => {
+        console.error("Unhandled rejection at:", promise, "reason: " ,reason);
+        await shutdown();
+    });
+};
+
 // Make sure arguments are passed correctly
 if (isNaN(numUsers) | isNaN(lengthInMinutes)) {
     console.error('Please provide valid arguments:numUsers & lengthInMinutes');
@@ -161,6 +197,8 @@ const addUsers = async (numUsers) => {
     await Promise.all(registerPromises)
     console.log("All users registered successfully")
 
+    globalUsers = users;
+
     return users;
 }
 
@@ -199,6 +237,8 @@ const randomPositionInPolygon = (cityPolygon) => {
 
     return position
 }
+
+setupGracefulShutdown();
 
 // Run the simulation
 simulation(numUsers, lengthInMinutes);
