@@ -16,7 +16,7 @@ class bikeBrain {
 
         this.currentCustomer = null;
 
-        this.log = [];
+        this.log = {};
         this.cityData = bikeData.cityData;
 
         this.batteryDrainInter = null;
@@ -47,12 +47,11 @@ class bikeBrain {
         this.available = false;
 
         const startLog = {
-            customer,
             startPosition: this.position,
             startLocation: this.location,
             startTime: new Date().toISOString(),
         };
-        this.log.push(startLog);
+        Object.assign(this.log, startLog);
 
         //en update till db att availavble = false
         console.log(`bikeId ${this.id} rented by userId ${customer}.`);
@@ -72,7 +71,7 @@ class bikeBrain {
                 endLocation: this.location,
                 endTime: new Date().toISOString(),
             }
-            this.log.push(endLog);
+            Object.assign(this.log, endLog);
 
             //rensa loggen
             this.socket.emit("saveRide", {bikeId: this.id, log: this.log, userId: this.currentCustomer});
