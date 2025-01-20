@@ -39,6 +39,7 @@ class bikeBrain {
 
     startRide(customer){
         if(!this.available || this.charging || !this.operational){
+            //borde lägga till en emit här
             console.log("Bike not available");
             return;
         }
@@ -61,11 +62,12 @@ class bikeBrain {
         this.batteryDrainInter = setInterval(() => {
             this.drainBattery();
         }, 60000);
+        return;
     }
 
     endRide() {
         if (this.currentCustomer) {
-            this.findLocation();
+            this.findLocation(); //kollar även om cykeln ska laddas
 
             const endLog = {
                 endPosition: this.position,
@@ -91,18 +93,25 @@ class bikeBrain {
     }
 
     drainBattery() {
-        if (!this.operational || this.batteryPercentage <= 0) {
+        if (!this.operational || this.batteryPercentage <= 10) {
             console.log("Bike not available");
             return;
         }
         const speed = 15;
         const batteryLoss = speed / 15;
-        this.batteryPercentage  = this.batteryPercentage - Number(batteryLoss.toPrecision(2));
+        this.batteryPercentage -= Number(batteryLoss.toPrecision(2));
 
         if (this.batteryPercentage <= 10) {
             console.log("Cykeln måste laddas och stängs av.");
             this.socket.emit("bikeEndRide", { userId: this.currentCustomer})
-            this.socket.updateAvailable(false);
+            this.socket.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
+
+            //tar bort intervallet så att den inte fortsätter att dra batteri
+            clearInterval(this.batteryDrainInter)
+            this.batteryDrainInter = null;
+
+            this.socket.emit("updateBike", {id: this.id, batteryPercentage: this.batteryPercentage});
+            return;
             // this.endRide(); // not used here as mobile app/user gets emit above and will end it like normal
         }
 
@@ -110,6 +119,7 @@ class bikeBrain {
 
         console.log(`Hastighet på cyckeln: ${this.id} och har hastiheten: ${speed}km/h. Batterinivå: ${this.batteryPercentage.toFixed(1)}%`);
         this.socket.emit("updateBike", {id: this.id, batteryPercentage: this.batteryPercentage});
+        return;
     }
 
 
@@ -126,6 +136,7 @@ class bikeBrain {
     findLocation() {
         if (this.locationInDistance(this.cityData.chargingStations)) {
             this.updateLocation("chargingStation");
+            this.updateCharging(true);
             setTimeout(() => this.chargingBattery(), 60000)
             return;
         }
@@ -134,6 +145,7 @@ class bikeBrain {
             return;
         }
         this.updateLocation("field");
+        return;
     }
 
     updatePosition(newPosition) {
@@ -141,10 +153,15 @@ class bikeBrain {
         this.position = newPosition;
         this.socket.emit("updateBike", {id: this.id, position: this.position});
         console.log(`Cykeln ${this.id} position uppdaterad till ${newPosition}`);
+        return;
     }
 
     updateLocation(newLocation) {
         this.location = newLocation;
+        if (this.location === "chargingStation") {
+            this.updateCharging(true);
+            setTimeout(() => this.chargingBattery(), 60000);
+        }
         this.socket.emit("updateBike", {id: this.id, location: this.location});
         return;
     }
@@ -166,11 +183,13 @@ class bikeBrain {
         this.socket.emit("updateBike", {id: this.id, charging: this.charging});
         this.updateAvailable(!status);
         console.log(`Cykeln ${this.id} : ${status ? "laddar" : "avslutar laddningen"}`);
+        return;
     }
 
     chargingBattery(){
         this.batteryPercentage = 100;
-        this.socket.emit("updateBike", {id: this.id, batteryPercentage: this.batteryPercentage})
+        this.socket.emit("updateBike", {id: this.id, batteryPercentage: this.batteryPercentage});
+        return;
     }
 
 }
