@@ -104,7 +104,7 @@ class bikeBrain {
         if (this.batteryPercentage <= 10) {
             console.log("Cykeln måste laddas och stängs av.");
             this.socket.emit("bikeEndRide", { userId: this.currentCustomer})
-            this.socket.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
+            this.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
 
             //tar bort intervallet så att den inte fortsätter att dra batteri
             clearInterval(this.batteryDrainInter)
@@ -158,7 +158,7 @@ class bikeBrain {
 
     updateLocation(newLocation) {
         this.location = newLocation;
-        if (this.location === "chargingStation") {
+        if (this.location == "chargingStation") {
             this.updateCharging(true);
             setTimeout(() => this.chargingBattery(), 60000);
         }
