@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline, Polygon, LayerGroup, Circle} from 'react-leaflet';
-import cityModel from "../models/city-models";
+import MarkerClusterGroup from 'react-leaflet-markercluster';
+import adminModel from "../models/admin-models";
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -13,6 +14,12 @@ export default function Map() {
     const [zones, setZones] = useState(null);
     const [bikes, setBikes] = useState(null);
 
+    useEffect(() => {
+        //fetching data
+        fetchBikes();
+        fetchCity();
+    }, [location.state]);
+
     let DefaultIcon = L.icon({
         iconUrl: icon,
         shadowUrl: iconShadow
@@ -23,7 +30,7 @@ export default function Map() {
     //Fetch city and get data
     const fetchCity = async () => {
         try {
-            const cityData = await cityModel.getOneCity(location.state.cityId);
+            const cityData = await adminModel.getOneCity(location.state.cityId);
             setCity({
                 borders: cityData.borders,
                 chargingStations: cityData.chargingStations,
@@ -51,19 +58,13 @@ export default function Map() {
     //Fetch bikes and get data
     const fetchBikes = async () => {
         try {
-            const bikesData = await cityModel.getBikes(location.state.cityName);
+            const bikesData = await adminModel.getBikes(location.state.cityName);
             setBikes(bikesData);
             // console.log(bikesData)
         } catch (error) {
             console.error("Error fetching city data:", error);
         }
     };
-
-    useEffect(() => {
-        //fetching data
-        fetchBikes();
-        fetchCity();
-    }, [location.state]);
 
     //render charging zones
     const renderChargingStations = () => {
@@ -107,10 +108,8 @@ export default function Map() {
         return parkingZones;
     };
 
-    //render charging zones
+    //render bikes zones
     const renderBikes = () => {
-        //update new bike position.
-        fetchBikes();
 
         if (!bikes || bikes.length === 0) {
             return null;
@@ -118,12 +117,12 @@ export default function Map() {
         //Button that toggles bike on and off.
         const  handleClick = async (bike) => {
             if (bike.operational !== true) {
-                const result = await cityModel.changeOperational(true, bike._id);
+                const result = await adminModel.changeOperational(true, bike._id);
                 alert("Operational ändrades till true!");
                 console.log(result)
                 return
             }
-            const result = await cityModel.changeOperational(false, bike._id);
+            const result = await adminModel.changeOperational(false, bike._id);
             alert("Operational ändrades till false!");
             console.log(result)
             return
@@ -179,19 +178,33 @@ export default function Map() {
             <Polyline pathOptions={blackOptions} positions={borders} />
             <Polygon pathOptions={greenOptions} positions={zones} />
             {renderChargingStations()}
-            {renderBikes()}
+            <MarkerClusterGroup>
+                {renderBikes()}
+            </MarkerClusterGroup>
             {renderParkingZones()}
             </MapContainer>
         );
     };
 
+    const handleClickUpdate = async () => {
+        await fetchBikes(); // Hämta ny cykeldata
+        alert("Cykelpositioner har uppdaterats!");
+    }
+
     return (
         <div>
-            <h1>Map</h1>
+            <h2>Map vy över {location.state.cityName}</h2>
             <p>Svartalinjegränsen: hela användningsområdet</p>
             <p>Grönt-område: zoner</p>
             <p>Gula cirklar: ladd-zoner</p>
             <p>Blå cirklar: parkerings-zoner</p>
+
+            <p>
+            <button onClick={handleClickUpdate}>
+                Uppdatera cykel positioner
+            </button>
+            </p>
+
             {city && borders && zones ? (
                 renderMap()
             ) : (

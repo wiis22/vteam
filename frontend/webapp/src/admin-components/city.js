@@ -23,7 +23,7 @@ export default function City() {
         <div className="citys">
 
             <p>
-                <Link to={`/admin/${ city }/users`}>Sök användare</Link> |{" "}
+                <Link to={`/admin/${ city }/users`}>Administrera användare</Link> |{" "}
                 <Link to={`/admin/${ city }/map`} state={{
                     cityId: `${ cityId }`,
                     cityName: `${ cityName }` 

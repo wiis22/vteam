@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { useLocation, Link } from "react-router-dom";
-import cityModel from "../models/city-models";
+import adminModel from "../models/admin-models";
 import ResponsivePagination from 'react-responsive-pagination';
 import 'react-responsive-pagination/themes/classic.css';
 
@@ -9,8 +9,15 @@ export default function BikeList() {
     const [bikes, setBikes] = useState([])
     const [allBikes, setAllBikes] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-    const [heading, setHeading] = useState('Alla cyklar')
+    const [heading, setHeading] = useState('Alla cyklar');
+    const [searchedBike, setSearchedBike] = useState('');
+    const [searchMessage, setSearchMessage] = useState('');
     const itemsPerPage = 20;
+
+    useEffect(() => {
+        //fetching data
+        fetchBikes();
+    }, [location.state]);
 
     //sets start index
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -24,22 +31,16 @@ export default function BikeList() {
     //Fetch bikes and get data
     const fetchBikes = async () => {
         try {
-            const bikesData = await cityModel.getBikes(location.state.cityName);
+            const bikesData = await adminModel.getBikes(location.state.cityName);
             setAllBikes(bikesData);
             setBikes(bikesData);
             // console.log(bikesData)
         } catch (error) {
-            console.error("Error fetching city data:", error);
+            console.error("Error fetching bikes data:", error);
         }
     };
 
-    useEffect(() => {
-        //fetching data
-        fetchBikes();
-        // console.log(bikes)
-    }, [location.state]);
-
-    //Button funktions
+    //Button functions
     const filterLowBattery = () => {
         setBikes(
             allBikes.filter((bike) => (
@@ -96,30 +97,72 @@ export default function BikeList() {
         setCurrentPage(1);
     }
 
+    //handle search submit
+    const handleSearchSubmit = async (event) => {
+        event.preventDefault();
+
+        setBikes(
+            allBikes.filter((bike) => (
+                //Search on id
+                bike._id.toLowerCase().includes(searchedBike.toLowerCase())
+            ))
+        );
+        setSearchMessage(`Du har sökt på ${searchedBike}`);
+        setSearchedBike("");
+        setCurrentPage(1);
+        //timer on message
+        setTimeout(() => {
+            setSearchMessage(``);
+        }, "8000");
+    }
+
     return  (
         <div>
-        <h1>{heading}</h1>
+
+        <h2>{location.state.cityName}s</h2>
+        <h3>{heading} (antal: {bikes.length})</h3>
+
+        <p>   
+        <form onSubmit={handleSearchSubmit}>
+            <p><label>Sök Cykel-id: </label></p>
+            <input className='textarea'
+                    type="text"
+                    value={searchedBike}
+                    placeholder='Id'
+                    onChange={(e) => setSearchedBike(e.target.value)}
+            />
+            <input type="submit" value="Sök"/>
+        </form>
+        </p>
+        <p>{searchMessage}</p>
+
         <button onClick={showAllBikes}>
             Visa alla cyklar
         </button>
+
         <button onClick={filterLowBattery}>
             Cyklar med låg batterinivå
         </button>
+
         <button onClick={filterOperational}>
             Operativa cyklar
         </button>
+
         <button onClick={filterNotOperational}>
             Icke operativa cyklar
         </button>
+
         <button onClick={filterAvailable}>
             Tillgängliga cyklar
         </button>
+
         <button onClick={filterNotAvailable}>
             Otillgängliga cyklar
         </button>
+
         {currentBikes.map((bike) => (
                 <div className="bike-list">
-                <p>Bike id:{bike._id}</p>
+                <p>Cykel id: {bike._id}</p>
                 <p>På laddning: {bike.charging ? "Ja" : "Nej"}, Batteri: {bike.batteryPercentage}%</p>
                 <p>Plats: {bike.location}, Tillgänglig: {bike.available ? "Ja" : "Nej"}, Operativ: {bike.operational ? "Ja" : "Nej"}</p>
                 <Link to={`/admin/${ location.state.cityName }/single-bike`} state={{
