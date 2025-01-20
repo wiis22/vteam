@@ -35,18 +35,19 @@ const addBikes = async (cityData, numBikes) => {
     // Generate bike data and add to database
     for (let i = 0; i < numBikes; i++) {
         let position;
-        let charging = false;
+        let location = "field";
 
         if (remainingChargingStations > 0) {
-            const {chargingStations} = cityData.chargingStations;
+            const chargingStations = cityData.chargingStations;
             const randomIndex = Math.floor(Math.random() * chargingStations.length);
             position = chargingStations[randomIndex];
-            charging = true;
+            location = "chargingStation";
             remainingChargingStations--;
         } else if (remainingParkingZones > 0) {
-            const {parkingZones} = cityData.parkingZones;
+            const parkingZones = cityData.parkingZones;
             const randomIndex = Math.floor(Math.random() * parkingZones.length);
             position = parkingZones[randomIndex];
+            location = "parkingZone";
             remainingParkingZones--;
         } else {
             do {
@@ -77,8 +78,8 @@ const addBikes = async (cityData, numBikes) => {
             },
             body: JSON.stringify({
                 city: cityData.name,
-                charging: charging,
-                position: position
+                position,
+                location
             })
         })
         .then(response => response.json())

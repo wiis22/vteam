@@ -40,13 +40,13 @@ io.sockets.on('connection', (socket) => {
 
     // used by mobile app when user starts a ride
     socket.on("startRide", (data) => {
-        console.log("Socket route: startRide", data)
+        // console.log("Socket route: startRide", data)
         io.to(data.bikeId).emit("startRide", { userId: data.userId });
     });
 
     // used by bike to confirm if ride was started or not
     socket.on("bikeStartRideResponse", (data) => {
-        console.log("Socket route: bikeStartRideResponse", data)
+        // console.log("Socket route: bikeStartRideResponse", data)
         io.to(data.userId).emit("bikeStartRideResponse", { bikeId: data.bikeId, started: data.started, }) // started is boolean
     })
 
@@ -63,20 +63,23 @@ io.sockets.on('connection', (socket) => {
     // used by bike when ride is ended and should be saved to database
     socket.on("saveRide", async (data) => {
         try {
+            console.log("data in socket route saveRide:")
+            console.log(data)
             const price = ride.getPrice(data.log.startLocation, data.log.endLocation, data.log.startTime, data.log.endTime);
+            const rideLengthSeconds = ride.getLengthSeconds(data.log.startTime, data.log.endTime);
 
             const rideData = {
                 userId: data.userId,
                 bikeId: data.bikeId,
                 startTime: data.log.startTime,
                 endTime: data.log.endTime,
-                startPosition: data.log.startLocation,
-                endPosition: data.log.endLocation,
+                startPosition: data.log.startPosition,
+                endPosition: data.log.endPosition,
                 startLocation: data.log.startLocation,
                 endLocation: data.log.endLocation,
-                rideLengthSeconds: rideLengthSeconds,
-                price: price
-            }
+                rideLengthSeconds,
+                price
+            };
 
             const result = await database.addOne("rides", rideData);
             io.to(data.userId).emit("rideDone", { ride: rideData });
@@ -88,7 +91,7 @@ io.sockets.on('connection', (socket) => {
 
     // used by mobile app to update it's position to the bike
     socket.on('updatePosition', (data) => {
-        console.log(`User updating position to Bike ${data.bikeId}. position: ${data.position}`);
+        // console.log(`User updating position to Bike ${data.bikeId}. position: ${data.position}`);
         socket.to(data.bikeId).emit('updatePosition', { position: data.position });
     });
 
@@ -96,7 +99,7 @@ io.sockets.on('connection', (socket) => {
     socket.on('updateBike', async (data) => {
         try {
             const result = await database.updateOne("bikes", data);
-            console.log("result: ", result);
+            // console.log("result: ", result);
         } catch (error) {
             console.error('Error updating bike:', error);
         }
@@ -156,7 +159,7 @@ app.post('/api/user', async (req, res) => {
 
     try {
         const userId = await auth.register(userData);
-        console.log("result: ", userId);
+        // console.log("result: ", userId);
         res.status(201).json({
             success: true,
             message: "User registered successfully",
@@ -192,7 +195,7 @@ app.delete('/api/user/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
     try {
         const result = await database.deleteOne("users", id);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error deleting user:', error);
@@ -203,7 +206,7 @@ app.delete('/api/user/:id', auth.verifyJwt, async (req, res) => {
 app.get('/api/cities', auth.verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("cities");
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.json(result);
     } catch (error) {
         console.error('Error fetching cities:', error);
@@ -216,7 +219,7 @@ app.get('/api/city/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.getOne("cities", id);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.json(result);
     } catch (error) {
         console.error('Error fetching city:', error);
@@ -234,7 +237,7 @@ app.post('/api/city', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.addOne("cities", cityData);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.json(result);
     } catch (error) {
         console.error('Error adding city:', error);
@@ -245,7 +248,7 @@ app.post('/api/city', auth.verifyJwt, async (req, res) => {
 app.get('/api/users', auth.verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("users");
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.json(result);
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -258,7 +261,7 @@ app.get('/api/user/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.getOne("users", id);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.json(result);
     } catch (error) {
         console.error('Error fetching city:', error);
@@ -276,7 +279,7 @@ app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.updateOne("users", updatedUserData);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.json(result);
     } catch (error) {
         console.error('Error updating user:', error);
@@ -290,7 +293,7 @@ app.put('/api/user/password/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await auth.updatePassword(id, newPassword);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(201).json({
             success: true,
             message: "Password updated successfully"
@@ -309,9 +312,9 @@ app.post('/api/bike', auth.verifyJwt, async (req, res) => {
     console.log(req.body)
     const bikeData = {
         city: req.body.city,
-        charging: req.body.charging,
         position: req.body.position,
-        location: "field",
+        location: req.body.location,
+        charging: req.body.location === "chargingStation",
         available: true,
         operational: true,
         batteryPercentage: 100
@@ -319,7 +322,7 @@ app.post('/api/bike', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.addOne("bikes", bikeData);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(201).json(result);
     } catch (error) {
         console.error('Error adding new bike to database:', error);
@@ -337,7 +340,7 @@ app.put('/api/bike/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.updateOne("bikes", updatedBikeData);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error updating bike data:', error);
@@ -354,7 +357,7 @@ app.get('/api/bikes/:city', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.filterAll("bikes", cityFilter);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error retrieving bikes:', error);
@@ -367,7 +370,7 @@ app.get('/api/bike/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.getOne("bikes", id);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error retrieving one bike:', error);
@@ -378,7 +381,7 @@ app.get('/api/bike/:id', auth.verifyJwt, async (req, res) => {
 app.get('/api/bikes', auth.verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("bikes");
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error retrieving all bikes:', error);
@@ -390,7 +393,7 @@ app.delete('/api/bike/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
     try {
         const result = await database.deleteOne("bikes", id);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error deleting bike:', error);
@@ -401,7 +404,7 @@ app.delete('/api/bike/:id', auth.verifyJwt, async (req, res) => {
 app.get('/api/rides', auth.verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("rides");
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error retrieving all rides', error);
@@ -416,7 +419,7 @@ app.get('/api/user/rides/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.filterAll("rides", ridesFilter);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error filtering rides on user id:', error);
@@ -431,10 +434,23 @@ app.get('/api/bike/rides/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.filterAll("rides", ridesFilter);
-        console.log("result: ", result);
+        // console.log("result: ", result);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error filtering rides on user id:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.delete('/api/ride/:id', auth.verifyJwt, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const result = await database.deleteOne("rides", id);
+        // console.log("result: ", result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error deleting ride:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });
