@@ -161,6 +161,7 @@ const simulateRide = async (user, bikeId, route) => {
 // Get the route array of positions between two positions
 const getRoute = (startPosition, endPosition) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     // 20km/h = 56m/10sec
     // const interval = 56
     const interval = 1000
@@ -169,6 +170,11 @@ const getRoute = (startPosition, endPosition) => {
     // const interval = 33
     const interval = 200
 >>>>>>> dcd3543 (Fixed some errors)
+=======
+    // 20km/h = 56m/10sec
+    // const interval = 56
+    const interval = 500
+>>>>>>> e4a2020 (Simulation now works)
     const turfStart = turf.point([startPosition.longitude, startPosition.latitude]);
     const turfEnd = turf.point([endPosition.longitude, endPosition.latitude]);
     const line = turf.lineString([turfStart.geometry.coordinates, turfEnd.geometry.coordinates]);
