@@ -268,7 +268,50 @@ const database = {
                 await client.close(); // Ensure the client is closed even if an error occurs
             }
         }
+    },
+
+
+    /**
+     *  Perform multiple operations in bulk.
+     * 
+     * @async
+     * 
+     * @param {string} colName Name of the collection
+     * @param {Array} operations Array of operations to perform
+     * 
+     * @throws Error when database operation fails.
+     * 
+     * @return {object} Result of the bulk operation.
+     */
+    bulkWrite: async function bulkWrite(colName, operations) {
+        let client;
+        try {
+            if (!Array.isArray(operations) || operations.length === 0) {
+                throw new Error("Operations must be a non-empty array");
+            }
+
+            client  = await mongo.connect(dsn);
+            const db = await client.db();
+            const col = await db.collection(colName);
+
+            const result = await col.bulkWrite(operations);
+
+            await client.close();
+
+            return result;
+
+        } catch (err) {
+            console.error("Error in bulkWrite", err.message);
+            throw new Error("Error performing bulk operation");
+            
+        } finally {
+            if (client) {
+                await client.close(); // Ensure the client is closed even if an error occurs
+                
+            }
+        }
     }
+
 };
 
 module.exports = database;
