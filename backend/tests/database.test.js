@@ -53,7 +53,7 @@ describe('Database Functions tests', () => {
     describe('getAll', () => {
         it('should retrieve all documents from a collection', async () => {
             const res = await databaseFunctions.getAll(colName);
-            console.log("GetAll: ", res);
+            // console.log("GetAll: ", res);
             
             expect(res).toBeInstanceOf(Array);
             expect(res).toHaveLength(1);
@@ -99,7 +99,7 @@ describe('Database Functions tests', () => {
                 value: 43
             };
             const res = await databaseFunctions.updateOne(colName, updateData);
-            console.log("UpdateOne: ", res);
+            // console.log("UpdateOne: ", res);
             // expect(res).toEqual({"acknowledged": true, "modifiedCount": 1, "upsertedId": null});
             expect(res).toBeInstanceOf(Object);
         });
@@ -116,7 +116,6 @@ describe('Database Functions tests', () => {
                 expect(err.message).toBe("Error updating");
             }
         });
-
     });
 
     describe('filterAll', () => {
@@ -126,6 +125,44 @@ describe('Database Functions tests', () => {
             } catch (err) {
                 expect(err.message).toBe("Error retrieving data");
             }
+        });
+    });
+
+    describe('bulkWrite', () => {
+        it('should throw an error "Error writing data" if no data is sent in.', async () => {
+            try {
+                await databaseFunctions.bulkWrite(colName);
+            } catch (err) {
+                expect(err.message).toBe("Error performing bulk operation");
+            }
+        });
+
+        it('should return an object if data is sent in.', async () => {
+            const data = [
+                {
+                    insertOne: {
+                        document: { name: "test42", value: 42 }
+                    }
+                },
+                {
+                    updateOne: {
+                        filter: { name: "test42" },
+                        update: { $set: { value: 43 } },
+                    }
+                },
+                {
+                    deleteOne: {
+                        filter: { name: "test42" }
+                    }
+                }
+            ];
+            const res = await databaseFunctions.bulkWrite(colName, data);
+            // console.log("BulkWrite return: ", res);
+            expect(res).toBeInstanceOf(Object);
+            expect(res.insertedCount).toBe(1);
+            expect(res.matchedCount).toBe(1);
+            expect(res.modifiedCount).toBe(1);
+            expect(res.deletedCount).toBe(1);
         });
     });
 });
