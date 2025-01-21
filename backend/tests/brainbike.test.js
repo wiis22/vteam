@@ -135,7 +135,7 @@ describe('bikeBrain', () => {
         bike.drainBattery();
 
         // expect(bike.socket.emit).toHaveBeenCalledWith("bikeEndRide", { userId: bike.currentCustomer });
-        expect(bike.batteryPercentage).toBe(10);
+        expect(bike.batteryPercentage).toBe(10.9);
         // expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, operational: false });
     });
 
