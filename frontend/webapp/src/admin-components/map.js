@@ -79,7 +79,7 @@ export default function Map() {
                 <Circle
                     center={[element.latitude, element.longitude]}
                     pathOptions={yellowOptions}
-                    radius={100}
+                    radius={30}
                     />
                 </LayerGroup>
             );
@@ -100,7 +100,7 @@ export default function Map() {
                 <Circle
                     center={[element.latitude, element.longitude]}
                     pathOptions={blueOptions}
-                    radius={100}
+                    radius={50}
                     />
                 </LayerGroup>
             );
