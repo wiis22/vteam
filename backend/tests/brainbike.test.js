@@ -155,13 +155,20 @@ describe('bikeBrain', () => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2bd9b2b (fixed the test)
     it('should change battery %', () => {
         expect(bike.operational).toBe(true);
         bike.batteryPercentage = 11;
         bike.drainBattery();
 
         // expect(bike.socket.emit).toHaveBeenCalledWith("bikeEndRide", { userId: bike.currentCustomer });
+<<<<<<< HEAD
         expect(bike.batteryPercentage).toBe(10.9);
+=======
+        expect(bike.batteryPercentage).toBe(10);
+>>>>>>> 2bd9b2b (fixed the test)
         // expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, operational: false });
 =======
     it('should emit bikeEndRide if battery gets <= 10% after called', () => {
