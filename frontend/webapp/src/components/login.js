@@ -18,13 +18,20 @@ export default function Login() {
         event.preventDefault();
 
         const result = await authModel.login(email, password);
-        if (result === "not ok") {
+        if (result.error) {
             setErrorMessage("Skrivit fel lösenord eller användarnamn.");
             return;
         }
+
         alert("Login lyckades!");
+
+        //admin goes directly to admin page
+        if (authModel.role === "admin") {
+            navigate("/admin");
+            return;
+        }
         navigate("/");
-        return console.log(result);
+        return;
     }
 
 

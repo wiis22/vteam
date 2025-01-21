@@ -6,7 +6,6 @@ import Admin from "./admin-components/admin";
 import Balance from "./components/balance";
 import Details from "./components/details";
 import History from "./components/history";
-import Navbar from "./components/navbar";
 import Users from "./admin-components/users";
 import MapView from "./admin-components/map";
 import BikeList from "./admin-components/bike-list";
@@ -22,8 +21,6 @@ export default function Router() {
         <BrowserRouter>
         {/* All routes */}
         <Routes>
-            <Route path="/" element={<Navbar />}>
-
             <Route index element={<Home />} />
             <Route path="/login" element={<Login  />} />
             <Route path="/logout" element={<Logout />} />
@@ -41,7 +38,6 @@ export default function Router() {
                 <Route path="list" element={<BikeList />} />
                 <Route path="single-bike" element={<SingleBike />} />
                 </Route>
-            </Route>
             </Route>
         </Routes>
         </BrowserRouter>

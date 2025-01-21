@@ -11,4 +11,3 @@ export default function Logout() {
         navigate("/");
     }, []);
 };
-//hej där

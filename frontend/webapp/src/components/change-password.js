@@ -1,13 +1,21 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import userModel from '../models/user';
+import Navbar from "./navbar";
+import authModel from '../models/auth'
 
 export default function ChangePassword() {
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const accessCheck = authModel.roleAccess("user");
+    document.title = "Ändra lösenord";
     const navigate = useNavigate();
-    document.title = 'Ändra lösenord';
+
+    // checks access
+    if (accessCheck) {
+        return <div>{accessCheck}</div>;
+    }
 
     const handleChangePassword = async (event) => {
         event.preventDefault();
@@ -34,6 +42,7 @@ export default function ChangePassword() {
 
     return (
         <div>
+        <Navbar />
 
         <h1>Ändra lösenord</h1>
 
