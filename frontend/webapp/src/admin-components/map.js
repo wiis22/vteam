@@ -11,7 +11,6 @@ export default function Map() {
     const location = useLocation();
     const [city, setCity] = useState(null);
     const [borders, setBorders] = useState(null);
-    const [zones, setZones] = useState(null);
     const [bikes, setBikes] = useState(null);
 
     useEffect(() => {
@@ -36,18 +35,10 @@ export default function Map() {
                 chargingStations: cityData.chargingStations,
                 geolocation: cityData.geolocation,
                 parkingZones: cityData.parkingZones,
-                zones: cityData.zones
             });
-            if (cityData.borders && cityData.zones) {
+            if (cityData.borders) {
                 const borderArray = cityData.borders.map(border => [border[1], border[0]]);
                 setBorders(borderArray);
-                //Setting up parking zones
-                const zones = [];
-                cityData.zones.forEach(element => {
-                    zones.push(element.map(border => [border[1], border[0]]));
-                });
-                // console.log(zones)
-                setZones(zones);
             }
             // console.log(cityData)
         } catch (error) {
@@ -161,7 +152,6 @@ export default function Map() {
     //render map
     const renderMap = () => {
         //setting up colors for border
-        const blackOptions = { color: 'black' }
         const greenOptions = { color: 'green' }
 
         return (
@@ -172,15 +162,8 @@ export default function Map() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            {/* <Marker position={[51.505, -0.09]}>
-                <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-                </Popup>
-            </Marker> */}
-
             {/* draw borders in city */}
-            <Polyline pathOptions={blackOptions} positions={borders} />
-            <Polygon pathOptions={greenOptions} positions={zones} />
+            <Polygon pathOptions={greenOptions} positions={borders} />
             {renderChargingStations()}
             <MarkerClusterGroup>
                 {renderBikes()}
@@ -198,8 +181,7 @@ export default function Map() {
     return (
         <div>
             <h2>Map vy över {location.state.cityName}</h2>
-            <p>Svartalinjegränsen: hela användningsområdet</p>
-            <p>Grönt-område: zoner</p>
+            <p>Grönt-område: hela användningsområdet</p>
             <p>Gula cirklar: ladd-zoner</p>
             <p>Blå cirklar: parkerings-zoner</p>
 
@@ -209,7 +191,7 @@ export default function Map() {
             </button>
             </p>
 
-            {city && borders && zones ? (
+            {city && borders ? (
                 renderMap()
             ) : (
                 <p>Laddar karta över staden...</p>
