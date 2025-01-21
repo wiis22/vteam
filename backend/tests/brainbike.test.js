@@ -165,10 +165,14 @@ describe('bikeBrain', () => {
 
         // expect(bike.socket.emit).toHaveBeenCalledWith("bikeEndRide", { userId: bike.currentCustomer });
 <<<<<<< HEAD
+<<<<<<< HEAD
         expect(bike.batteryPercentage).toBe(10.9);
 =======
         expect(bike.batteryPercentage).toBe(10);
 >>>>>>> 2bd9b2b (fixed the test)
+=======
+        expect(bike.batteryPercentage).toBe(10.9);
+>>>>>>> 3f2e929 (fixed the test)
         // expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, operational: false });
 =======
     it('should emit bikeEndRide if battery gets <= 10% after called', () => {
