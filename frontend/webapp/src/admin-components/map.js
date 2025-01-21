@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline, Polygon, LayerGroup, Circle} from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import adminModel from "../models/admin-models";
@@ -146,7 +146,11 @@ export default function Map() {
 
                 <button onClick={() => handleClick(bike)}>
                     Change status on operational
-                </button>
+                </button><br/>
+                <Link to={`/admin/${ location.state.cityName }/single-bike`} state={{
+                    bikeId: `${ bike._id }` 
+                    }} className="button" >Inställningar & Historik
+                </Link>
                 </Popup>
             </Marker>
             );

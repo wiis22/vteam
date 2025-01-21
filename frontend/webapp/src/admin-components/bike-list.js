@@ -168,7 +168,7 @@ export default function BikeList() {
                 <Link to={`/admin/${ location.state.cityName }/single-bike`} state={{
                     bikeId: `${ bike._id }` 
                     }} className="button" >Inställningar & Historik</Link>
-                </div>        
+                </div>
             ))}
         <ResponsivePagination
         current={currentPage}
