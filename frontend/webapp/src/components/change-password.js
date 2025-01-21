@@ -26,10 +26,10 @@ export default function ChangePassword() {
         }
 
         const newPassword = {
-            password: password
+            newPassword: password
         };
 
-        const result = await userModel.updateUser(newPassword);
+        const result = await userModel.changeUserPassword(newPassword);
 
         if (result.status < 300) {
             setErrorMessage('');
