@@ -44,7 +44,7 @@ export default function BikeList() {
     const filterLowBattery = () => {
         setBikes(
             allBikes.filter((bike) => (
-                bike.batteryPercentage < 30
+                bike.batteryPercentage <= 10
             ))
         );
         setHeading("Cyklar med låg batterinivå");
