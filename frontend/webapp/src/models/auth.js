@@ -1,4 +1,5 @@
 import { serverURL } from "../utils";
+import Login from "../components/login";
 
 //Module with auth functions.
 const auth = {
@@ -31,10 +32,10 @@ const auth = {
             auth.userId = result._id;
             auth.balance = result.balance;
 
-            console.log(result);
-            return "ok";
+            // console.log(result);
+            return result;
         }
-
+        // console.log(result);
         return "not ok";
     },
 
@@ -70,6 +71,24 @@ const auth = {
         auth.role = null;
         auth.balance = 0;
     },
+    //checks if role has access to page, put role that have access in argument.
+    roleAccess: function roleAccess (roleAccess) {
+        //checks if logged in, if not renders login page
+        if(!auth.token) {
+            return (
+                <Login  />
+            );
+        }
+
+        if (auth.role === "banned") {
+            return 'Du är bannad kontakta admin@admin.se för mer info';
+        }
+
+        if (auth.role === "user" && roleAccess === "admin") {
+            return 'Denna sidan är endast avsedd för admin användare'
+        }
+        return
+    }
 };
 
 export default auth;
