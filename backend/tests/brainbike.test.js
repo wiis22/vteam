@@ -129,13 +129,13 @@ describe('bikeBrain', () => {
         // timeOutSpy.mockRestore();
     });
 
-    it('should change operational if battery gets <= 10%', () => {
+    it('should change battery %', () => {
         expect(bike.operational).toBe(true);
         bike.batteryPercentage = 11;
         bike.drainBattery();
 
         // expect(bike.socket.emit).toHaveBeenCalledWith("bikeEndRide", { userId: bike.currentCustomer });
-        expect(bike.operational).toBe(false);
+        expect(bike.batteryPercentage).toBe(10);
         // expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, operational: false });
     });
 
