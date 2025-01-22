@@ -108,7 +108,6 @@ export default function BikeList() {
             ))
         );
         setSearchMessage(`Du har sökt på ${searchedBike}`);
-        setSearchedBike("");
         setCurrentPage(1);
         //timer on message
         setTimeout(() => {
