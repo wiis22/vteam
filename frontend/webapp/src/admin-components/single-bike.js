@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import adminModel from "../models/admin-models";
+import Rides from "./rides";
 
 export default function SingleBike() {
     const location = useLocation();
@@ -108,6 +109,7 @@ export default function SingleBike() {
             </button>
 
             <h2>Cykel historik</h2>
+            <Rides userOrBike={'bike'} id={bikeDetails.id} receipt={false} />
         </div>
     );
 };
