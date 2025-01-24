@@ -32,65 +32,68 @@ export default function Register() {
     }
 
     return (
-        <div className='register'>
+        <>
+        <div className="dashboard">
 
         <h1>Registrera ny användare</h1>
 
-            <form onSubmit={handleRegister}>
-                <p><label>Namn: </label></p>
-                <input className='textarea'
-                        type="text"
-                        value={firstName}
-                        placeholder='Ange namn'
-                        onChange={(e) => setFirstName(e.target.value)}
-                        required
-                    />
+        <form onSubmit={handleRegister}>
+        <p><label>Namn: </label></p>
+        <input className='textarea'
+                type="text"
+                value={firstName}
+                placeholder='Ange namn'
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+            />
 
-                <p><label>Efternamn: </label></p>
-                <input className='textarea'
-                        type="text"
-                        value={lastName}
-                        placeholder='Ange efternamn'
-                        onChange={(e) => setLastName(e.target.value)}
-                        required
-                    />
+        <p><label>Efternamn: </label></p>
+        <input className='textarea'
+                type="text"
+                value={lastName}
+                placeholder='Ange efternamn'
+                onChange={(e) => setLastName(e.target.value)}
+                required
+            />
 
-                <p><label>E-mail: </label></p>
-                <input className='textarea'
-                        type="email"
-                        value={email}
-                        placeholder='Email'
-                        onChange={(e) => setEmail(e.target.value)}
-                        // readOnly={!!email}
-                        required
-                    />
+        <p><label>E-mail: </label></p>
+        <input className='textarea'
+                type="email"
+                value={email}
+                placeholder='Email'
+                onChange={(e) => setEmail(e.target.value)}
+                // readOnly={!!email}
+                required
+            />
 
-                <p><label>Password: </label></p>
-                <input className='textarea'
-                        type="password"
-                        value={password}
-                        placeholder='******'
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+        <p><label>Password: </label></p>
+        <input className='textarea'
+                type="password"
+                value={password}
+                placeholder='******'
+                onChange={(e) => setPassword(e.target.value)}
+                required
+            />
 
-                <p><label>Confirm Password: </label></p>
-                <input className='textarea'
-                        type="password"
-                        value={password2}
-                        placeholder='******'
-                        onChange={(e) => setPassword2(e.target.value)}
-                        required
-                    />
+        <p><label>Confirm Password: </label></p>
+        <input className='textarea'
+                type="password"
+                value={password2}
+                placeholder='******'
+                onChange={(e) => setPassword2(e.target.value)}
+                required
+            />
 
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
 
-                <p>
-                <button className='button green-button' type="submit">
-                    Register
-                </button>
-                </p>
-            </form>
+        <p>
+        <button className='button green-button' type="submit">
+            Register
+        </button>
+        </p>
+
+        </form>
         </div>
+        </>
     );
 };

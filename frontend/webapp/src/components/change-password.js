@@ -1,13 +1,21 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import userModel from '../models/user';
+import Navbar from "./navbar";
+import authModel from '../models/auth'
 
 export default function ChangePassword() {
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const accessCheck = authModel.roleAccess("user");
+    document.title = "Ändra lösenord";
     const navigate = useNavigate();
-    document.title = 'Ändra lösenord';
+
+    // checks access
+    if (accessCheck) {
+        return <div>{accessCheck}</div>;
+    }
 
     const handleChangePassword = async (event) => {
         event.preventDefault();
@@ -18,10 +26,10 @@ export default function ChangePassword() {
         }
 
         const newPassword = {
-            password: password
+            newPassword: password
         };
 
-        const result = await userModel.updateUser(newPassword);
+        const result = await userModel.changeUserPassword(newPassword);
 
         if (result.status < 300) {
             setErrorMessage('');
@@ -33,8 +41,9 @@ export default function ChangePassword() {
     }
 
     return (
-        <div>
-
+        <>
+        <Navbar />
+        <div className="dashboard">
         <h1>Ändra lösenord</h1>
 
             <form onSubmit={handleChangePassword}>
@@ -60,11 +69,12 @@ export default function ChangePassword() {
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
 
                 <p>
-                <button className='button green-button' type="submit">
+                <button className='green-button' type="submit">
                     Ändra lösenordet
                 </button>
                 </p>
             </form>
         </div>
+        </>
     );
 };

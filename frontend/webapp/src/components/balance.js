@@ -2,23 +2,26 @@ import React, { useState, useEffect } from "react";
 import authModel from '../models/auth';
 import userModel from "../models/user";
 import Login from './login';
+import Navbar from "./navbar";
 
 export default function Balance() {
     const [balance, setBalance] = useState(authModel.balance);
     const [addBalance, setAddBalance] = useState(0);
-
+    const accessCheck = authModel.roleAccess("user");
     document.title = 'Saldo';
+
+    //Checks access
+    useEffect(() => {
+        // checks access
+        if (accessCheck) {
+            return <div>{accessCheck}</div>;
+        }
+    }, []);
+
     //Changes authModel.balance when balance changes.
     useEffect(() => {
         authModel.balance = balance;
     }, [balance]);
-
-    //Check if logged in.
-    if(!authModel.token) {
-        return (
-            <Login  />
-        );
-    }
 
     const handleAddBalance = async (event) => {
         event.preventDefault();
@@ -39,14 +42,16 @@ export default function Balance() {
     }
 
     return (
-        <div>
+        <>
+        <Navbar />
+        <div className="dashboard">
             <h1>Saldo</h1>
 
             <h2>Nuvarande saldo: {balance}</h2>
             
             <form onSubmit={handleAddBalance}>
                 <label>Utöka saldo: </label>
-                <input className='textarea'
+                <input className='input'
                     type="number" 
                     min="1" 
                     max="100000" 
@@ -56,5 +61,6 @@ export default function Balance() {
                 <button type="submit" className="button">Lägg till</button>
             </form>
         </div>
+        </>
     );
 };

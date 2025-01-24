@@ -1,19 +1,24 @@
 import React from 'react'
 import authModel from '../models/auth';
-import Login from './login';
+import Navbar from "./navbar";
 
 export default function Home() {
-    //Login component if not logged in.
-    if(!authModel.token) {
-        return (
-            <Login  />
-        );
+    const accessCheck = authModel.roleAccess("user");
+    document.title = 'Hem';
+
+    // checks access
+    if (accessCheck) {
+        return <div>{accessCheck}</div>;
     }
+
     return (
-        <div>
-            <h1>Home page</h1>
+        <>
+        <Navbar />
+        <div className="dashboard">
+            <h1>Hem</h1>
             <p>Välkommen tillbaka {authModel.username}</p>
         </div>
+        </>
     );
 };
 

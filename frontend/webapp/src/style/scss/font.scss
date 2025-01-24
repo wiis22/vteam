@@ -4,7 +4,12 @@ html {
     font-size: 100%;
 }
 
-* {
+a {
+    font-family: var.$font;
+    color: var.$font-color;
+}
+
+button {
     font-family: var.$font;
     color: var.$font-color;
 }
@@ -16,10 +21,13 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
     font-size: 2.8em;
-    margin-bottom: 3.5rem;
+    margin-bottom: 3rem;
+    text-align: center;
 }
 
 p {
+    font-family: var.$font;
+    color: var.$font-color;
     font-size: 1.25em;
     margin-bottom: 1.75rem;
     font-weight: var.$font-weight;

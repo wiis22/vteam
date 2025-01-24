@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline, Polygon, LayerGroup, Circle} from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import adminModel from "../models/admin-models";
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import redMarker from '../style/images/marker-icon.png';
 
 export default function Map() {
     const location = useLocation();
     const [city, setCity] = useState(null);
     const [borders, setBorders] = useState(null);
-    const [zones, setZones] = useState(null);
     const [bikes, setBikes] = useState(null);
 
     useEffect(() => {
@@ -25,10 +25,16 @@ export default function Map() {
         shadowUrl: iconShadow
     });
 
-    L.Marker.prototype.options.icon = DefaultIcon;
+    let lowBatteryMarker = L.icon({
+        iconUrl: redMarker
+    });
+
+
+    // L.Marker.prototype.options.icon = DefaultIcon;
 
     //Fetch city and get data
     const fetchCity = async () => {
+        // console.log(location.state.cityId)
         try {
             const cityData = await adminModel.getOneCity(location.state.cityId);
             setCity({
@@ -36,20 +42,12 @@ export default function Map() {
                 chargingStations: cityData.chargingStations,
                 geolocation: cityData.geolocation,
                 parkingZones: cityData.parkingZones,
-                zones: cityData.zones
             });
-            if (cityData.borders && cityData.zones) {
+            if (cityData.borders) {
                 const borderArray = cityData.borders.map(border => [border[1], border[0]]);
                 setBorders(borderArray);
-                //Setting up parking zones
-                const zones = [];
-                cityData.zones.forEach(element => {
-                    zones.push(element.map(border => [border[1], border[0]]));
-                });
-                // console.log(zones)
-                setZones(zones);
             }
-            // console.log(cityData)
+            console.log(cityData)
         } catch (error) {
             console.error("Error fetching city data:", error);
         }
@@ -79,7 +77,7 @@ export default function Map() {
                 <Circle
                     center={[element.latitude, element.longitude]}
                     pathOptions={yellowOptions}
-                    radius={100}
+                    radius={30}
                     />
                 </LayerGroup>
             );
@@ -100,7 +98,7 @@ export default function Map() {
                 <Circle
                     center={[element.latitude, element.longitude]}
                     pathOptions={blueOptions}
-                    radius={100}
+                    radius={50}
                     />
                 </LayerGroup>
             );
@@ -135,7 +133,10 @@ export default function Map() {
             const bikeOperational = bike.operational ? "Ja" : "Nej";
             //Add marker and popup to bikes array
             allBikes.push(
-            <Marker position={[bike.position.latitude, bike.position.longitude]}>
+            <Marker 
+            position={[bike.position.latitude, bike.position.longitude]}
+            icon={bike.batteryPercentage <= 10 ? lowBatteryMarker: DefaultIcon}
+            >
                 <Popup>
                 <p>ID: {bike._id}</p>
                 Charging: {bikeCharging}<br/>
@@ -146,7 +147,11 @@ export default function Map() {
 
                 <button onClick={() => handleClick(bike)}>
                     Change status on operational
-                </button>
+                </button><br/>
+                <Link to={`/admin/${ location.state.cityName }/single-bike`} state={{
+                    bikeId: `${ bike._id }` 
+                    }} className="small-button" >Inställningar & Historik
+                </Link>
                 </Popup>
             </Marker>
             );
@@ -157,7 +162,6 @@ export default function Map() {
     //render map
     const renderMap = () => {
         //setting up colors for border
-        const blackOptions = { color: 'black' }
         const greenOptions = { color: 'green' }
 
         return (
@@ -168,15 +172,8 @@ export default function Map() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            {/* <Marker position={[51.505, -0.09]}>
-                <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-                </Popup>
-            </Marker> */}
-
             {/* draw borders in city */}
-            <Polyline pathOptions={blackOptions} positions={borders} />
-            <Polygon pathOptions={greenOptions} positions={zones} />
+            <Polygon pathOptions={greenOptions} positions={borders} />
             {renderChargingStations()}
             <MarkerClusterGroup>
                 {renderBikes()}
@@ -192,20 +189,19 @@ export default function Map() {
     }
 
     return (
-        <div>
+        <div className="dashboard">
             <h2>Map vy över {location.state.cityName}</h2>
-            <p>Svartalinjegränsen: hela användningsområdet</p>
-            <p>Grönt-område: zoner</p>
+            <p>Grönt-område: hela användningsområdet</p>
             <p>Gula cirklar: ladd-zoner</p>
             <p>Blå cirklar: parkerings-zoner</p>
 
             <p>
-            <button onClick={handleClickUpdate}>
+            <button className="button" onClick={handleClickUpdate}>
                 Uppdatera cykel positioner
             </button>
             </p>
 
-            {city && borders && zones ? (
+            {city && borders ? (
                 renderMap()
             ) : (
                 <p>Laddar karta över staden...</p>

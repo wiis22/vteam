@@ -3,13 +3,19 @@ import userModel from "../models/user";
 import { Link } from 'react-router-dom';
 import authModel from "../models/auth";
 import Login from './login';
+import Navbar from "./navbar";
 
 export default function AccountDetails() {
     //all user details.
     const [userDetails, setUserDetails] = useState("");
+    const accessCheck = authModel.roleAccess("user");
     document.title = 'Användare';
 
     useEffect(() => {
+        // checks access
+        if (accessCheck) {
+            return <div>{accessCheck}</div>;
+        }
         //fetch and sets all userdetails.
         const fetchUser = async () => {
             try {
@@ -28,15 +34,10 @@ export default function AccountDetails() {
         fetchUser();
     }, []);
 
-    //Check if logged in.
-    if(!authModel.token) {
-        return (
-            <Login  />
-        );
-    }
-
     return (
-        <div>
+        <>
+        <Navbar />
+        <div className="dashboard">
             <h1>Användar-uppgifter</h1>
 
             <p>Namn: {userDetails.name}</p>
@@ -47,8 +48,9 @@ export default function AccountDetails() {
 
             <p>Nuvarande saldo: {userDetails.balance}</p>
 
-            <Link to="/change-password">Ändra lösenord</Link>
+            <Link to="/change-password" className="button">Ändra lösenord</Link>
         </div>
+        </>
     );
 };
 

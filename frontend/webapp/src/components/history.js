@@ -1,16 +1,24 @@
 import React from "react";
 import authModel from "../models/auth";
-import Login from './login';
+import Rides from "../admin-components/rides";
+import Navbar from "./navbar";
 
 export default function History() {
-    if(!authModel.token) {
-        return (
-            <Login  />
-        );
+    const accessCheck = authModel.roleAccess("user");
+    document.title = 'Historik & kvitton'
+
+    // checks access
+    if (accessCheck) {
+        return <div>{accessCheck}</div>;
     }
 
     return (
-        <h1>History</h1>
+        <>
+        <Navbar />
+        <div className="dashboard">
+            <h1>Historik & kvitto</h1>
+            <Rides userOrBike={ 'user' } id={authModel.userId} receipt={true} />
+        </div>
+        </>
     );
 };
-

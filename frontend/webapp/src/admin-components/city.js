@@ -1,37 +1,51 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, Outlet } from "react-router-dom";
+import { useParams, NavLink, Outlet } from "react-router-dom";
+// import adminModel from "../models/admin-models";
 
 export default function City() {
     const [cityId, setCityId] = useState('');
     const [cityName, setCityName] = useState('');
+    // const [cities, setCities] = useState([])
     const { city } = useParams();
 
     useEffect(() => {
         if (city === "goteborg") {
-            setCityId('6783d9507857ca45566e04fd');
+            setCityId('6790fc1e8ed7b6439b3fc430');
             setCityName('Göteborg');
+            // console.log(cities[0]._id)
         } else if (city === "karlskrona") {
-            setCityId('6783d9507857ca45566e04fe');
+            setCityId('6790fc1e8ed7b6439b3fc431');
             setCityName('Karlskrona');
         } else if (city === "harnosand") {
-            setCityId('6783d9507857ca45566e04ff');
+            setCityId('6790fc1e8ed7b6439b3fc432');
             setCityName('Härnösand');
         }
     }, [city]);
 
-    return (
-        <div className="citys">
+    //Fetch cities and get data
+    // const fetchCities = async () => {
+    //     try {
+    //         const citiesData = await adminModel.getCities();
+    //         setCities(citiesData);
+    //         // console.log(citiesData)
+    //     } catch (error) {
+    //         console.error("Error fetching cities data:", error);
+    //     }
+    // };
 
-            <p>
-                <Link to={`/admin/${ city }/users`}>Administrera användare</Link> |{" "}
-                <Link to={`/admin/${ city }/map`} state={{
+    return (
+        <div className="dashboard">
+
+            <nav className="navbar">
+                <NavLink to={`/admin/${ city }/users`} className={({ isActive }) => (isActive ? "active" : undefined)}>Administrera användare</NavLink>
+                <NavLink to={`/admin/${ city }/map`} state={{
                     cityId: `${ cityId }`,
                     cityName: `${ cityName }` 
-                    }}>Map</Link> |{" "}
-                <Link to={`/admin/${ city }/list`} state={{
+                    }} className={({ isActive }) => (isActive ? "active" : undefined)}>Map</NavLink>
+                <NavLink to={`/admin/${ city }/list`} state={{
                     cityName: `${ cityName }` 
-                    }}>Lista med cyklar</Link>
-            </p>
+                    }} className={({ isActive }) => (isActive ? "active" : undefined)}>Lista med cyklar</NavLink>
+            </nav>
 
             <Outlet />
         </div>

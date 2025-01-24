@@ -18,6 +18,22 @@ const user = {
 
         return result;
     },
+    changeUserPassword: async function changeUserPassword(NewPassword) {
+        const updatedPassword = {
+            ...NewPassword
+        };
+
+        const result = await fetch(`${serverURL}/api/user/password/${authModel.userId}`, {
+            body: JSON.stringify(updatedPassword),
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${authModel.token}`,
+            },
+            method: 'PUT'
+        });
+
+        return result;
+    },
 
     getOneUser: async function getOneUser() {
         const response = await fetch(`${serverURL}/api/user/${authModel.userId}`, {

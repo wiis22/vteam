@@ -6,7 +6,6 @@ import Admin from "./admin-components/admin";
 import Balance from "./components/balance";
 import Details from "./components/details";
 import History from "./components/history";
-import Navbar from "./components/navbar";
 import Users from "./admin-components/users";
 import MapView from "./admin-components/map";
 import BikeList from "./admin-components/bike-list";
@@ -16,14 +15,13 @@ import Login from "./components/login";
 import Logout from "./components/logout";
 import ChangePassword from "./components/change-password";
 import SingleBike from "./admin-components/single-bike";
+import UserRides from "./admin-components/user-rides";
 
 export default function Router() {
     return (
         <BrowserRouter>
         {/* All routes */}
         <Routes>
-            <Route path="/" element={<Navbar />}>
-
             <Route index element={<Home />} />
             <Route path="/login" element={<Login  />} />
             <Route path="/logout" element={<Logout />} />
@@ -35,13 +33,13 @@ export default function Router() {
             <Route path="/history" element={<History />} />
             {/* Admin routes */}
             <Route path="/admin" element={<Admin />}>
+            <Route path="user-rides" element={<UserRides />} />
                 <Route path=":city" element={<City />}>
-                <Route path="users" element={<Users />} />
-                <Route path="map" element={<MapView />} />
-                <Route path="list" element={<BikeList />} />
-                <Route path="single-bike" element={<SingleBike />} />
+                    <Route path="users" element={<Users />} />
+                    <Route path="map" element={<MapView />} />
+                    <Route path="list" element={<BikeList />} />
+                    <Route path="single-bike" element={<SingleBike />} />
                 </Route>
-            </Route>
             </Route>
         </Routes>
         </BrowserRouter>
