@@ -47,6 +47,10 @@ services:
     build:
       context: ./frontend/webapp
       dockerfile: Dockerfile
+    working_dir: /frontend/webapp
+    volumes:
+      - ./frontend/webapp:/frontend/webapp
+      - ./.env:/frontend/webapp/.env
     networks:
       - vteam
     restart: always
