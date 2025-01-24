@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, NavLink, Outlet } from "react-router-dom";
-import adminModel from "../models/admin-models";
+// import adminModel from "../models/admin-models";
 
 export default function City() {
     const [cityId, setCityId] = useState('');
     const [cityName, setCityName] = useState('');
-    const [cities, setCities] = useState([])
+    // const [cities, setCities] = useState([])
     const { city } = useParams();
 
     useEffect(() => {

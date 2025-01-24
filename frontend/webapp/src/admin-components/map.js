@@ -6,6 +6,7 @@ import adminModel from "../models/admin-models";
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import redMarker from '../style/images/marker-icon.png';
 
 export default function Map() {
     const location = useLocation();
@@ -24,7 +25,12 @@ export default function Map() {
         shadowUrl: iconShadow
     });
 
-    L.Marker.prototype.options.icon = DefaultIcon;
+    let lowBatteryMarker = L.icon({
+        iconUrl: redMarker
+    });
+
+
+    // L.Marker.prototype.options.icon = DefaultIcon;
 
     //Fetch city and get data
     const fetchCity = async () => {
@@ -127,7 +133,10 @@ export default function Map() {
             const bikeOperational = bike.operational ? "Ja" : "Nej";
             //Add marker and popup to bikes array
             allBikes.push(
-            <Marker position={[bike.position.latitude, bike.position.longitude]}>
+            <Marker 
+            position={[bike.position.latitude, bike.position.longitude]}
+            icon={bike.batteryPercentage <= 10 ? lowBatteryMarker: DefaultIcon}
+            >
                 <Popup>
                 <p>ID: {bike._id}</p>
                 Charging: {bikeCharging}<br/>
@@ -141,7 +150,7 @@ export default function Map() {
                 </button><br/>
                 <Link to={`/admin/${ location.state.cityName }/single-bike`} state={{
                     bikeId: `${ bike._id }` 
-                    }} className="button" >Inställningar & Historik
+                    }} className="small-button" >Inställningar & Historik
                 </Link>
                 </Popup>
             </Marker>
