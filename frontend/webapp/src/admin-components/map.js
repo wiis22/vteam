@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, Popup, Polygon, LayerGroup, Circle} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline, Polygon, LayerGroup, Circle} from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import adminModel from "../models/admin-models";
 import L from 'leaflet';
@@ -194,7 +194,6 @@ export default function Map() {
             <p>Grönt-område: hela användningsområdet</p>
             <p>Gula cirklar: ladd-zoner</p>
             <p>Blå cirklar: parkerings-zoner</p>
-            <p>Röd markör visar cykel med låg batteri</p>
 
             <p>
             <button className="button" onClick={handleClickUpdate}>
