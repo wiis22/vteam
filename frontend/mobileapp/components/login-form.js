@@ -43,8 +43,8 @@ export default class LoginForm extends HTMLElement {
         });
 
         let usernameLabel = document.createElement("label");
-        let username = document.createElement("input");
         let passwordLabel = document.createElement("label");
+        let username = document.createElement("input");
         let password = document.createElement("input");
         let submitButton = document.createElement("input");
         let registerButton = document.createElement("input");

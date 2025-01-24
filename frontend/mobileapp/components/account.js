@@ -1,6 +1,4 @@
-import authModel from "../models/auth.js";
-import { toast } from "../utils.js";
-import auth from "../models/auth.js";
+import accountModel from "../models/account.js";
 
 export default class Account extends HTMLElement {
     constructor() {
@@ -46,19 +44,17 @@ export default class Account extends HTMLElement {
         let balanceTh = document.createElement("td");
         let balanceTd = document.createElement("td");
         balanceTh.textContent = "Balance";
-        balanceTd.textContent = user.balance +" sek";
+        balanceTd.textContent = user.balance + " sek";
         balanceRow.appendChild(balanceTh);
         balanceRow.appendChild(balanceTd);
 
         // Balance form
         let balanceFormRow = document.createElement("tr");
-        let balanceFormTh = document.createElement("td");
         let balanceFormTd = document.createElement("td");
         let balanceForm = document.createElement("form");
         let balanceInput = document.createElement("input");
         let balanceButton = document.createElement("button");
 
-        balanceFormTh.textContent = "Add Balance";
         balanceInput.type = "number";
         balanceInput.placeholder = "Enter new balance";
         balanceInput.min = "0";
@@ -68,7 +64,6 @@ export default class Account extends HTMLElement {
         balanceForm.appendChild(balanceInput);
         balanceForm.appendChild(balanceButton);
         balanceFormTd.appendChild(balanceForm);
-        balanceFormRow.appendChild(balanceFormTh);
         balanceFormRow.appendChild(balanceFormTd);
 
         // Logout button
@@ -76,7 +71,7 @@ export default class Account extends HTMLElement {
         logoutButton.textContent = "Logout";
         logoutButton.classList.add("blue-button", "full-width-button");
         logoutButton.addEventListener("click", () => {
-            auth.logout();
+            accountModel.logout();
         });
 
         // Append rows to table
@@ -88,5 +83,18 @@ export default class Account extends HTMLElement {
         table.appendChild(tbody);
         this.appendChild(table);
         this.appendChild(logoutButton);
+
+        // Log session storage
+        console.log("Session Storage:");
+        for (let i = 0; i < sessionStorage.length; i++) {
+            let key = sessionStorage.key(i);
+            console.log(`${key}: ${sessionStorage.getItem(key)}`);
+        }
+        // Log local storage
+        console.log("Local Storage:", localStorage);
+        for (let i = 0; i < localStorage.length; i++) {
+            let key = localStorage.key(i);
+            console.log(`${key}: ${localStorage.getItem(key)}`);
+        }
     }
 }
