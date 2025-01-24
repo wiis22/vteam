@@ -1,51 +1,52 @@
-import { baseURL } from "../utils.js";
+import { baseURL, toast } from '../utils.js';
 
 const auth = {
-    token: "",
+    token: '',
 
+    /*
+        * Log in the user
+        * @param {string} username - The email of the user
+        * @param {string} password - The password of the user
+        * @returns {string} - The result of the login request
+        * @returns {string} - The error message if the login request fails
+    */
     login: async function login(username, password) {
-        const user = {
-            email: username,
-            password: password
-        };
-
         const response = await fetch(`${baseURL}/api/login`, {
-            body: JSON.stringify(user),
+            body: JSON.stringify({ email: username, password: password }),
             headers: {
-                'content-type': "application/json",
+                'content-type': 'application/json',
             },
-            "method": "POST",
+            'method': 'POST',
         });
-
         const result = await response.json();
+        console.log('Result of login request: ' + JSON.stringify(result));
 
-        console.log("Result of login request: " + JSON.stringify(result));
-        if ("error" in result) {
+        if ('error' in result) {
             return result.message;
         } else {
-            const returnedUser = {
-                id: result._id,
-                role: result.role,
-                email: result.email,
-                balance: result.balance,
-                email: user.email
-                // firstName: result.user.firstName,    This is currently not returned from login route
-                // lastName: result.user.lastName          -||-
-            };
-            localStorage.setItem("user", JSON.stringify(returnedUser));
-            localStorage.setItem("jwtToken", result.jwtToken);
-
             auth.token = result.jwtToken;
-            console.log("jwtToken: " + localStorage.getItem("jwtToken"));
-            console.log("All local storage items:");
+            result.email = username;
+            localStorage.setItem('user', JSON.stringify(result));
+            localStorage.setItem('jwtToken', result.jwtToken);
+            console.log('jwtToken: ' + localStorage.getItem('jwtToken'));
+            console.log('All local storage items:');
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
                 console.log(`${key}: ${localStorage.getItem(key)}`);
             }
-            return "ok";
+            location.hash = 'account';
+            location.reload();
+            return 'ok';
         }
     },
 
+    /*
+        * Register a new user
+        * @param {string} username - The email of the user
+        * @param {string} password - The password of the user
+        * @param {string} firstName - The first name of the user
+        * @param {string} lastName - The last name of the user    
+    */
     register: async function register(username, password, firstName, lastName) {
         const user = {
             email: username,
@@ -53,29 +54,23 @@ const auth = {
             firstName: firstName,
             lastName: lastName
         };
-
         const response = await fetch(`${baseURL}/api/user`, {
             body: JSON.stringify(user),
             headers: {
-                'content-type': "application/json",
+                'content-type': 'application/json',
             },
-            "method": "POST"
-        });
+            'method': 'POST'
+        }); const result = await response.json();
 
-        const result = await response.json();
-        console.log(result);
-
-        if (result.message === "User successfully registered.") {
-            return auth.login(username, password);
+        console.log('Result of register request: ', result);
+        if (result.success === true) {
+            auth.login(username, password);
         }
-        return result.message;
-    },
-
-    logout: function logout() {
-        localStorage.clear();
-        sessionStorage.clear();
-        auth.token = "";
-        location.hash = "login";
+        if (result.error) {
+            toast(result.error);
+        } else {
+            toast(result.message);
+        }
     },
 };
 
