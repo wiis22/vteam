@@ -58,7 +58,7 @@ export default function Admin() {
 
         </div>
         {toggleButton ? (
-            <button className="button" onClick={handleClick}>
+            <button className="header-button" onClick={handleClick}>
                 Ändra stad
             </button>
         ): ''}

@@ -99,6 +99,13 @@ const OneUser = ({ user }) => {
             </p>
 
             {buttons}
+
+            <Link to={`/admin/user-rides`} state={{
+                    userId: `${ userData._id }`,
+                    user: `${userData.email}`
+                    }} className="button" >
+            Historik
+            </Link>
         </div>
     );
 };

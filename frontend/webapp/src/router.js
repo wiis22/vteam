@@ -15,6 +15,7 @@ import Login from "./components/login";
 import Logout from "./components/logout";
 import ChangePassword from "./components/change-password";
 import SingleBike from "./admin-components/single-bike";
+import UserRides from "./admin-components/user-rides";
 
 export default function Router() {
     return (
@@ -32,11 +33,12 @@ export default function Router() {
             <Route path="/history" element={<History />} />
             {/* Admin routes */}
             <Route path="/admin" element={<Admin />}>
+            <Route path="user-rides" element={<UserRides />} />
                 <Route path=":city" element={<City />}>
-                <Route path="users" element={<Users />} />
-                <Route path="map" element={<MapView />} />
-                <Route path="list" element={<BikeList />} />
-                <Route path="single-bike" element={<SingleBike />} />
+                    <Route path="users" element={<Users />} />
+                    <Route path="map" element={<MapView />} />
+                    <Route path="list" element={<BikeList />} />
+                    <Route path="single-bike" element={<SingleBike />} />
                 </Route>
             </Route>
         </Routes>

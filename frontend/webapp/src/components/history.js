@@ -1,6 +1,6 @@
 import React from "react";
 import authModel from "../models/auth";
-import Login from './login';
+import Rides from "../admin-components/rides";
 import Navbar from "./navbar";
 
 export default function History() {
@@ -16,9 +16,9 @@ export default function History() {
         <>
         <Navbar />
         <div className="dashboard">
-            <h1>Historik</h1>
+            <h1>Historik & kvitto</h1>
+            <Rides userOrBike={ 'user' } id={authModel.userId} receipt={true} />
         </div>
         </>
     );
 };
-

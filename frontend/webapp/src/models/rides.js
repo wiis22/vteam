@@ -11,6 +11,7 @@ const rides = {
         });
         
         const result = await response.json();
+        console.log(`API URL: ${serverURL}/api/${userOrBike}/rides/${Id}`);
         return result;
         },
 };

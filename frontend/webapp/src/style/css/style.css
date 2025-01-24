@@ -39,6 +39,9 @@ body {
 
 .navbar a {
   text-decoration: none;
+  width: 100%;
+  text-align: center;
+  border-radius: 0.2em;
 }
 
 .navbar a:hover {
@@ -187,6 +190,26 @@ body {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
+.header-button {
+  color: #333;
+  background-color: #cdcdcd;
+  text-decoration: none;
+  box-sizing: border-box;
+  display: inline-block;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1.25em;
+  text-align: center;
+  border-radius: 0.8rem;
+  line-height: 1;
+  border-color: #cdcdcd;
+  margin-bottom: 2px;
+  margin-left: 2px;
+}
+
+.header-button:hover {
+  background-color: #b4b4b4;
+}
+
 .login-form {
   margin: 0 auto;
   text-align: center;
@@ -303,5 +326,9 @@ p {
 }
 
 .user-list:nth-child(even) {
+  background-color: #ececec;
+}
+
+.ride-list:nth-child(even) {
   background-color: #ececec;
 }

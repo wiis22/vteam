@@ -28,16 +28,18 @@ const Rides = ({ userOrBike, id, receipt }) => {
     const fetchRides = async () => {
         try {
             const ridesData = await ridesModel.getRides(userOrBike, id);
+            console.log(id)
             setRides(ridesData);
             console.log(ridesData)
         } catch (error) {
             console.error("Error fetching rides data:", error);
+            console.log(id)
         }
     };
 
     //Button functions
     const handleClickReceipt = () => {
-
+        console.log("kvitto")
     }
 
     return (
