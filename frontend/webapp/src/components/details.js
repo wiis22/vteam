@@ -35,8 +35,9 @@ export default function AccountDetails() {
     }, []);
 
     return (
-        <div>
-            <Navbar />
+        <>
+        <Navbar />
+        <div className="dashboard">
             <h1>Användar-uppgifter</h1>
 
             <p>Namn: {userDetails.name}</p>
@@ -47,8 +48,9 @@ export default function AccountDetails() {
 
             <p>Nuvarande saldo: {userDetails.balance}</p>
 
-            <Link to="/change-password">Ändra lösenord</Link>
+            <Link to="/change-password" className="button">Ändra lösenord</Link>
         </div>
+        </>
     );
 };
 

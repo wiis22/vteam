@@ -64,7 +64,8 @@ export default function Users() {
     }
 
     return  (
-        <div>
+        <>
+        <div className="dashboard">
         <h2>{heading} (antal: {users.length})</h2>
 
         <p>   
@@ -76,7 +77,7 @@ export default function Users() {
                     placeholder='Sök användare, namn eller status'
                     onChange={(e) => setSearchedUsers(e.target.value)}
             />
-            <input type="submit" value="Sök"/>
+            <input className="small-button" type="submit" value="Sök"/>
         </form>
         </p>
 
@@ -87,5 +88,6 @@ export default function Users() {
         onPageChange={handlePageChange}
         />
         </div>
+        </>
     );
 };

@@ -45,11 +45,11 @@ const OneUser = ({ user }) => {
 
         setButtons(
             <div>
-                <button onClick={() => handleRollChange('banned', userData._id)}>
+                <button className="small-button" onClick={() => handleRollChange('banned', userData._id)}>
                     Bannad
                 </button>
 
-                <button onClick={() => handleRollChange('admin', userData._id)}>
+                <button className="small-button" onClick={() => handleRollChange('admin', userData._id)}>
                     Admin
                 </button>
             </div>
@@ -93,7 +93,7 @@ const OneUser = ({ user }) => {
             <p>Status: {userData.role}</p>
 
             <p>
-                <button onClick={handleClick}>
+                <button className="button" onClick={handleClick}>
                     Ändra status
                 </button>
             </p>

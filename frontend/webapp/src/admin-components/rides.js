@@ -29,7 +29,7 @@ const Rides = ({ userOrBike, id, receipt }) => {
         try {
             const ridesData = await ridesModel.getRides(userOrBike, id);
             setRides(ridesData);
-            // console.log(ridesData)
+            console.log(ridesData)
         } catch (error) {
             console.error("Error fetching rides data:", error);
         }

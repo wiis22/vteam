@@ -1,10 +1,32 @@
+@use './variables' as var;
+
 .navbar {
-    position: fixed;
+    position: relative;
+    margin: 0 auto;
     top: 0;
     overflow: hidden;
     width: 100%;
+    max-width: 800px;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-around;
-    background-color: whitesmoke;
+    background-color: var.$light-grey;
+    font-size: 1.25em;
+    margin-bottom: 1.75rem;
+    font-weight: var.$font-weight;
+    color: var.$font-color;
+}
+
+.navbar a {
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    background-color: var.$darker-grey;
+}
+
+.active {
+    background-color: #1c6ea4;
+    color: #fff;
+    border-radius: 5%;
 }

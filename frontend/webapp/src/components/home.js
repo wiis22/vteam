@@ -12,11 +12,13 @@ export default function Home() {
     }
 
     return (
-        <div>
-            <Navbar />
+        <>
+        <Navbar />
+        <div className="dashboard">
             <h1>Hem</h1>
             <p>Välkommen tillbaka {authModel.username}</p>
         </div>
+        </>
     );
 };
 

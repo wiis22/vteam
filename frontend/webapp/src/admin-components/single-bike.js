@@ -79,14 +79,14 @@ export default function SingleBike() {
     };
 
     return (
-        <div>
+        <div className="dashboard">
             <h2>Cykel information och settings</h2>
 
             <p>Id: {bikeDetails.id}</p>
 
             <p>Plats: {bikeDetails.location}</p>
 
-            <button onClick={() => handleClickLocation(bikeDetails.id)}>
+            <button className="small-button" onClick={() => handleClickLocation(bikeDetails.id)}>
                     Ändra plats till {bikeDetails.location === "field" ? "maintenance": 'field'}
             </button>
 
@@ -97,19 +97,19 @@ export default function SingleBike() {
             <p>
                 Tillgänglig: {bikeDetails.available ? "Ja": "Nej"}
             </p>
-            <button onClick={() => handleClickAvailable(bikeDetails.id)}>
+            <button className="small-button" onClick={() => handleClickAvailable(bikeDetails.id)}>
                     Ändra tillgänglig status
             </button>
 
             <p>
                 Operativ: {bikeDetails.operational ? "Ja": "Nej"}
             </p>
-            <button onClick={() => handleClickOperational(bikeDetails.id)}>
+            <button className="small-button" onClick={() => handleClickOperational(bikeDetails.id)}>
                     Ändra operativ status
             </button>
 
             <h2>Cykel historik</h2>
-            <Rides userOrBike={'bike'} id={bikeDetails.id} receipt={false} />
+            <Rides userOrBike={ 'bike' } id={bikeDetails.id} receipt={false} />
         </div>
     );
 };

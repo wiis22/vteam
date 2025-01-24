@@ -13,10 +13,12 @@ export default function History() {
     }
 
     return (
-        <div>
-            <Navbar />
-            <h1>History</h1>
+        <>
+        <Navbar />
+        <div className="dashboard">
+            <h1>Historik</h1>
         </div>
+        </>
     );
 };
 

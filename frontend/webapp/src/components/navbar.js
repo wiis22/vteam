@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import authModel from "../models/auth";
 
 export default function Navbar() {
@@ -11,19 +11,19 @@ export default function Navbar() {
     // }, []);
     useEffect(() => {
         if (authModel.role === "admin") {
-            setAdminLink(<Link to="/admin">Admin</Link>);
+            setAdminLink(<NavLink to="/admin">Admin</NavLink>);
         }
     }, []);
 
     return (
         <div>
             <nav className="navbar">
-                <Link to="/">Hem</Link>
-                <Link to="/balance">Saldo</Link>
-                <Link to="/details">Användare</Link>
-                <Link to="/history">Historik & kvitton</Link>
+                <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>Hem</NavLink>
+                <NavLink to="/balance" className={({ isActive }) => (isActive ? "active" : undefined)}>Saldo</NavLink>
+                <NavLink to="/details" className={({ isActive }) => (isActive ? "active" : undefined)}>Användare</NavLink>
+                <NavLink to="/history" className={({ isActive }) => (isActive ? "active" : undefined)}>Historik & kvitton</NavLink>
                 {adminLink}
-                <Link to="/logout">Logga ut</Link>
+                <NavLink to="/logout">Logga ut</NavLink>
             </nav>
 
             <Outlet />

@@ -36,36 +36,40 @@ export default function Login() {
 
 
     return (
-        <div className='login'>
+        <>
+        <div className="dashboard">
 
         <h1>Logga in</h1>
 
-            <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className='login-form'>
 
-                <p><label>E-mail/Användarnamn: </label></p>
-                <input className='textarea'
-                        type="email"
-                        value={email}
-                        placeholder='Email'
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
+        <p><label>E-mail/Användarnamn: </label></p>
+        <input className='input form-input'
+                type="email"
+                value={email}
+                placeholder='Email'
+                onChange={(e) => setEmail(e.target.value)}
+                required
+            />
 
-                <p><label>Password: </label></p>
-                <input className='textarea'
-                        type="password"
-                        value={password}
-                        placeholder='******'
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+        <p><label>Password: </label></p>
+        <input className='input form-input'
+                type="password"
+                value={password}
+                placeholder='******'
+                onChange={(e) => setPassword(e.target.value)}
+                required
+            />
 
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                <button className='button green-button' type="submit">
-                    Log in
-                </button>
-            </form>
-            <Link to="/register">Registera ny användare</Link>
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
+        <button className='green-button form-button' type="submit">
+            Logga in
+        </button>
+
+        <Link to="/register" className='button form-button'>Registera ny användare</Link>
+        </form>
         </div>
+        </>
     )
 }

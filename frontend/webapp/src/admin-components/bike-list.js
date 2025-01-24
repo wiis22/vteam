@@ -116,7 +116,7 @@ export default function BikeList() {
     }
 
     return  (
-        <div>
+        <div className="dashboard">
 
         <h2>{location.state.cityName}s</h2>
         <h3>{heading} (antal: {bikes.length})</h3>
@@ -130,32 +130,32 @@ export default function BikeList() {
                     placeholder='Id'
                     onChange={(e) => setSearchedBike(e.target.value)}
             />
-            <input type="submit" value="Sök"/>
+            <input className="small-button" type="submit" value="Sök"/>
         </form>
         </p>
         <p>{searchMessage}</p>
 
-        <button onClick={showAllBikes}>
+        <button className="small-button" onClick={showAllBikes}>
             Visa alla cyklar
         </button>
 
-        <button onClick={filterLowBattery}>
+        <button className="small-button" onClick={filterLowBattery}>
             Cyklar med låg batterinivå
         </button>
 
-        <button onClick={filterOperational}>
+        <button className="small-button" onClick={filterOperational}>
             Operativa cyklar
         </button>
 
-        <button onClick={filterNotOperational}>
+        <button className="small-button" onClick={filterNotOperational}>
             Icke operativa cyklar
         </button>
 
-        <button onClick={filterAvailable}>
+        <button className="small-button" onClick={filterAvailable}>
             Tillgängliga cyklar
         </button>
 
-        <button onClick={filterNotAvailable}>
+        <button className="small-button" onClick={filterNotAvailable}>
             Otillgängliga cyklar
         </button>
 

@@ -28,6 +28,7 @@ export default function Map() {
 
     //Fetch city and get data
     const fetchCity = async () => {
+        console.log(location.state.cityId)
         try {
             const cityData = await adminModel.getOneCity(location.state.cityId);
             setCity({
@@ -40,7 +41,7 @@ export default function Map() {
                 const borderArray = cityData.borders.map(border => [border[1], border[0]]);
                 setBorders(borderArray);
             }
-            // console.log(cityData)
+            console.log(cityData)
         } catch (error) {
             console.error("Error fetching city data:", error);
         }
@@ -179,14 +180,14 @@ export default function Map() {
     }
 
     return (
-        <div>
+        <div className="dashboard">
             <h2>Map vy över {location.state.cityName}</h2>
             <p>Grönt-område: hela användningsområdet</p>
             <p>Gula cirklar: ladd-zoner</p>
             <p>Blå cirklar: parkerings-zoner</p>
 
             <p>
-            <button onClick={handleClickUpdate}>
+            <button className="button" onClick={handleClickUpdate}>
                 Uppdatera cykel positioner
             </button>
             </p>

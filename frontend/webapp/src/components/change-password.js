@@ -41,9 +41,9 @@ export default function ChangePassword() {
     }
 
     return (
-        <div>
+        <>
         <Navbar />
-
+        <div className="dashboard">
         <h1>Ändra lösenord</h1>
 
             <form onSubmit={handleChangePassword}>
@@ -69,11 +69,12 @@ export default function ChangePassword() {
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
 
                 <p>
-                <button className='button green-button' type="submit">
+                <button className='green-button' type="submit">
                     Ändra lösenordet
                 </button>
                 </p>
             </form>
         </div>
+        </>
     );
 };

@@ -42,15 +42,16 @@ export default function Balance() {
     }
 
     return (
-        <div>
-            <Navbar />
+        <>
+        <Navbar />
+        <div className="dashboard">
             <h1>Saldo</h1>
 
             <h2>Nuvarande saldo: {balance}</h2>
             
             <form onSubmit={handleAddBalance}>
                 <label>Utöka saldo: </label>
-                <input className='textarea'
+                <input className='input'
                     type="number" 
                     min="1" 
                     max="100000" 
@@ -60,5 +61,6 @@ export default function Balance() {
                 <button type="submit" className="button">Lägg till</button>
             </form>
         </div>
+        </>
     );
 };

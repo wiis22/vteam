@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, Outlet } from "react-router-dom";
+import { useParams, NavLink, Outlet } from "react-router-dom";
 
 export default function City() {
     const [cityId, setCityId] = useState('');
@@ -20,18 +20,18 @@ export default function City() {
     }, [city]);
 
     return (
-        <div className="citys">
+        <div className="dashboard">
 
-            <p>
-                <Link to={`/admin/${ city }/users`}>Administrera användare</Link> |{" "}
-                <Link to={`/admin/${ city }/map`} state={{
+            <nav className="navbar">
+                <NavLink to={`/admin/${ city }/users`} className={({ isActive }) => (isActive ? "active" : undefined)}>Administrera användare</NavLink>
+                <NavLink to={`/admin/${ city }/map`} state={{
                     cityId: `${ cityId }`,
                     cityName: `${ cityName }` 
-                    }}>Map</Link> |{" "}
-                <Link to={`/admin/${ city }/list`} state={{
+                    }} className={({ isActive }) => (isActive ? "active" : undefined)}>Map</NavLink>
+                <NavLink to={`/admin/${ city }/list`} state={{
                     cityName: `${ cityName }` 
-                    }}>Lista med cyklar</Link>
-            </p>
+                    }} className={({ isActive }) => (isActive ? "active" : undefined)}>Lista med cyklar</NavLink>
+            </nav>
 
             <Outlet />
         </div>
