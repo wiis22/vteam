@@ -1,0 +1,5 @@
+@use './variables' as var;
+
+.bike-list:nth-child(even) {
+    background-color: var.$very-light-grey;
+}

@@ -1,0 +1,16 @@
+@use './variables' as var;
+
+body {
+    line-height: 1.4;
+    background-color: var.$background-color;
+    overflow-x: hidden;
+}
+
+.dashboard {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.admin {
+    background-color: var.$very-light-grey;
+}
