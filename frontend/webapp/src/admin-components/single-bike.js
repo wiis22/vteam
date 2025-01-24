@@ -109,7 +109,7 @@ export default function SingleBike() {
             </button>
 
             <h2>Cykel historik</h2>
-            <Rides userOrBike={ 'bike' } id={location.state.bikeId} receipt={false} />
+            <Rides userOrBike={ 'bike' } id={bikeDetails.id} receipt={false} />
         </div>
     );
 };
