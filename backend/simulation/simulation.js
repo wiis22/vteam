@@ -18,7 +18,15 @@ const setupGracefulShutdown = () => {
         console.log("\nShutting down simulation...");
         try {
             for (const user of globalUsers) {
+<<<<<<< HEAD
+<<<<<<< HEAD
                 if (user.bikeId !== null) {
+=======
+                if (user.bike !== null) {
+>>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
+=======
+                if (user.bikeId !== null) {
+>>>>>>> 5a6524b (Simulation now shutsdown correctly and adds users in batches)
                     console.log(`ending ride for user: ${user.userId}`);
                     await user.endRide();
                 }
@@ -128,8 +136,19 @@ const simulateCity = async (users, city) => {
 // Simulate one ride
 const simulateRide = async (user, bikeId, route) => {
     // Seconds between each position update (10 sec results in reasonable speed)
+<<<<<<< HEAD
+<<<<<<< HEAD
     const intervalSec = 20
     console.log(`Starting ride. UserId: ${user.userId}. BikeId: ${bikeId}. The ride should take ${intervalSec * route.length} seconds.`)
+=======
+    intervalSec = 2
+    console.log(`Starting ride. UserId: ${user.userId}. BikeId: ${bikeId}. The ride should take ${intervalSec * route.length} seconds.`)
+    console.log(``)
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+    const intervalSec = 20
+    console.log(`Starting ride. UserId: ${user.userId}. BikeId: ${bikeId}. The ride should take ${intervalSec * route.length} seconds.`)
+>>>>>>> 5a6524b (Simulation now shutsdown correctly and adds users in batches)
     // Start the ride
     user.startRide(bikeId);
     // Sleep for 10 sec
@@ -150,9 +169,25 @@ const simulateRide = async (user, bikeId, route) => {
 
 // Get the route array of positions between two positions
 const getRoute = (startPosition, endPosition) => {
+<<<<<<< HEAD
+<<<<<<< HEAD
     // 20km/h = 56m/10sec
     // const interval = 56
     const interval = 1000
+=======
+    // 20km/h = 200m/min = 33.33m/10sec
+    // const interval = 33
+    const interval = 200
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+    // 20km/h = 56m/10sec
+    // const interval = 56
+<<<<<<< HEAD
+    const interval = 500
+>>>>>>> e4a2020 (Simulation now works)
+=======
+    const interval = 1000
+>>>>>>> 5a6524b (Simulation now shutsdown correctly and adds users in batches)
     const turfStart = turf.point([startPosition.longitude, startPosition.latitude]);
     const turfEnd = turf.point([endPosition.longitude, endPosition.latitude]);
     const line = turf.lineString([turfStart.geometry.coordinates, turfEnd.geometry.coordinates]);
@@ -221,6 +256,11 @@ const addUsers = async (numUsers) => {
     }
 
     console.log("All users registered");
+<<<<<<< HEAD
+
+    globalUsers = users;
+=======
+>>>>>>> 5a6524b (Simulation now shutsdown correctly and adds users in batches)
 
     globalUsers = users;
 

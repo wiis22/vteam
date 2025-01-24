@@ -39,7 +39,14 @@ class bikeBrain {
 
     startRide(customer){
         if(!this.available || this.charging || !this.operational){
+<<<<<<< HEAD
+<<<<<<< HEAD
             //borde lägga till en emit här
+=======
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+            //borde lägga till en emit här
+>>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
             console.log("Bike not available");
             return;
         }
@@ -60,7 +67,15 @@ class bikeBrain {
         // Drain battery every minute
         this.batteryDrainInter = setInterval(() => {
             this.drainBattery();
+<<<<<<< HEAD
+<<<<<<< HEAD
         }, 6000);
+=======
+        }, 60000);
+>>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
+=======
+        }, 6000);
+>>>>>>> 5a6524b (Simulation now shutsdown correctly and adds users in batches)
         return;
     }
 
@@ -92,18 +107,47 @@ class bikeBrain {
     }
 
     drainBattery() {
+<<<<<<< HEAD
+<<<<<<< HEAD
         if (!this.operational || this.batteryPercentage <= 10) {
+=======
+        if (!this.operational || this.batteryPercentage <= 0) {
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        if (!this.operational || this.batteryPercentage <= 10) {
+>>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
             console.log("Bike not available");
             return;
         }
         const speed = 15;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5a6524b (Simulation now shutsdown correctly and adds users in batches)
         const batteryLoss = (speed / 15) / 10;
         this.batteryPercentage -= Number(batteryLoss.toPrecision(2));
+=======
+        const batteryLoss = speed / 15;
+<<<<<<< HEAD
+        this.batteryPercentage  = this.batteryPercentage - Number(batteryLoss.toPrecision(2));
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        this.batteryPercentage -= Number(batteryLoss.toPrecision(2));
+>>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
 
         if (this.batteryPercentage <= 10) {
             console.log("Cykeln måste laddas och stängs av.");
             this.socket.emit("bikeEndRide", { userId: this.currentCustomer})
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
             this.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
+=======
+            this.socket.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
+>>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
+=======
+            this.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
+>>>>>>> d623c05 (made some changes to bikebrain and fixed test for better coverage.)
 
             //tar bort intervallet så att den inte fortsätter att dra batteri
             clearInterval(this.batteryDrainInter)
@@ -111,9 +155,18 @@ class bikeBrain {
 
             this.socket.emit("updateBike", {id: this.id, batteryPercentage: this.batteryPercentage});
             return;
+<<<<<<< HEAD
             // this.endRide(); // not used here as mobile app/user gets emit above and will end it like normal
         }
 
+=======
+            this.socket.updateAvailable(false);
+=======
+>>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
+            // this.endRide(); // not used here as mobile app/user gets emit above and will end it like normal
+        }
+
+>>>>>>> dcd3543 (Fixed some errors)
         this.batteryPercentage = Math.max(this.batteryPercentage, 0);
 
         console.log(`Cykel ${this.id}. Batterinivå: ${this.batteryPercentage.toFixed(1)}%`);
@@ -157,7 +210,15 @@ class bikeBrain {
 
     updateLocation(newLocation) {
         this.location = newLocation;
+<<<<<<< HEAD
+<<<<<<< HEAD
         if (this.location == "chargingStation") {
+=======
+        if (this.location === "chargingStation") {
+>>>>>>> 59c11e6 (Added a GracefulShutdown setup for simulation and fixed some issues.)
+=======
+        if (this.location == "chargingStation") {
+>>>>>>> d623c05 (made some changes to bikebrain and fixed test for better coverage.)
             this.updateCharging(true);
             setTimeout(() => this.chargingBattery(), 60000);
         }

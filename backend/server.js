@@ -40,13 +40,29 @@ io.sockets.on('connection', (socket) => {
 
     // used by mobile app when user starts a ride
     socket.on("startRide", (data) => {
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("Socket route: startRide", data)
+=======
+        console.log("Socket route: startRide", data)
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("Socket route: startRide", data)
+>>>>>>> e4a2020 (Simulation now works)
         io.to(data.bikeId).emit("startRide", { userId: data.userId });
     });
 
     // used by bike to confirm if ride was started or not
     socket.on("bikeStartRideResponse", (data) => {
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("Socket route: bikeStartRideResponse", data)
+=======
+        console.log("Socket route: bikeStartRideResponse", data)
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("Socket route: bikeStartRideResponse", data)
+>>>>>>> e4a2020 (Simulation now works)
         io.to(data.userId).emit("bikeStartRideResponse", { bikeId: data.bikeId, started: data.started, }) // started is boolean
     })
 
@@ -91,7 +107,15 @@ io.sockets.on('connection', (socket) => {
 
     // used by mobile app to update it's position to the bike
     socket.on('updatePosition', (data) => {
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log(`User updating position to Bike ${data.bikeId}. position: ${data.position}`);
+=======
+        console.log(`User updating position to Bike ${data.bikeId}. position: ${data.position}`);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log(`User updating position to Bike ${data.bikeId}. position: ${data.position}`);
+>>>>>>> e4a2020 (Simulation now works)
         socket.to(data.bikeId).emit('updatePosition', { position: data.position });
     });
 
@@ -195,7 +219,15 @@ app.delete('/api/user/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
     try {
         const result = await database.deleteOne("users", id);
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.status(200).json(result);
     } catch (error) {
         console.error('Error deleting user:', error);
@@ -206,7 +238,15 @@ app.delete('/api/user/:id', auth.verifyJwt, async (req, res) => {
 app.get('/api/cities', auth.verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("cities");
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.json(result);
     } catch (error) {
         console.error('Error fetching cities:', error);
@@ -219,7 +259,15 @@ app.get('/api/city/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.getOne("cities", id);
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.json(result);
     } catch (error) {
         console.error('Error fetching city:', error);
@@ -237,7 +285,15 @@ app.post('/api/city', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.addOne("cities", cityData);
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.json(result);
     } catch (error) {
         console.error('Error adding city:', error);
@@ -248,7 +304,15 @@ app.post('/api/city', auth.verifyJwt, async (req, res) => {
 app.get('/api/users', auth.verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("users");
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.json(result);
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -261,7 +325,15 @@ app.get('/api/user/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.getOne("users", id);
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.json(result);
     } catch (error) {
         console.error('Error fetching city:', error);
@@ -279,7 +351,15 @@ app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.updateOne("users", updatedUserData);
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.json(result);
     } catch (error) {
         console.error('Error updating user:', error);
@@ -321,7 +401,15 @@ app.post('/api/bike', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.addOne("bikes", bikeData);
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.status(201).json(result);
     } catch (error) {
         console.error('Error adding new bike to database:', error);
@@ -339,7 +427,15 @@ app.put('/api/bike/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.updateOne("bikes", updatedBikeData);
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.status(200).json(result);
     } catch (error) {
         console.error('Error updating bike data:', error);
@@ -356,7 +452,15 @@ app.get('/api/bikes/:city', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.filterAll("bikes", cityFilter);
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.status(200).json(result);
     } catch (error) {
         console.error('Error retrieving bikes:', error);
@@ -369,7 +473,15 @@ app.get('/api/bike/:id', auth.verifyJwt, async (req, res) => {
 
     try {
         const result = await database.getOne("bikes", id);
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.status(200).json(result);
     } catch (error) {
         console.error('Error retrieving one bike:', error);
@@ -380,7 +492,15 @@ app.get('/api/bike/:id', auth.verifyJwt, async (req, res) => {
 app.get('/api/bikes', auth.verifyJwt, async (req, res) => {
     try {
         const result = await database.getAll("bikes");
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.status(200).json(result);
     } catch (error) {
         console.error('Error retrieving all bikes:', error);
@@ -392,7 +512,15 @@ app.delete('/api/bike/:id', auth.verifyJwt, async (req, res) => {
     const { id } = req.params;
     try {
         const result = await database.deleteOne("bikes", id);
+<<<<<<< HEAD
+<<<<<<< HEAD
         // console.log("result: ", result);
+=======
+        console.log("result: ", result);
+>>>>>>> dcd3543 (Fixed some errors)
+=======
+        // console.log("result: ", result);
+>>>>>>> e4a2020 (Simulation now works)
         res.status(200).json(result);
     } catch (error) {
         console.error('Error deleting bike:', error);
