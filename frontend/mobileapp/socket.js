@@ -1,6 +1,8 @@
+/* global io */
+
 import { baseURL } from "./utils.js";
 
-const socket = io("localhost:1337");
+const socket = io(baseURL);
 
 socket.on('connect', () => {
     console.log('Socket.IO connection established');

@@ -44,47 +44,16 @@ export default class MapComponent extends HTMLElement {
             `;
 
         if (!this.token) {
-            toast("Login required");
+            toast("Login required to view map");
             return
         }
         this.fetchCities();
 
         getUserLocation().then(coordinates => {
-            // Check if user is logged in
             this.renderMap(coordinates);
-            this.map.whenReady(() => {
-                // this.renderCities();
-            });
         }).catch(error => {
-            console.error("Error getting geolocation:", error);
-            toast("Error getting geolocation");
+            toast(error);
         });
-
-        // // Listen for WebSocket messages
-        // socket.on('bikeUpdate', (data) => {
-        //     this.bikes = data.bikes;
-        //     this.setAttribute("bikes", JSON.stringify(this.bikes));
-        // });
-
-        // socket.on('startRide', (data) => {
-        //     console.log(`Ride started for user ${data.userId}`);
-        //     // Handle ride start
-        // });
-
-        // socket.on('endRide', () => {
-        //     console.log('Ride ended');
-        //     // Handle ride end
-        // });
-
-        // socket.on('rideDone', (data) => {
-        //     console.log('Ride saved:', data.ride);
-        //     // Handle ride save
-        // });
-
-        // socket.on('updatePosition', (data) => {
-        //     console.log('Position updated:', data.position);
-        //     // Handle position update
-        // });
     }
 
     async createCitySelection(cities) {
@@ -212,25 +181,24 @@ export default class MapComponent extends HTMLElement {
             }
         }).filter(coord => coord !== null);
         if (cityBorders.length > 0) {
-            L.polygon(cityBorders, { color: 'cyan', fillOpacity: 0.1, fillColor: "grey", weight: 4, opacity: 1 }).addTo(this.map);
+            L.polygon(cityBorders, { color: 'green', fillOpacity: 0.05, weight: 4, opacity: 1 }).addTo(this.map);
         }
         // Render parking zones
         city.parkingZones.forEach((zone) => {
             const { latitude, longitude } = zone;
             if (latitude && longitude) {
-                const circle = L.circle([latitude, longitude], {
-                    color: 'lightgrey',
-                    fillOpacity: 0.5,
-                    fillColor: 'blue',
-                    radius: 5
+                L.circle([latitude, longitude], {
+                    color: 'blue',
+                    opacity: 0.3,
+                    radius: 50,
                 }).addTo(this.map);
                 L.marker([latitude, longitude], { icon: icons.parking, opacity: 0.5, zIndexOffset: -1000 }).addTo(this.map);
                 // Adjust circle radius based on zoom level
-                this.map.on('zoomend', () => {
-                    const zoomLevel = this.map.getZoom();
-                    const newRadius = 8 * (20 / zoomLevel);
-                    circle.setRadius(newRadius);
-                });
+                // this.map.on('zoomend', () => {
+                //     const zoomLevel = this.map.getZoom();
+                //     const newRadius = 8 * (20 / zoomLevel);
+                //     circle.setRadius(newRadius);
+                // });
             } else {
                 console.error("Invalid parking zone node:", zone);
             }
@@ -244,7 +212,7 @@ export default class MapComponent extends HTMLElement {
                     color: 'green',
                     fillOpacity: 0.4,
                     fillColor: 'green',
-                    radius: 20,
+                    radius: 30,
                     zIndexOffset: -500
                 }).addTo(this.map);
             } else {

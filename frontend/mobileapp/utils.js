@@ -10,7 +10,7 @@ function toast(message) {
     setTimeout(function () {
         toast.className = toast.className.replace("visible", "");
     },
-    3000
+        3000
     );
 }
 

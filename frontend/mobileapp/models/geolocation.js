@@ -1,4 +1,5 @@
 import getCoordinates from "./nominatim.js";
+import { toast } from "../utils.js";
 
 /* 
 * Get the user's geolocation
@@ -20,7 +21,7 @@ export default async function getGeolocation() {
             }, async () => {
                 // If geolocation (fails), use Karlskrona coordinates
                 const coords = await getCoordinates("Göteborg");
-
+                toast("Using standard location");
                 resolve(coords[0]);
             });
         });

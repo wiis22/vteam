@@ -24,11 +24,6 @@ export default class Router extends HTMLElement {
                 name: "Register",
                 hidden: true,
             },
-            // "login": {
-            //     view: "<login-view></login-view>",
-            //     name: "Account",
-            //     hidden: true,
-            // },
         };
     }
 
