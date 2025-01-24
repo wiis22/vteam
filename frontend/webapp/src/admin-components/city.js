@@ -1,23 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { useParams, NavLink, Outlet } from "react-router-dom";
+import adminModel from "../models/admin-models";
 
 export default function City() {
     const [cityId, setCityId] = useState('');
     const [cityName, setCityName] = useState('');
+    const [cities, setCities] = useState([])
     const { city } = useParams();
 
     useEffect(() => {
         if (city === "goteborg") {
-            setCityId('6783d9507857ca45566e04fd');
+            setCityId('6790fc1e8ed7b6439b3fc430');
             setCityName('Göteborg');
+            // console.log(cities[0]._id)
         } else if (city === "karlskrona") {
-            setCityId('6783d9507857ca45566e04fe');
+            setCityId('6790fc1e8ed7b6439b3fc431');
             setCityName('Karlskrona');
         } else if (city === "harnosand") {
-            setCityId('6783d9507857ca45566e04ff');
+            setCityId('6790fc1e8ed7b6439b3fc432');
             setCityName('Härnösand');
         }
     }, [city]);
+
+    //Fetch cities and get data
+    // const fetchCities = async () => {
+    //     try {
+    //         const citiesData = await adminModel.getCities();
+    //         setCities(citiesData);
+    //         // console.log(citiesData)
+    //     } catch (error) {
+    //         console.error("Error fetching cities data:", error);
+    //     }
+    // };
 
     return (
         <div className="dashboard">

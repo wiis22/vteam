@@ -17,6 +17,7 @@ body {
 .map {
   height: 50vh;
   width: 100%;
+  margin-bottom: 3rem;
 }
 
 .navbar {
@@ -297,10 +298,10 @@ p {
     font-size: 112.5%;
   }
 }
-.bike-list:nth-child(odd) {
+.bike-list:nth-child(even) {
   background-color: #ececec;
 }
 
-.user-list:nth-child(odd) {
+.user-list:nth-child(even) {
   background-color: #ececec;
 }

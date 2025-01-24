@@ -28,7 +28,7 @@ export default function Map() {
 
     //Fetch city and get data
     const fetchCity = async () => {
-        console.log(location.state.cityId)
+        // console.log(location.state.cityId)
         try {
             const cityData = await adminModel.getOneCity(location.state.cityId);
             setCity({
