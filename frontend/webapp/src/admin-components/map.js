@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, Polygon, LayerGroup, Circle} from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
@@ -15,12 +15,6 @@ export default function Map() {
     const [city, setCity] = useState(null);
     const [borders, setBorders] = useState(null);
     const [bikes, setBikes] = useState(null);
-
-    useEffect(() => {
-        //fetching data
-        fetchBikes();
-        fetchCity();
-    }, [location.state]);
 
     let bikeMarker = L.icon({
         iconUrl: bikeIcon,
@@ -40,7 +34,7 @@ export default function Map() {
     // L.Marker.prototype.options.icon = DefaultIcon;
 
     //Fetch city and get data
-    const fetchCity = async () => {
+    const fetchCity = useCallback(async () => {
         // console.log(location.state.cityId)
         try {
             const cityData = await adminModel.getOneCity(location.state.cityId);
@@ -58,10 +52,10 @@ export default function Map() {
         } catch (error) {
             console.error("Error fetching city data:", error);
         }
-    };
+    }, [location.state]);
 
     //Fetch bikes and get data
-    const fetchBikes = async () => {
+    const fetchBikes = useCallback(async () => {
         try {
             const bikesData = await adminModel.getBikes(location.state.cityName);
             setBikes(bikesData);
@@ -69,7 +63,13 @@ export default function Map() {
         } catch (error) {
             console.error("Error fetching city data:", error);
         }
-    };
+    }, [location.state]);
+
+    useEffect(() => {
+        //fetching data
+        fetchBikes();
+        fetchCity();
+    }, [fetchCity, fetchBikes]);
 
     //render charging zones
     const renderChargingStations = () => {

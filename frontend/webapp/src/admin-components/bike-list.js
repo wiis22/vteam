@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import { useLocation, Link } from "react-router-dom";
 import adminModel from "../models/admin-models";
 import ResponsivePagination from 'react-responsive-pagination';
@@ -14,22 +14,8 @@ export default function BikeList() {
     const [searchMessage, setSearchMessage] = useState('');
     const itemsPerPage = 20;
 
-    useEffect(() => {
-        //fetching data
-        fetchBikes();
-    }, [location.state]);
-
-    //sets start index
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    //sets current bikes per page
-    const currentBikes = bikes.slice(startIndex, startIndex + itemsPerPage);
-
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
-
     //Fetch bikes and get data
-    const fetchBikes = async () => {
+    const fetchBikes = useCallback(async () => {
         try {
             const bikesData = await adminModel.getBikes(location.state.cityName);
             setAllBikes(bikesData);
@@ -38,6 +24,20 @@ export default function BikeList() {
         } catch (error) {
             console.error("Error fetching bikes data:", error);
         }
+    }, [location.state]);
+
+    useEffect(() => {
+        //fetching data
+        fetchBikes();
+    }, [fetchBikes]);
+
+    //sets start index
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    //sets current bikes per page
+    const currentBikes = bikes.slice(startIndex, startIndex + itemsPerPage);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     };
 
     //Button functions
