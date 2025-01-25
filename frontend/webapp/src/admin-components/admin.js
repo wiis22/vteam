@@ -4,6 +4,7 @@ import authModel from "../models/auth"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import Hamburger from "../style/images/hamburger.jpg"
 
 export default function Admin() {
     const [isHidden, setIsHidden] = useState(false);
@@ -63,7 +64,7 @@ export default function Admin() {
             </button>
         ): ''}
         </div>
-
+        <img src={Hamburger} alt="Goteburgare" className="burger" />
             <Outlet />
         </div>
     );

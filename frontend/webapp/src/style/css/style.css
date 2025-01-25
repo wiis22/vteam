@@ -332,3 +332,19 @@ p, input {
 .ride-list:nth-child(even) {
   background-color: #ececec;
 }
+
+.burger {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 150px;
+  margin-bottom: 1em;
+  margin-right: 1em;
+  border-radius: 0.5em;
+}
+
+@media (max-width: 900px) {
+  .burger {
+    display: none;
+  }
+}
