@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import authModel from "../models/auth";
+import Hamburger from "../style/images/hamburger.jpg"
 
 export default function Navbar() {
     const [adminLink, setAdminLink] = useState('');
@@ -25,6 +26,7 @@ export default function Navbar() {
                 {adminLink}
                 <NavLink to="/logout">Logga ut</NavLink>
             </nav>
+            <img src={Hamburger} alt="Goteburgare" className="burger" />
 
             <Outlet />
         </div>

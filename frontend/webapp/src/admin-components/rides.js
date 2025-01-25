@@ -56,7 +56,7 @@ const Rides = ({ userOrBike, id, receipt }) => {
     return (
         <div>
             {rides.length === 0 ? (
-                <p>No rides to show</p>
+                <p>Ingen historik att visa</p>
             ) : (
                 <div>
                     {currentRides.map((ride) => (
