@@ -118,7 +118,7 @@ export default function BikeList() {
     return  (
         <div className="dashboard">
 
-        <h2>{location.state.cityName}s</h2>
+        <h2>{location.state.cityName}</h2>
         <h3>{heading} (antal: {bikes.length})</h3>
 
         <p>   

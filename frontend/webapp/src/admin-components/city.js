@@ -37,14 +37,23 @@ export default function City() {
         <div className="dashboard">
 
             <nav className="navbar">
-                <NavLink to={`/admin/${ city }/users`} className={({ isActive }) => (isActive ? "active" : undefined)}>Administrera användare</NavLink>
+                <NavLink to={`/admin/${ city }/users`} className={({ isActive }) => (isActive ? "active" : undefined)}>
+                Administrera användare
+                </NavLink>
+
                 <NavLink to={`/admin/${ city }/map`} state={{
                     cityId: `${ cityId }`,
                     cityName: `${ cityName }` 
-                    }} className={({ isActive }) => (isActive ? "active" : undefined)}>Map</NavLink>
+                    }} className={({ isActive }) => (isActive ? "active" : undefined)}>
+                Karta
+                </NavLink>
+
                 <NavLink to={`/admin/${ city }/list`} state={{
                     cityName: `${ cityName }` 
-                    }} className={({ isActive }) => (isActive ? "active" : undefined)}>Lista med cyklar</NavLink>
+                    }} className={({ isActive }) => (isActive ? "active" : undefined)}>
+                Lista med cyklar
+                </NavLink>
+
             </nav>
 
             <Outlet />

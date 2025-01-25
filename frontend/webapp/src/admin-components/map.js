@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline, Polygon, LayerGroup, Circle} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polygon, LayerGroup, Circle} from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import adminModel from "../models/admin-models";
 import L from 'leaflet';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import redMarker from '../style/images/marker-icon.png';
+// import icon from 'leaflet/dist/images/marker-icon.png';
+// import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+// import redMarker from '../style/images/marker-icon.png';
+import bikeIcon from '../style/images/micro-scooter.png';
+import redBikeIcon from '../style/images/red-micro-scooter.png';
 
 export default function Map() {
     const location = useLocation();
@@ -20,13 +22,18 @@ export default function Map() {
         fetchCity();
     }, [location.state]);
 
-    let DefaultIcon = L.icon({
-        iconUrl: icon,
-        shadowUrl: iconShadow
-    });
+    let bikeMarker = L.icon({
+        iconUrl: bikeIcon,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        popupAnchor: [0, -10],
+    })
 
-    let lowBatteryMarker = L.icon({
-        iconUrl: redMarker
+    let lowBatteryBike = L.icon({
+        iconUrl: redBikeIcon,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        popupAnchor: [0, -10],
     });
 
 
@@ -135,7 +142,7 @@ export default function Map() {
             allBikes.push(
             <Marker 
             position={[bike.position.latitude, bike.position.longitude]}
-            icon={bike.batteryPercentage <= 10 ? lowBatteryMarker: DefaultIcon}
+            icon={bike.batteryPercentage <= 10 ? lowBatteryBike: bikeMarker}
             >
                 <Popup>
                 <p>ID: {bike._id}</p>
@@ -190,10 +197,11 @@ export default function Map() {
 
     return (
         <div className="dashboard">
-            <h2>Map vy över {location.state.cityName}</h2>
+            <h2>Vy över {location.state.cityName}</h2>
             <p>Grönt-område: hela användningsområdet</p>
             <p>Gula cirklar: ladd-zoner</p>
             <p>Blå cirklar: parkerings-zoner</p>
+            <p>Cyklar med låg batterinivå visas som röda cyklar.</p>
 
             <p>
             <button className="button" onClick={handleClickUpdate}>
