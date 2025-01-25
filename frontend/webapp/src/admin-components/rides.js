@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import jsPDF from "jspdf"; 
 import ridesModel from "../models/rides";
 import ResponsivePagination from 'react-responsive-pagination';
 import 'react-responsive-pagination/themes/classic.css';
@@ -37,10 +38,20 @@ const Rides = ({ userOrBike, id, receipt }) => {
         }
     };
 
-    //Button functions
-    const handleClickReceipt = () => {
-        console.log("kvitto")
-    }
+    //Button function to save receipt
+    const saveReceipt = (ride) => {
+        const doc = new jsPDF();
+        doc.setFontSize(16);
+        doc.text(`Kvitto för resa ${ride._id}`, 10, 10);
+
+        doc.setFontSize(12);
+        doc.text(`Starttid: ${ride.startTime}`, 10, 20);
+        doc.text(`Sluttid: ${ride.endTime}`, 10, 30);
+        doc.text(`Total tid: ${ride.rideLengthSeconds} sekunder`, 10, 40);
+        doc.text(`Pris: ${ride.price} Kr`, 10, 50);
+
+        doc.save(`kvitto_${ride._id}.pdf`);
+    };
 
     return (
         <div>
@@ -54,7 +65,7 @@ const Rides = ({ userOrBike, id, receipt }) => {
                             <p>Start: {ride.startTime}, Slut: {ride.endTime}, Totaltid: {ride.rideLengthSeconds}</p>
                             <p>Pris: {ride.price}</p>
                             {receiptButton && (
-                                <button onClick={handleClickReceipt}>
+                                <button onClick={() => saveReceipt(ride)}>
                                     Kvitto
                                 </button>
                             )}
