@@ -23,10 +23,10 @@ const cityData = citiesData.find(c => c.name.toLowerCase() === city.toLowerCase(
 console.log(cityData);
 
 const addBikes = async (cityData, numBikes) => {
-    const ratioChargingStations = 0.2
-    const ratioParkingZones = 0.3
-    let remainingChargingStations = parseInt(numBikes * ratioChargingStations)
-    let remainingParkingZones = parseInt(numBikes * ratioParkingZones)
+    const ratioChargingStations = 0.2;
+    const ratioParkingZones = 0.3;
+    let remainingChargingStations = parseInt(numBikes * ratioChargingStations);
+    let remainingParkingZones = parseInt(numBikes * ratioParkingZones);
     const cityPolygon = cityData.borders;
     const turfPolygon = turf.polygon([cityPolygon]);
     let bikePromises = [];
@@ -96,6 +96,6 @@ const addBikes = async (cityData, numBikes) => {
     // resolve all promises in the array
     await Promise.all(bikePromises);
     console.log("All bikes added to database");
-}
+};
 
 addBikes(cityData, numBikes);

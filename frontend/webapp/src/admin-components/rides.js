@@ -6,9 +6,9 @@ import 'react-responsive-pagination/themes/classic.css';
 
 //Arg, set to "bike" or "user", id: user or bike id, receipt: true or false
 const Rides = ({ userOrBike, id, receipt }) => {
-    const [rides, setRides] = useState([])
+    const [rides, setRides] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const receiptButton= receipt
+    const receiptButton= receipt;
     const itemsPerPage = 10;
 
     useEffect(() => {
@@ -29,12 +29,12 @@ const Rides = ({ userOrBike, id, receipt }) => {
     const fetchRides = async () => {
         try {
             const ridesData = await ridesModel.getRides(userOrBike, id);
-            console.log(id)
+            console.log(id);
             setRides(ridesData);
-            console.log(ridesData)
+            console.log(ridesData);
         } catch (error) {
             console.error("Error fetching rides data:", error);
-            console.log(id)
+            console.log(id);
         }
     };
 

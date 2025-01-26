@@ -37,9 +37,9 @@ export default function Balance() {
         //new balance put request to database 
         const result = await userModel.updateUser(newBalance);
         alert(`${addBalance} Har lagts till i ditt saldo!`);
-        setAddBalance(0)
+        setAddBalance(0);
         return console.log(result);
-    }
+    };
 
     return (
         <>

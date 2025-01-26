@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import authModel from '../models/auth';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -32,7 +32,7 @@ export default function Login() {
         }
         navigate("/");
         return;
-    }
+    };
 
 
     return (
@@ -71,5 +71,5 @@ export default function Login() {
         </form>
         </div>
         </>
-    )
+    );
 }

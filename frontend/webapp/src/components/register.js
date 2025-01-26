@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authModel from '../models/auth';
 
@@ -29,7 +29,7 @@ export default function Register() {
             alert("Registrering lyckades!");
             navigate("/");
         }
-    }
+    };
 
     return (
         <>

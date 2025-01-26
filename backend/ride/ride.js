@@ -26,6 +26,6 @@ const ride = {
         const endDate = new Date(endTime);
         return (endDate - startDate) / 1000;
     }
-}
+};
 
 module.exports = ride;

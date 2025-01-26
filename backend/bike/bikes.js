@@ -13,7 +13,7 @@ async function initBikes() {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer 1337`
             }
-        })
+        });
 
         const bikes = await bikesResponse.json();
 
@@ -25,7 +25,7 @@ async function initBikes() {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer 1337`
             }
-        })
+        });
 
         const cities = await citiesResponse.json();
 

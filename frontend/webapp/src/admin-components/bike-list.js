@@ -6,8 +6,8 @@ import 'react-responsive-pagination/themes/classic.css';
 
 export default function BikeList() {
     const location = useLocation();
-    const [bikes, setBikes] = useState([])
-    const [allBikes, setAllBikes] = useState([])
+    const [bikes, setBikes] = useState([]);
+    const [allBikes, setAllBikes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [heading, setHeading] = useState('Alla cyklar');
     const [searchedBike, setSearchedBike] = useState('');
@@ -49,7 +49,7 @@ export default function BikeList() {
         );
         setHeading("Cyklar med låg batterinivå");
         setCurrentPage(1);
-    }
+    };
 
     const filterOperational = () => {
         setBikes(
@@ -59,7 +59,7 @@ export default function BikeList() {
         );
         setHeading("Operativa cyklar");
         setCurrentPage(1);
-    }
+    };
 
     const filterNotOperational = () => {
         setBikes(
@@ -69,7 +69,7 @@ export default function BikeList() {
         );
         setHeading("Icke operativa cyklar");
         setCurrentPage(1);
-    }
+    };
 
     const filterAvailable = () => {
         setBikes(
@@ -77,9 +77,9 @@ export default function BikeList() {
                 bike.available
             ))
         );
-        setHeading("Tillgängliga cyklar")
+        setHeading("Tillgängliga cyklar");
         setCurrentPage(1);
-    }
+    };
 
     const filterNotAvailable = () => {
         setBikes(
@@ -87,15 +87,15 @@ export default function BikeList() {
                 !bike.available
             ))
         );
-        setHeading("Otillgängliga cyklar")
+        setHeading("Otillgängliga cyklar");
         setCurrentPage(1);
-    }
+    };
 
     const showAllBikes = () => {
         setBikes(allBikes);
-        setHeading("Alla cyklar")
+        setHeading("Alla cyklar");
         setCurrentPage(1);
-    }
+    };
 
     //handle search submit
     const handleSearchSubmit = async (event) => {
@@ -113,7 +113,7 @@ export default function BikeList() {
         setTimeout(() => {
             setSearchMessage(``);
         }, "8000");
-    }
+    };
 
     return  (
         <div className="dashboard">

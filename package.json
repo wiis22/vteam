@@ -2,16 +2,25 @@
   "name": "vteam",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./backend/server.js",
     "startDev": "concurrently \"command1 arg\" \"command2 arg\"",
-    "dev": "npm run dev --prefix frontend"
+    "dev": "npm run dev --prefix frontend",
+    "lint": "eslint --fix"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "concurrently": "^9.0.1"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.26.5",
+    "@babel/preset-env": "^7.26.7",
+    "@babel/preset-react": "^7.26.3",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.14.0"
   }
 }

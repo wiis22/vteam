@@ -4,7 +4,7 @@ import Rides from "./rides";
 
 export default function UserRides() {
     const location = useLocation();
-    document.title = 'Användar historik'
+    document.title = 'Användar historik';
 
     return (
         <>

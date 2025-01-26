@@ -21,7 +21,7 @@ export default function Map() {
         iconSize: [20, 20],
         iconAnchor: [10, 10],
         popupAnchor: [0, -10],
-    })
+    });
 
     let lowBatteryBike = L.icon({
         iconUrl: redBikeIcon,
@@ -48,7 +48,7 @@ export default function Map() {
                 const borderArray = cityData.borders.map(border => [border[1], border[0]]);
                 setBorders(borderArray);
             }
-            console.log(cityData)
+            console.log(cityData);
         } catch (error) {
             console.error("Error fetching city data:", error);
         }
@@ -74,10 +74,10 @@ export default function Map() {
     //render charging zones
     const renderChargingStations = () => {
         if(!city.chargingStations){
-            return
+            return;
         }
         const chargingStations = [];
-        const yellowOptions = { color: 'yellow' }
+        const yellowOptions = { color: 'yellow' };
         city.chargingStations.forEach((element) => {
             chargingStations.push(
                 <LayerGroup>
@@ -95,10 +95,10 @@ export default function Map() {
     //render charging zones
     const renderParkingZones = () => {
         if(!city.parkingZones){
-            return
+            return;
         }
         const parkingZones = [];
-        const blueOptions = { color: 'blue' }
+        const blueOptions = { color: 'blue' };
         city.parkingZones.forEach((element) => {
             parkingZones.push(
                 <LayerGroup>
@@ -124,13 +124,13 @@ export default function Map() {
             if (bike.operational !== true) {
                 const result = await adminModel.changeOperational(true, bike._id);
                 alert("Operational ändrades till true!");
-                console.log(result)
-                return
+                console.log(result);
+                return;
             }
             const result = await adminModel.changeOperational(false, bike._id);
             alert("Operational ändrades till false!");
-            console.log(result)
-            return
+            console.log(result);
+            return;
         };
         //Put all bikes markers in a array
         const allBikes = [];
@@ -169,7 +169,7 @@ export default function Map() {
     //render map
     const renderMap = () => {
         //setting up colors for border
-        const greenOptions = { color: 'green' }
+        const greenOptions = { color: 'green' };
 
         return (
             <MapContainer className="map" center={[city.geolocation.latitude, city.geolocation.longitude]} zoom={13} scrollWheelZoom={true}>
@@ -193,7 +193,7 @@ export default function Map() {
     const handleClickUpdate = async () => {
         await fetchBikes(); // Hämta ny cykeldata
         alert("Cykelpositioner har uppdaterats!");
-    }
+    };
 
     return (
         <div className="dashboard">

@@ -25,8 +25,8 @@ const mockBikeData = {
 
 describe('bikeBrain', () => {
     let bike;
-    let intervalSpy
-    let timeOutSpy
+    let intervalSpy;
+    let timeOutSpy;
 
     beforeEach(() => {
         jest.useFakeTimers();
@@ -145,7 +145,7 @@ describe('bikeBrain', () => {
         bike.updatePosition(newPosition);
 
         expect(bike.position).toBe(newPosition);
-        expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, position: newPosition })
+        expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, position: newPosition });
     });
 
     it('should update location correctly', () => {
@@ -168,7 +168,7 @@ describe('bikeBrain', () => {
         bike.updateCharging(true);
 
         expect(bike.available).toBe(false);
-        expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, available: false })
+        expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, available: false });
     });
 
     it('should drain battery during ride', () => {
@@ -194,13 +194,13 @@ describe('bikeBrain', () => {
     it('should not drain battery if bike is not operational', () => {
         bike.operational = false;
         bike.drainBattery();
-        expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, batteryPercentage: 100 })
+        expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, batteryPercentage: 100 });
         expect(bike.batteryPercentage).toBe(100);
     });
 
     it('should correctly calculate the distance from a point', () => {
-        const refPoint = [{ lat: 1, lon: 0}]
-        bike.position = { lat: 1, lon: 0}
+        const refPoint = [{ lat: 1, lon: 0}];
+        bike.position = { lat: 1, lon: 0};
 
         const res = bike.locationInDistance(refPoint);
 
@@ -208,14 +208,14 @@ describe('bikeBrain', () => {
     });
 
     it('should find a parkingZone if within distance', () => {
-        bike.position = { lat: 10, lon: 0}
+        bike.position = { lat: 10, lon: 0};
         bike.findLocation();
 
         expect(bike.location).toBe("parkingZone");
     });
 
     it('should be in field if not within a distance of a refpoit', () => {
-        bike.position = { lat: 0, lon: 0}
+        bike.position = { lat: 0, lon: 0};
         bike.findLocation();
 
         expect(bike.location).toBe("field");

@@ -47,8 +47,8 @@ io.sockets.on('connection', (socket) => {
     // used by bike to confirm if ride was started or not
     socket.on("bikeStartRideResponse", (data) => {
         // console.log("Socket route: bikeStartRideResponse", data)
-        io.to(data.userId).emit("bikeStartRideResponse", { bikeId: data.bikeId, started: data.started, }) // started is boolean
-    })
+        io.to(data.userId).emit("bikeStartRideResponse", { bikeId: data.bikeId, started: data.started, }); // started is boolean
+    });
 
     // used by mobile app when user ends the ride
     socket.on("userEndRide", (data) => {
@@ -63,8 +63,8 @@ io.sockets.on('connection', (socket) => {
     // used by bike when ride is ended and should be saved to database
     socket.on("saveRide", async (data) => {
         try {
-            console.log("data in socket route saveRide:")
-            console.log(data)
+            console.log("data in socket route saveRide:");
+            console.log(data);
             const price = ride.getPrice(data.log.startLocation, data.log.endLocation, data.log.startTime, data.log.endTime);
             const rideLengthSeconds = ride.getLengthSeconds(data.log.startTime, data.log.endTime);
 
@@ -98,6 +98,9 @@ io.sockets.on('connection', (socket) => {
     // used by bike to save updated values to database
     socket.on('updateBike', async (data) => {
         try {
+
+            
+
             const result = await database.updateOne("bikes", data);
             // console.log("result: ", result);
         } catch (error) {
@@ -128,7 +131,7 @@ app.get('/test1', async (req, res) => {
         city_name: "test_City",
         bikes: [12345, 54321],
         zones: [],
-    }
+    };
 
     const result = await database.updateOneDoc("documents", data);
 
@@ -142,10 +145,10 @@ app.get('/test2', async (req, res) => {
         one: 1,
         two: 2,
         three: 3
-    }
+    };
 
-    res.json(data)
-})
+    res.json(data);
+});
 
 app.post('/api/user', async (req, res) => {
     const userData = {
@@ -155,7 +158,7 @@ app.post('/api/user', async (req, res) => {
         lastName: req.body.lastName,
         role: "user",
         balance: 0
-    }
+    };
 
     try {
         const userId = await auth.register(userData);
@@ -178,7 +181,7 @@ app.post('/api/login', async (req, res) => {
     const loginData = {
         email: req.body.email,
         password: req.body.password
-    }
+    };
 
     // console.log("loginData: ", loginData);
 
@@ -233,7 +236,7 @@ app.post('/api/city', auth.verifyJwt, async (req, res) => {
         area: req.body.area,
         parkingStations: req.body.parkingStations,
         chargingStations: req.body.chargingStations
-    }
+    };
 
     try {
         const result = await database.addOne("cities", cityData);
@@ -275,7 +278,7 @@ app.put('/api/user/:id', auth.verifyJwt, async (req, res) => {
     const updatedUserData = {
         ...{ id: id },
         ...req.body
-    }
+    };
 
     try {
         const result = await database.updateOne("users", updatedUserData);
@@ -309,6 +312,7 @@ app.put('/api/user/password/:id', auth.verifyJwt, async (req, res) => {
 });
 
 app.post('/api/bike', auth.verifyJwt, async (req, res) => {
+    // console.log(req.body)
     const bikeData = {
         city: req.body.city,
         position: req.body.position,
@@ -317,7 +321,7 @@ app.post('/api/bike', auth.verifyJwt, async (req, res) => {
         available: true,
         operational: true,
         batteryPercentage: 100
-    }
+    };
 
     try {
         const result = await database.addOne("bikes", bikeData);
@@ -335,7 +339,7 @@ app.put('/api/bike/:id', auth.verifyJwt, async (req, res) => {
     const updatedBikeData = {
         ...{ id: id },
         ...req.body
-    }
+    };
 
     try {
         const result = await database.updateOne("bikes", updatedBikeData);
@@ -352,7 +356,7 @@ app.get('/api/bikes/:city', auth.verifyJwt, async (req, res) => {
 
     const cityFilter = {
         city: city
-    }
+    };
 
     try {
         const result = await database.filterAll("bikes", cityFilter);

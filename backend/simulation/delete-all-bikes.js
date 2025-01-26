@@ -5,7 +5,7 @@ const cities = ["Göteborg", "Karlskrona", "Härnösand"];
 deleteAllBikes(cities);
 
 async function deleteAllBikes(cities) {
-    let deletePromises = []
+    let deletePromises = [];
 
     for (const city of cities) {
         try {
@@ -30,7 +30,7 @@ async function deleteAllBikes(cities) {
                     }
                 });
 
-                deletePromises.push(deletePromise)
+                deletePromises.push(deletePromise);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -39,5 +39,5 @@ async function deleteAllBikes(cities) {
 
     // resolve all promises in the array
     await Promise.all(deletePromises);
-    console.log("All bikes deleted")
+    console.log("All bikes deleted");
 }

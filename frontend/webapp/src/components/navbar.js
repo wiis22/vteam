@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import authModel from "../models/auth";
-import Hamburger from "../style/images/hamburger.jpg"
+import Hamburger from "../style/images/hamburger.jpg";
 
 export default function Navbar() {
     const [adminLink, setAdminLink] = useState('');

@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userModel from '../models/user';
 import Navbar from "./navbar";
-import authModel from '../models/auth'
+import authModel from '../models/auth';
 
 export default function ChangePassword() {
     const [password, setPassword] = useState('');
@@ -38,7 +38,7 @@ export default function ChangePassword() {
         };
 
         setErrorMessage("Registrering misslyckades. Försök igen.");
-    }
+    };
 
     return (
         <>
