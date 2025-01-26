@@ -98,6 +98,9 @@ io.sockets.on('connection', (socket) => {
     // used by bike to save updated values to database
     socket.on('updateBike', async (data) => {
         try {
+
+            
+
             const result = await database.updateOne("bikes", data);
             // console.log("result: ", result);
         } catch (error) {
@@ -309,6 +312,7 @@ app.put('/api/user/password/:id', auth.verifyJwt, async (req, res) => {
 });
 
 app.post('/api/bike', auth.verifyJwt, async (req, res) => {
+    // console.log(req.body)
     const bikeData = {
         city: req.body.city,
         position: req.body.position,

@@ -5,7 +5,7 @@ import Navbar from "./navbar";
 
 export default function History() {
     const accessCheck = authModel.roleAccess("user");
-    document.title = 'Historik & kvitton'
+    document.title = 'Historik & kvitton';
 
     // checks access
     if (accessCheck) {

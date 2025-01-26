@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, Link } from "react-router-dom";
-import authModel from "../models/auth"
+import authModel from "../models/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import Hamburger from "../style/images/hamburger.jpg"
+import Hamburger from "../style/images/hamburger.jpg";
 
 export default function Admin() {
     const [isHidden, setIsHidden] = useState(false);
@@ -13,12 +13,12 @@ export default function Admin() {
     document.title = 'Admin';
 
     useEffect(() => {
-        setIsHidden(false)
+        setIsHidden(false);
     }, []);
 
     const handleClick = () => {
         setIsHidden(!isHidden);
-        setToggleButton(!toggleButton)
+        setToggleButton(!toggleButton);
     };
 
     // checks access

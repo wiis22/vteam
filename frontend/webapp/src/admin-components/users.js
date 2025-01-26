@@ -11,7 +11,7 @@ export default function Users() {
     const [heading, setHeading] = useState('Alla användare');
     const [searchedUsers, setSearchedUsers] = useState('');
     const itemsPerPage = 20;
-    document.title = "Användare"
+    document.title = "Användare";
 
     useEffect(() => {
         //fetching data
@@ -61,7 +61,7 @@ export default function Users() {
         setHeading(`Sökt på "${searchedUsers}"`);
         setSearchedUsers("");
         setCurrentPage(1);
-    }
+    };
 
     return  (
         <>

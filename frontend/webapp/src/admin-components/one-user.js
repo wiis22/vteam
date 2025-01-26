@@ -54,7 +54,7 @@ const OneUser = ({ user }) => {
                 </button>
             </div>
         );
-    }
+    };
 
     const handleRollChange = async (setNewRoll, userId) => {
 
@@ -64,22 +64,22 @@ const OneUser = ({ user }) => {
         //Check if request "ok"
         if (!result.ok) {
             alert(`Användar-status ändrades ej`);
-            return
+            return;
         }
         alert(`Användar-status har ändrats till ${setNewRoll}`);
         setUserData({
             ...userData,
             role: setNewRoll
-        })
-        setButtons(null)
-    }
+        });
+        setButtons(null);
+    };
 
     const handleClick = () => {
 
         //toggle off
         if (buttons) {
-            setButtons(null)
-            return
+            setButtons(null);
+            return;
         }
 
         //Checks user status and sets buttons according

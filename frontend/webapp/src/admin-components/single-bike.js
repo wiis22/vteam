@@ -35,15 +35,15 @@ export default function SingleBike() {
         if (bikeDetails.operational !== true) {
             const result = await adminModel.changeOperational(true, bikeId);
             alert("Operational ändrades till true!");
-            console.log(result)
+            console.log(result);
             fetchBike();
-            return
+            return;
         }
         const result = await adminModel.changeOperational(false, bikeId);
         alert("Operational ändrades till false!");
         console.log(result);
         fetchBike();
-        return
+        return;
     };
 
     //Button that toggles available on and off.
@@ -53,13 +53,13 @@ export default function SingleBike() {
             alert("Available ändrades till true!");
             console.log(result);
             fetchBike();
-            return
+            return;
         }
         const result = await adminModel.changeAvailable(false, bikeId);
         alert("Available ändrades till false!");
         console.log(result);
         fetchBike();
-        return
+        return;
     };
 
     //Button that toggles location between field and maintenance.
@@ -69,13 +69,13 @@ export default function SingleBike() {
             alert("Plats ändrades till maintenance!");
             console.log(result);
             fetchBike();
-            return
+            return;
         }
         const result = await adminModel.changeLocation('field', bikeId);
         alert("Plats ändrades till field!");
         console.log(result);
         fetchBike();
-        return
+        return;
     };
 
     return (
