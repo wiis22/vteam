@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import authModel from '../models/auth';
 import { useNavigate } from 'react-router-dom';
 

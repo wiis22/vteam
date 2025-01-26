@@ -2,7 +2,7 @@
 deleteAllRides();
 
 async function deleteAllRides() {
-    let deletePromises = []
+    let deletePromises = [];
 
     try {
         const response = await fetch(`http://localhost:1337/api/rides`, {
@@ -24,14 +24,14 @@ async function deleteAllRides() {
                 }
             });
 
-            deletePromises.push(deletePromise)
+            deletePromises.push(deletePromise);
         }
     } catch (error) {
         console.error('Error:', error);
     }
 
-    console.log(`Deleting ${deletePromises.length} rides`)
+    console.log(`Deleting ${deletePromises.length} rides`);
     // resolve all promises in the array
     await Promise.all(deletePromises);
-    console.log("All rides deleted")
+    console.log("All rides deleted");
 }

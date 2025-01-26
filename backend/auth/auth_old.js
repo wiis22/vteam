@@ -19,6 +19,6 @@ const jwksRsa = require("jwks-rsa");
 // placeholder middleweare that is always bypassed
 const verifyJwt = (req, res, next) => {
     next();
-}
+};
 
 module.exports = verifyJwt;
