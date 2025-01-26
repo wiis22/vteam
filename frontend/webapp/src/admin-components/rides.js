@@ -65,7 +65,7 @@ const Rides = ({ userOrBike, id, receipt }) => {
                             <p>Start: {ride.startTime}, Slut: {ride.endTime}, Totaltid: {ride.rideLengthSeconds}</p>
                             <p>Pris: {ride.price}</p>
                             {receiptButton && (
-                                <button onClick={() => saveReceipt(ride)}>
+                                <button className="button" onClick={() => saveReceipt(ride)}>
                                     Kvitto
                                 </button>
                             )}
