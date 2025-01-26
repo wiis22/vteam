@@ -29,7 +29,7 @@ const addBikes = async (cityData, numBikes) => {
     let remainingParkingZones = parseInt(numBikes * ratioParkingZones)
     const cityPolygon = cityData.borders;
     const turfPolygon = turf.polygon([cityPolygon]);
-    let bikePromises = [];
+    // let bikePromises = [];
     let bikes = [];
 
     // Generate bike data and add to database
@@ -69,33 +69,59 @@ const addBikes = async (cityData, numBikes) => {
             };
         }
 
-        // API request
-        const bikePromise = fetch('http://localhost:1337/api/bike', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer 1337`
-            },
-            body: JSON.stringify({
-                city: cityData.name,
-                position,
-                location
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            // console.log('Bike added:', data);
-            bikes.push(data);
-        })
-        .catch(error => console.error('Error:', error));
+        // // API request
+        // const bikePromise = fetch('http://localhost:1337/api/bike', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `Bearer 1337`
+        //     },
+        //     body: JSON.stringify({
+        //         city: cityData.name,
+        //         position,
+        //         location
+        //     })
+        // })
+        // .then(response => response.json())
+        // .then(data => {
+        //     // console.log('Bike added:', data);
+        //     bikes.push(data);
+        // })
+        // .catch(error => console.error('Error:', error));
+// 
+//         // Add the API request to the array
+//         bikePromises.push(bikePromise);
 
-        // Add the API request to the array
-        bikePromises.push(bikePromise);
+        const bike = {
+            city: cityData.name,
+            position,
+            location,
+            charging: location === "chargingStation",
+            available: true,
+            operational: true,
+            batteryPercentage: 100
+        };
+
+        bikes.push(bike);
     }
 
-    // resolve all promises in the array
-    await Promise.all(bikePromises);
-    console.log("All bikes added to database");
+    // // resolve all promises in the array
+    // await Promise.all(bikePromises);
+
+    const response = await fetch('http://localhost:1337/api/bulk-insert/bikes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer 1337`
+        },
+        body: JSON.stringify(bikes)
+    });
+
+    if (response.status === 200) {
+        console.log(`Added ${numBikes} bikes to the database`);
+    } else {
+        console.error('Failed to add bikes to the database');
+    }
 }
 
 addBikes(cityData, numBikes);

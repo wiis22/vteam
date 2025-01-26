@@ -5,8 +5,6 @@ const cities = ["Göteborg", "Karlskrona", "Härnösand"];
 deleteAllBikes(cities);
 
 async function deleteAllBikes(cities) {
-    let deletePromises = []
-
     for (const city of cities) {
         try {
             const response = await fetch(`http://localhost:1337/api/bikes/${city}`, {
@@ -18,26 +16,50 @@ async function deleteAllBikes(cities) {
             });
 
             const bikes = await response.json();
+            console.log(`Found ${bikes.length} bikes in ${city}`);
 
-            // console.log(bikes)
+            if (bikes.length === 0) {
+                continue;
+            }
 
-            for (let i = 0; i < bikes.length; i++) {
-                const deletePromise = fetch(`http://localhost:1337/api/bike/${bikes[i]._id}`, {
-                    method: 'DELETE',
+            const bikeIds = bikes.map(bike => bike._id);
+
+            // Split bikes into chunks of 500
+            const chunks = [];
+            for (let i = 0; i < bikeIds.length; i += 500) {
+                chunks.push(bikeIds.slice(i, i + 500));
+            }
+
+            // Delete bikes in batches of 500
+            for (const chunk of chunks) {
+                const deleteResponse = await fetch(`http://localhost:1337/api/bulk-delete/bikes/`, {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer 1337`
-                    }
+                    },
+                    body: JSON.stringify(chunk)
                 });
 
-                deletePromises.push(deletePromise)
+                if (deleteResponse.status === 200) {
+                    console.log(`Deleted ${chunk.length} bikes in ${city}`);
+                } else {
+                    console.error(`Failed to delete bikes in ${city}`);
+                }
             }
+
+            console.log(`Deleted all bikes in ${city}`);
         } catch (error) {
             console.error('Error:', error);
         }
     }
+}
 
-    // resolve all promises in the array
-    await Promise.all(deletePromises);
-    console.log("All bikes deleted")
+// Function to split an array into chunks
+function chunkArray(arr, size) {
+    const chunks = [];
+    for (let i = 0; i < arr.length; i += size) {
+        chunks.push(arr.slice(i, i + size));
+    }
+    return chunks;
 }

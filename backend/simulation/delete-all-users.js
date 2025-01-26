@@ -15,19 +15,27 @@ async function deleteAllUsers() {
 
         const users = await response.json();
 
-        // console.log(bikes)
+        console.log(`Found ${users.length} users `);
 
-        for (const user of users) {
-            const deletePromise = fetch(`http://localhost:1337/api/user/${user._id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer 1337`
-                }
-            });
+        // console.log(users)
 
-            deletePromises.push(deletePromise)
+        const userIds = users.map(user => user._id);
+
+        const result = await fetch(`http://localhost:1337/api/bulk-delete/users/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer 1337`
+            },
+            body: JSON.stringify(userIds)
+        });
+
+        if (result.status === 200) {
+            console.log(`Deleted all ${users.length} users `);
+        } else {
+            console.error(`Failed to delete users`);
         }
+
     } catch (error) {
         console.error('Error:', error);
     }
