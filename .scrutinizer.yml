@@ -1,14 +1,12 @@
 build:
   dependencies:
     before:
-      - npm install
-  paths:
-    - backend/
+      - cd backend && npm install
   nodes:
     coverage:
       tests:
         override:
-          - command: npm run test
+          - command: cd backend && npm run test
             coverage:
-              file: coverage/clover.xml
+              file: backend/coverage/clover.xml
               format: clover
