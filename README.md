@@ -8,7 +8,7 @@ Detta projekt har skapats som en del av kursen **Programutveckling i virtuella t
 - **Databas**
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wiis22/vteam/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/?branch=main)
-[![Code Coverage](https://scrutinizer-ci.com/g/wiis22/vteam/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/?branch=main)
+
 [![Build Status](https://scrutinizer-ci.com/g/wiis22/vteam/badges/build.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/build-status/main)
 
 ## [vTeam Kurs](https://dbwebb.se/kurser/vteam-v1)
