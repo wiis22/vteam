@@ -1,4 +1,6 @@
 import accountModel from "../models/account.js";
+import auth from "../models/auth.js";
+import { toast } from "../utils.js";
 
 export default class Account extends HTMLElement {
     constructor() {
@@ -60,6 +62,18 @@ export default class Account extends HTMLElement {
         balanceInput.min = "0";
         balanceButton.textContent = "Update";
         balanceButton.classList.add("red-button", "full-width-button");
+        balanceForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const amount = parseFloat(balanceInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                toast("Please enter a valid amount");
+                return;
+            }
+            const result = await auth.addBalance(amount);
+            console.log("Adding balance:", amount);
+            console.log("Result of adding balance:", result);
+            balanceTd.textContent = user.balance + " sek"; // Update balance display
+        });
 
         balanceForm.appendChild(balanceInput);
         balanceForm.appendChild(balanceButton);

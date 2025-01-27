@@ -72,6 +72,50 @@ const auth = {
             toast(result.message);
         }
     },
+
+    /*
+        * Update User Balance
+        * @param {number} amount - The amount to add to the balance
+    */
+    addBalance: async function addBalance(amount) {
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const userId = user._id;
+            const token = localStorage.getItem('jwtToken');
+
+            // Update the balance
+            user.balance = (user.balance || 0) + amount;
+
+            console.log('User:', user);
+            const response = await fetch(`${baseURL}/api/user/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ balance: user.balance })
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                // Update the user in localStorage
+                localStorage.setItem('user', JSON.stringify(user));
+                toast('Balance updated successfully');
+                console.log('Balance updated successfully:', result);
+                setTimeout(() => {
+                    location.reload();
+                }, 1400);
+            } else {
+                toast(result.message || 'Failed to update balance');
+                console.error('Failed to update balance:', result);
+            }
+            return result;
+        } catch (error) {
+            console.error('Error updating balance:', error);
+            toast('Error updating balance');
+            return error;
+        }
+    },
 };
 
 export default auth;

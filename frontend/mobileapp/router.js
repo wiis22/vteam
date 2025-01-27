@@ -68,9 +68,8 @@ export default class Router extends HTMLElement {
             html = this.routes[this.currentRoute].view;
             if (this.wildcard) {
                 html = html.replace("$wildcard", this.wildcard);
-            }
-            console.log("View rendering: " + html);
-        }
+            };
+        };
         this.innerHTML = html;
     }
 }
