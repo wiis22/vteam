@@ -1,5 +1,5 @@
 // declare baseURL for API requests
-const baseURL = "http://server:1337";
+const baseURL = "http://localhost:1337";
 
 // declare toast function to display messages to the user
 function toast(message) {
