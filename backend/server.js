@@ -14,14 +14,16 @@ const port = process.env.PORT_API || 1337;
 app.use(express.json());
 const httpserver = http.createServer(app);
 
-const webAppURL = process.env.WEB_APP_URL || 'http://localhost:3000';
-const mobileAppURL = process.env.MOBILE_APP_URL || 'http://localhost:3001';
+const webAppURL = 'http://localhost:3000';
+const mobileAppURL = 'http://mobile_app:3001';
 
 app.use(cors({
     origin: [webAppURL, mobileAppURL],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
+
+app.options('*', cors());
 
 // Increase the payload size limit
 app.use(bodyParser.json({ limit: '100mb' }));
