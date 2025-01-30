@@ -31,9 +31,6 @@ export default class MapComponent extends HTMLElement {
     }
 
     attributeChangedCallback(property, oldValue, newValue) {
-        if (property === "bikes") {
-            this.updateBikeMarkers(JSON.parse(newValue));
-        }
         if (oldValue === newValue) {
             return;
         } else {
@@ -130,7 +127,7 @@ export default class MapComponent extends HTMLElement {
         }
         // Create map with user location
         this.map = L.map('map', {
-            minZoom: 14,
+            minZoom: 14, // Prevent zooming out too far, remove this line to allow zooming out further
         }).setView([coordinates.lat, coordinates.lon], 18);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -149,8 +146,8 @@ export default class MapComponent extends HTMLElement {
         this.map.setView([coords[0].lat, coords[0].lon], 14);
 
         const bikes = await bikesModel.fetchBikes(this.token, this.cityName);
+
         this.bikes = bikes;
-        this.setAttribute("bikes", JSON.stringify(this.bikes));
         this.updateBikeMarkers(bikes);
     };
 
@@ -162,7 +159,8 @@ export default class MapComponent extends HTMLElement {
         // Add new bike markers with popups
         bikes.forEach((bike) => {
             const { latitude, longitude } = bike.position;
-            if (latitude && longitude && bike.available) {
+
+            if (latitude && longitude && bike.available && bike.operational) {
                 this.bikeCluster.addLayer(L.marker([latitude, longitude], { icon: icons.bike, opacity: 0.8 }).bindPopup(`
                     <b>Bike ID:</b> ${bike._id}<br>
                     <b>Charging:</b> ${bike.charging}<br>
@@ -214,6 +212,7 @@ export default class MapComponent extends HTMLElement {
             this.map.removeLayer(this.rentedBike);
             this.rentedBike = null;
             this.renderBikes();
+
             bottomNav.removeChild(button);
             for (let i = 0; i < bottomNav.children.length; i++) {
                 bottomNav.children[i].style.width = '';
