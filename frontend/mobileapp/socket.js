@@ -72,6 +72,7 @@ class Socket {
 
     // Send the current position of the bike
     sendPosition(position) {
+        console.log("Sending position:", position);
         this.socket.emit('updatePosition', { bikeId: this.bikeId, position });
     }
 

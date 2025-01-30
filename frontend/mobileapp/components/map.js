@@ -41,7 +41,10 @@ export default class MapComponent extends HTMLElement {
         }
     }
 
-    // connect component
+    /*
+    * Connect component
+    * Main function to render the map and city selection dropdown
+    */
     async connectedCallback() {
         this.innerHTML = `
                 <div id="city-selection" class="city-selection">
@@ -50,36 +53,60 @@ export default class MapComponent extends HTMLElement {
                 </div>
                 <div id="map" class="map fade-in"></div>
             `;
-        if (!this.token) {
-            toast("Login required to view map");
-            return
-        }
 
-        this.fetchCities();
-        this.userId = JSON.parse(this.user)._id;
-        this.socket = new socket(this.userId);
-        this.socket.setupSocket();
-
+        /*
+        * Get user location and render the map
+        * If it fails, return a toast message
+        */
         getUserLocation().then(coordinates => {
             this.renderMap(coordinates);
         }).catch(error => {
             toast(error);
         });
+
+        /*
+        * Create city selection dropdown
+        * Tries to fetch cities, if it doesn't work due to invalid or expired token, return a toast message
+        * and cancel the rest of function.
+        */
+        const response = await this.createCitySelection();
+        if (response) {
+            toast(response);
+            return;
+        }
+
+        this.userId = JSON.parse(this.user)._id;
+        this.socket = new socket(this.userId);
+        this.socket.setupSocket();
     }
 
     /*
     * Create city selection dropdown
-    * @param {Array} cities - Array of city names
+    * Fetch cities from the API
+    * Sets the cities object with city data
+    * Sets up the city selection
     */
-    async createCitySelection(cities) {
+    async createCitySelection() {
+        const cities = await citiesModel.fetchCities(this.token);
+        let citiesArray = [];
+        if (cities.message === 'Token invalid or expired') {
+            return 'Token invalid or expired';
+        }
+        cities.forEach(city => {
+            this.cities[city.name] = city;
+            citiesArray.push(city.name);
+        });
+
         const toggleButton = this.querySelector("#city-selection-toggle");
         const cityList = this.querySelector("#city-list");
+        const citySelection = document.getElementById("city-selection");
 
+        citySelection.style.visibility = "visible";
         toggleButton.addEventListener("click", () => {
             cityList.classList.toggle("show");
         });
-        // Example cities, replace with actual city data
-        cities.forEach(city => {
+
+        citiesArray.forEach(city => {
             const li = document.createElement("li");
             li.textContent = city;
             li.addEventListener("click", () => {
@@ -90,7 +117,7 @@ export default class MapComponent extends HTMLElement {
             });
             cityList.appendChild(li);
         });
-    }
+    };
 
     /*
     * Render the map
@@ -101,6 +128,7 @@ export default class MapComponent extends HTMLElement {
             console.error("Invalid coordinates:", coordinates);
             return;
         }
+        // Create map with user location
         this.map = L.map('map', {
             minZoom: 14,
         }).setView([coordinates.lat, coordinates.lon], 18);
@@ -108,7 +136,7 @@ export default class MapComponent extends HTMLElement {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(this.map);
-        // Add marker with popup "You are here"
+        // Create user marker
         L.marker([coordinates.lat, coordinates.lon], { icon: icons.user })
             .addTo(this.map)
             .bindPopup("You are here")
@@ -124,14 +152,14 @@ export default class MapComponent extends HTMLElement {
         this.bikes = bikes;
         this.setAttribute("bikes", JSON.stringify(this.bikes));
         this.updateBikeMarkers(bikes);
-    }
+    };
 
     // Update bike markers on the map
     updateBikeMarkers(bikes) {
         // Clear existing bike markers
         this.bikeCluster.clearLayers();
 
-        // Add new bike markers
+        // Add new bike markers with popups
         bikes.forEach((bike) => {
             const { latitude, longitude } = bike.position;
             if (latitude && longitude && bike.available) {
@@ -159,38 +187,45 @@ export default class MapComponent extends HTMLElement {
                     this.map.panTo([bike.position.latitude, bike.position.longitude]);
                     if (bike) {
                         this.gainControl(bike);
-                        setTimeout(() => {
-                            this.socket.endRide(bike._id);
-                            this.map.removeLayer(this.rentedBike);
-                            this.rentedBike = null;
-                            this.renderBikes();
-                            toast("Ride ended and bike parked.");
-                        }, 10000);
+                        this.createBikeControls();
                     }
                     console.log('Renting bike:', bikeId);
                 });
             }
         });
-    }
+    };
 
     /*
-    * Fetch cities from the API
-    * Sets the cities object with city data
-    * Sets up the city selection
-    */
-    async fetchCities() {
-        const cities = await citiesModel.fetchCities(this.token);
-        let citiesArray = [];
-        cities.forEach(city => {
-            this.cities[city.name] = city;
-            citiesArray.push(city.name);
+   * 
+   */
+    createBikeControls() {
+        let bottomNav = document.getElementById('bottom-nav');
+        for (let i = 0; i < bottomNav.children.length; i++) {
+            bottomNav.children[i].style.display = 'none';
+            bottomNav.children[i].style.width = 0;
+        }
+        let button = document.createElement('button');
+        button.classList.add('red-button', 'full-width-button');
+        button.textContent = 'End Ride';
+        button.style.width = '99%';
+        button.style.height = '90%';
+        button.addEventListener('click', () => {
+            this.socket.endRide();
+            this.map.removeLayer(this.rentedBike);
+            this.rentedBike = null;
+            this.renderBikes();
+            bottomNav.removeChild(button);
+            for (let i = 0; i < bottomNav.children.length; i++) {
+                bottomNav.children[i].style.width = '';
+                bottomNav.children[i].style.display = 'block';
+            }
         });
-        this.createCitySelection(citiesArray);
+        bottomNav.appendChild(button);
     }
 
     /*
     * Render the current selected city in within this.cityName
-    * Renders city borders, parking zones, and charging stations
+    * Renders city borders, parking zones, and charging stations of selected city
     */
     renderCity() {
         // Clear existing city layers
@@ -225,12 +260,7 @@ export default class MapComponent extends HTMLElement {
         city.parkingZones.forEach((zone) => {
             const { latitude, longitude } = zone;
             if (latitude && longitude) {
-                const circle = L.circle([latitude, longitude], {
-                    color: 'blue',
-                    opacity: 0.3,
-                    radius: 50,
-                    zIndexOffset: -500
-                }).addTo(this.map);
+                const circle = L.circle([latitude, longitude], { color: 'blue', opacity: 0.3, radius: 50, zIndexOffset: -500 }).addTo(this.map);
                 this.cityLayers.push(circle);
                 this.parkingZones.push(circle);
                 const marker = L.marker([latitude, longitude], { icon: icons.parking, opacity: 0.5, zIndexOffset: -1000 }).addTo(this.map);
@@ -259,65 +289,75 @@ export default class MapComponent extends HTMLElement {
                 console.error("Invalid charging station node:", station);
             }
         });
-    }
+    };
 
     /*
     * Gain control of a bike
     * @param {Object} bike - The bike object to control
     */
     gainControl(bike) {
+        if (this.rentedBike) {
+            this.stopControl(); // Ensure previous bike control is stopped
+        }
+
         this.socket.startRide(bike._id);
         this.rentedBike = L.marker([bike.position.latitude, bike.position.longitude], { icon: icons.bike, opacity: 0.8 }).addTo(this.map);
         this.map.removeLayer(this.bikeCluster);
 
         const step = 0.00001;
 
-        const parkingZones = this.parkingZones || [];
-        const chargingZones = this.chargingZones || [];
+        // Remove previous keydown listener before adding a new one
+        if (this.keydownListener) {
+            document.removeEventListener('keydown', this.keydownListener);
+        }
 
-        console.log('Parking zones:', parkingZones);
-        console.log('Charging stations:', chargingZones);
-
-        const isInsideZone = (lat, lon, zones) => {
-            return zones.some(zone => zone.getLatLng().distanceTo([lat, lon]) <= zone.getRadius());
-        };
-
-        document.addEventListener('keydown', (event) => {
-            switch (event.key) {
-                case 'w':
-                    bike.position.latitude += step;
-                    break;
-                case 'a':
-                    bike.position.longitude -= step * 2;
-                    break;
-                case 's':
-                    bike.position.latitude -= step;
-                    break;
-                case 'd':
-                    bike.position.longitude += step * 2;
-                    break;
-                default:
-                    return; // Ignore other keys
-            }
-            this.map.panTo([bike.position.latitude, bike.position.longitude]);
-            this.map.setView([bike.position.latitude, bike.position.longitude], 18);
-            this.rentedBike.setLatLng([bike.position.latitude, bike.position.longitude]);
-            checkZones();
-        });
-
-        const checkZones = () => {
-            if (isInsideZone(bike.position.latitude, bike.position.longitude, parkingZones)) {
-                console.log('Bike is inside a parking zone');
-            }
-
-            if (isInsideZone(bike.position.latitude, bike.position.longitude, chargingZones)) {
-                console.log('Bike is inside a charging station');
+        this.keydownListener = (event) => {
+            const keyMap = {
+                'w': () => bike.position.latitude += step,
+                'a': () => bike.position.longitude -= step * 2,
+                's': () => bike.position.latitude -= step,
+                'd': () => bike.position.longitude += step * 2
+            };
+            if (keyMap[event.key]) {
+                keyMap[event.key]();
+                this.map.panTo([bike.position.latitude, bike.position.longitude]);
+                this.rentedBike.setLatLng([bike.position.latitude, bike.position.longitude]);
             }
         };
 
-        setInterval(() => {
-            console.log('Socket: sending position ', bike.position);
+        document.addEventListener('keydown', this.keydownListener);
+
+        // Clear previous interval before starting a new one
+        if (this.controlInterval) {
+            clearInterval(this.controlInterval);
+        }
+
+        this.controlInterval = setInterval(() => {
+            if (!this.rentedBike) {
+                clearInterval(this.controlInterval);
+                this.controlInterval = null;
+                return;
+            }
+            console.log(`Sending position of bike ${bike._id}`);
             this.socket.sendPosition(bike.position);
         }, 5000);
+    };
+
+    /*
+    * Stop controlling the bike
+    */
+    stopControl() {
+        if (this.keydownListener) {
+            document.removeEventListener('keydown', this.keydownListener);
+            this.keydownListener = null;
+        }
+        if (this.controlInterval) {
+            clearInterval(this.controlInterval);
+            this.controlInterval = null;
+        }
+        if (this.rentedBike) {
+            this.map.removeLayer(this.rentedBike);
+            this.rentedBike = null;
+        }
     }
-}
+};
