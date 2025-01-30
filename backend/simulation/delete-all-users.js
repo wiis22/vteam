@@ -2,7 +2,7 @@
 deleteAllUsers();
 
 async function deleteAllUsers() {
-    let deletePromises = []
+    let deletePromises = [];
 
     try {
         const response = await fetch(`http://localhost:1337/api/users`, {
@@ -40,8 +40,8 @@ async function deleteAllUsers() {
         console.error('Error:', error);
     }
 
-    console.log(`Deleting ${deletePromises.length} users`)
+    console.log(`Deleting ${deletePromises.length} users`);
     // resolve all promises in the array
     await Promise.all(deletePromises);
-    console.log("All users deleted")
+    console.log("All users deleted");
 }

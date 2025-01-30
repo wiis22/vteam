@@ -242,4 +242,63 @@ router-outlet {
   height: 92.5vh;
   width: 100%; }
 
+.city-selection {
+  visibility: hidden;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 116px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 1000; }
+
+.city-selection-toggle {
+  background-color: #3f9cff;
+  width: 100%;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px; }
+
+.city-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: none; }
+
+.city-list.show {
+  display: block; }
+
+.city-list li {
+  padding: 10px;
+  cursor: pointer; }
+
+.city-list li:hover {
+  background-color: #f0f0f0; }
+
+.padded-main {
+  padding: 1em; }
+
+.table {
+  box-sizing: border-box;
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse; }
+  .table th {
+    text-align: left; }
+  .table td {
+    border-top: 1px solid #ccc; }
+  .table th,
+  .table td {
+    white-space: nowrap;
+    padding: 0.2rem 0.8rem; }
+  .table .number-cell {
+    text-align: right; }
+
+.table-striped tr:nth-of-type(2n) {
+  background-color: #eee; }
+
 /*# sourceMappingURL=style.css.map */

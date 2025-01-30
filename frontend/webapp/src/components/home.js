@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import authModel from '../models/auth';
 import Navbar from "./navbar";
 

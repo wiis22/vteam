@@ -25,13 +25,20 @@ h1 {
     text-align: center;
 }
 
-p {
+p, input {
     font-family: var.$font;
     color: var.$font-color;
     font-size: 1.25em;
     margin-bottom: 1.75rem;
     font-weight: var.$font-weight;
 }
+
+.city-font {
+    font-family: var.$font;
+    color: var.$font-color;
+    font-size: 1.25em;
+    font-weight: var.$font-weight;
+} 
 
 @media (min-width: 64em) {
     html {

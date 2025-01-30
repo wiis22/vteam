@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authModel from '../models/auth';
 
@@ -29,7 +29,7 @@ export default function Register() {
             alert("Registrering lyckades!");
             navigate("/");
         }
-    }
+    };
 
     return (
         <>
@@ -39,7 +39,7 @@ export default function Register() {
 
         <form onSubmit={handleRegister}>
         <p><label>Namn: </label></p>
-        <input className='textarea'
+        <input className='input'
                 type="text"
                 value={firstName}
                 placeholder='Ange namn'
@@ -48,7 +48,7 @@ export default function Register() {
             />
 
         <p><label>Efternamn: </label></p>
-        <input className='textarea'
+        <input className='input'
                 type="text"
                 value={lastName}
                 placeholder='Ange efternamn'
@@ -57,7 +57,7 @@ export default function Register() {
             />
 
         <p><label>E-mail: </label></p>
-        <input className='textarea'
+        <input className='input'
                 type="email"
                 value={email}
                 placeholder='Email'
@@ -67,7 +67,7 @@ export default function Register() {
             />
 
         <p><label>Password: </label></p>
-        <input className='textarea'
+        <input className='input'
                 type="password"
                 value={password}
                 placeholder='******'
@@ -76,7 +76,7 @@ export default function Register() {
             />
 
         <p><label>Confirm Password: </label></p>
-        <input className='textarea'
+        <input className='input'
                 type="password"
                 value={password2}
                 placeholder='******'
@@ -87,7 +87,7 @@ export default function Register() {
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
 
         <p>
-        <button className='button green-button' type="submit">
+        <button className='button' type="submit">
             Register
         </button>
         </p>

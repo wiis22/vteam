@@ -8,7 +8,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      
+
     working_dir: /backend
     volumes:
       - ./backend:/backend
@@ -38,6 +38,8 @@ services:
     build:
       context: ./frontend/mobileapp
       dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
     networks:
       - vteam
     restart: always
@@ -47,6 +49,10 @@ services:
     build:
       context: ./frontend/webapp
       dockerfile: Dockerfile
+    working_dir: /frontend/webapp
+    volumes:
+      - ./frontend/webapp:/frontend/webapp
+      - ./.env:/frontend/webapp/.env
     networks:
       - vteam
     restart: always

@@ -58,7 +58,7 @@ const auth = {
         const result = await response.json();
 
         if (result.success === true) {
-            console.log(result)
+            console.log(result);
             return "ok";
         }
 
@@ -85,9 +85,9 @@ const auth = {
         }
 
         if (auth.role === "user" && roleAccess === "admin") {
-            return 'Denna sidan är endast avsedd för admin användare'
+            return 'Denna sidan är endast avsedd för admin användare';
         }
-        return
+        return;
     }
 };
 

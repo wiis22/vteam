@@ -1,7 +1,7 @@
 import authModel from "../models/auth.js";
 import { toast } from "../utils.js";
 
-export default class LoginForm extends HTMLElement {
+export default class RegisterForm extends HTMLElement {
     constructor() {
         super();
         this.credentials = {
@@ -24,11 +24,13 @@ export default class LoginForm extends HTMLElement {
 
         let emailLabel = document.createElement("label");
         let passwordLabel = document.createElement("label");
+        let confirmPasswordLabel = document.createElement("label");
         let firstNameLabel = document.createElement("label");
         let lastNameLabel = document.createElement("label");
 
         let email = document.createElement("input");
         let password = document.createElement("input");
+        let confirmPassword = document.createElement("input");
         let firstName = document.createElement("input");
         let lastName = document.createElement("input");
         let registerButton = document.createElement("input");
@@ -58,6 +60,20 @@ export default class LoginForm extends HTMLElement {
             this.credentials = {
                 ...this.credentials,
                 password: event.target.value,
+            };
+        });
+
+        confirmPasswordLabel.classList.add("input-label");
+        confirmPasswordLabel.textContent = "Confirm Password*";
+        confirmPasswordLabel.setAttribute("for", "confirmPassword");
+        confirmPassword.setAttribute("id", "confirmPassword");
+        confirmPassword.setAttribute("type", "password");
+        confirmPassword.setAttribute("required", "required");
+        confirmPassword.classList.add("input");
+        confirmPassword.addEventListener("input", (event) => {
+            this.credentials = {
+                ...this.credentials,
+                confirmPassword: event.target.value,
             };
         });
 
@@ -96,30 +112,32 @@ export default class LoginForm extends HTMLElement {
 
         form.appendChild(emailLabel);
         form.appendChild(email);
-        form.appendChild(passwordLabel);
-        form.appendChild(password);
         form.appendChild(firstNameLabel);
         form.appendChild(firstName);
         form.appendChild(lastNameLabel);
         form.appendChild(lastName);
+        form.appendChild(passwordLabel);
+        form.appendChild(password);
+        form.appendChild(confirmPasswordLabel);
+        form.appendChild(confirmPassword);
         form.appendChild(registerButton);
 
         this.appendChild(form);
     }
 
     async register() {
+        if (this.credentials.password !== this.credentials.confirmPassword) {
+            toast("Passwords do not match");
+            return;
+        }
         const result = await authModel.register(
             this.credentials.email,
             this.credentials.password,
             this.credentials.firstName,
             this.credentials.lastName
         );
-
         if (result === "ok") {
-            this.login();
-        } else {
-            toast(result);
-            console.log(result);
+            toast("Logged in");
         }
     }
 }

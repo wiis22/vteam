@@ -46,7 +46,7 @@ const auth = {
             // console.log("userData in auth.login:", userData)
 
             const res = await this.comparePasswords(loginData.password, userData.password);
-            console.log("res from comparePasswords in auth.login:", res)
+            console.log("res from comparePasswords in auth.login:", res);
 
             if (res) {
                 const payload = { email: loginData.email };
@@ -116,6 +116,6 @@ const auth = {
         });
     },
 
-}
+};
 
 module.exports = auth;

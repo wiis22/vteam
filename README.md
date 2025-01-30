@@ -7,6 +7,10 @@ Detta projekt har skapats som en del av kursen **Programutveckling i virtuella t
 - **REST API**    
 - **Databas**
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wiis22/vteam/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/?branch=main)
+
+[![Build Status](https://scrutinizer-ci.com/g/wiis22/vteam/badges/build.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/build-status/main)
+
 ## [vTeam Kurs](https://dbwebb.se/kurser/vteam-v1)
 > Kursen **Programutveckling i virtuella team**, a.k.a. **vteam**, lär ut avancerad programmering med webbteknologier och låter studenten fördjupa sig i ett flertal teknikområden inom nischen. Studenten får hantera verktyg och tekniker för att jobba med kodkvalitet och hur begrepp som “snygg kod” hanteras.
 >
@@ -19,7 +23,7 @@ Utvecklingen av systemet är baserat på **3.2 Göteburgare**s gemensamma **SDS 
 >
 > SDS:ens syfte är att ge en tydlig och gemensam förståelse för systemets struktur, funktioner och interaktioner mellan dess olika komponenter.
 
-För en djupare förklaring av systemet och kravren som ställs på den, rekommenderas man att läsa repots SDS.
+För en djupare förklaring av systemet och kraven som "kunden" ställt, rekommenderas man att läsa projektets tillhörande SDS.
 
 ## Repo Struktur
 >### Frontend

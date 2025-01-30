@@ -8,7 +8,7 @@ require('dotenv').config();
 // Get the arguments from the command line
 const args = process.argv.slice(2);
 const numUsers = parseInt(args[0]);
-const lengthInMinutes = parseInt(args[1])
+const lengthInMinutes = parseInt(args[1]);
 const API_URL = 'http://localhost:1337';
 
 let globalUsers = [];
@@ -61,14 +61,14 @@ async function simulation(numUsers, lengthInMinutes) {
     const halfUsersLength = Math.floor(users.length / 2);
     const quarterUsersLength = Math.floor(users.length / 4);
     const goteborgUsers = users.slice(0, halfUsersLength);
-    const harnosandUsers = users.slice(halfUsersLength, halfUsersLength + quarterUsersLength)
+    const harnosandUsers = users.slice(halfUsersLength, halfUsersLength + quarterUsersLength);
     const karlskronaUsers = users.slice(halfUsersLength + quarterUsersLength);
     // Simulate each city
     simulateCity(goteborgUsers, "Göteborg");
     simulateCity(harnosandUsers, "Härnösand");
     simulateCity(karlskronaUsers, "Karlskrona");
 
-    const lengthInMilliseconds = lengthInMinutes * 60 * 1000
+    const lengthInMilliseconds = lengthInMinutes * 60 * 1000;
     // End all rides and delete all users after set minutes
     setTimeout(async () => {
         try {
@@ -80,7 +80,7 @@ async function simulation(numUsers, lengthInMinutes) {
             }
             console.log("All rides ended successfully");
         } catch (error) {
-            console.error("Error ending all rides", error)
+            console.error("Error ending all rides", error);
         }
 
         await deleteUsers(users);
@@ -119,15 +119,15 @@ const simulateCity = async (users, city) => {
             const endPosition = getEndPosition(cityData);
             const route = getRoute(bike.position, endPosition);
             // Simulate the ride
-            await simulateRide(user, bike._id, route)
+            await simulateRide(user, bike._id, route);
         }
-    }
+    };
 
     // Simulate all users
     for (const user of users) {
         simulateUser(user);
     }
-}
+};
 
 // Simulate one ride
 const simulateRide = async (user, bikeId, route) => {
@@ -146,18 +146,18 @@ const simulateRide = async (user, bikeId, route) => {
     // Update positions from route on loop
     for (const position of route) {
         user.sendPosition(position);
-        await new Promise(resolve => setTimeout(resolve, intervalSec * 1000)) // Pause intervalSec sec
+        await new Promise(resolve => setTimeout(resolve, intervalSec * 1000)); // Pause intervalSec sec
     }
     // End ride
     // console.log(`Ending ride. UserId: ${user.userId}. BikeId: ${bikeId}`)
     user.endRide();
-}
+};
 
 // Get the route array of positions between two positions
 const getRoute = (startPosition, endPosition) => {
     // 20km/h = 56m/10sec
     // const interval = 56
-    const interval = 1000
+    const interval = 1000;
     const turfStart = turf.point([startPosition.longitude, startPosition.latitude]);
     const turfEnd = turf.point([endPosition.longitude, endPosition.latitude]);
     const line = turf.lineString([turfStart.geometry.coordinates, turfEnd.geometry.coordinates]);
@@ -171,12 +171,12 @@ const getRoute = (startPosition, endPosition) => {
         const position = {
             latitude,
             longitude
-        }
+        };
         route.push(position);
     }
 
     return route;
-}
+};
 
 // Get all available bikes for a city
 const getAvailableBikesCity = async (city) => {
@@ -186,13 +186,13 @@ const getAvailableBikesCity = async (city) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer 1337`
         }
-    })
+    });
 
     const bikes = await response.json();
 
     const availableBikes = bikes.filter(bike => bike.available);
-    return availableBikes
-}
+    return availableBikes;
+};
 
 // Add users
 const addUsers = async (numUsers) => {
@@ -256,7 +256,7 @@ const addUsers = async (numUsers) => {
     console.log(`Added all ${users.length} users`);
 
     return users;
-}
+};
 
 // Delete users
 const deleteUsers = async (users) => {
@@ -316,8 +316,8 @@ const randomPositionInPolygon = (cityPolygon) => {
         latitude: position[1]
     };
 
-    return position
-}
+    return position;
+};
 
 setupGracefulShutdown();
 

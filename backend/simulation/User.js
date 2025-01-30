@@ -18,7 +18,7 @@ class User {
     }
 
     getRegisterPromise() {
-        const promise = fetchRegister(this.userIndex, true)
+        const promise = fetchRegister(this.userIndex, true);
         return promise;
     }
 
@@ -34,9 +34,9 @@ class User {
             // console.log("User retreived data from socket route bikeStartRideResponse")
             console.log(data)
             if (data.started) {
-                this.rideStarted(data.bikeId)
+                this.rideStarted(data.bikeId);
             }
-        })
+        });
         this.socket.on('bikeEndRide', () => {
             this.endRide();
         });
@@ -57,7 +57,7 @@ class User {
     }
 
     sendPosition(position) {
-        this.socket.emit('updatePosition', { bikeId: this.bikeId, position, position })
+        this.socket.emit('updatePosition', { bikeId: this.bikeId, position, position });
     }
 
     endRide() {
@@ -79,7 +79,7 @@ async function fetchDelete(userId) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer 1337`
         }
-    })
+    });
 
     return promise;
 }
@@ -100,7 +100,7 @@ async function fetchRegister(userIndex, returnPromise = false) {
                 'Authorization': `Bearer 1337`
             },
             body: JSON.stringify(registerData)
-        })
+        });
         return promise;
     }
 
@@ -111,7 +111,7 @@ async function fetchRegister(userIndex, returnPromise = false) {
             'Authorization': `Bearer 1337`
         },
         body: JSON.stringify(registerData)
-    })
+    });
 
     const data = await response.json();
 

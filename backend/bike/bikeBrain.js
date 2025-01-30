@@ -24,17 +24,17 @@ class bikeBrain {
         this.socket = io(API_URL);
         this.socket.emit('joinRoom', {roomName: this.id});
         this.socket.on('startRide', (data) => {
-            this.socket.emit('bikeStartRideResponse', {userId: data.userId, bikeId: this.id, started: this.available})
+            this.socket.emit('bikeStartRideResponse', {userId: data.userId, bikeId: this.id, started: this.available});
             if (this.available) {
                 this.startRide(data.userId);
             }
-        })
+        });
         this.socket.on('endRide', () => {
             this.endRide();
-        })
+        });
         this.socket.on('updatePosition', (data) => {
             this.updatePosition(data.position);
-        })
+        });
     }
 
     startRide(customer){
@@ -72,16 +72,16 @@ class bikeBrain {
                 endPosition: this.position,
                 endLocation: this.location,
                 endTime: new Date().toISOString(),
-            }
+            };
             Object.assign(this.log, endLog);
 
             //rensa loggen
             this.socket.emit("saveRide", {bikeId: this.id, log: this.log, userId: this.currentCustomer});
             console.log(`Cykeln ${this.id} återlämnas av ${this.currentCustomer}. Resan är loggad.`);
             //en update till db att availavble = true
-            this.updateAvailable(true)
+            this.updateAvailable(true);
             if (this.batteryDrainInter) {
-                clearInterval(this.batteryDrainInter)
+                clearInterval(this.batteryDrainInter);
                 this.batteryDrainInter = null;
             }
             this.currentCustomer = null;
@@ -102,11 +102,11 @@ class bikeBrain {
 
         if (this.batteryPercentage <= 10) {
             console.log("Cykeln måste laddas och stängs av.");
-            this.socket.emit("bikeEndRide", { userId: this.currentCustomer})
+            this.socket.emit("bikeEndRide", { userId: this.currentCustomer});
             this.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
 
             //tar bort intervallet så att den inte fortsätter att dra batteri
-            clearInterval(this.batteryDrainInter)
+            clearInterval(this.batteryDrainInter);
             this.batteryDrainInter = null;
 
             // this.endRide(); // not used here as mobile app/user gets emit above and will end it like normal
@@ -132,7 +132,7 @@ class bikeBrain {
         if (this.locationInDistance(this.cityData.chargingStations)) {
             this.updateLocation("chargingStation");
             this.updateCharging(true);
-            setTimeout(() => this.chargingBattery(), 60000)
+            setTimeout(() => this.chargingBattery(), 60000);
             return;
         }
         if (this.locationInDistance(this.cityData.parkingZones)) {
@@ -144,7 +144,7 @@ class bikeBrain {
     }
 
     updatePosition(newPosition) {
-        console.log("Bike: updatePosition() called with newPosition: ", newPosition)
+        console.log("Bike: updatePosition() called with newPosition: ", newPosition);
         this.position = newPosition;
         this.socket.emit("updateBike", {id: this.id, position: this.position});
         console.log(`Cykeln ${this.id} position uppupdateBikedaterad till ${newPosition}`);
@@ -189,5 +189,5 @@ class bikeBrain {
     }
 
 }
-
+//test
 module.exports = bikeBrain;

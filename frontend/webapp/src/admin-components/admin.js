@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, Link } from "react-router-dom";
-import authModel from "../models/auth"
+import authModel from "../models/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import Hamburger from "../style/images/hamburger.jpg";
 
 export default function Admin() {
     const [isHidden, setIsHidden] = useState(false);
     const [toggleButton, setToggleButton] = useState(false);
+    const [currentCity, setCurrentCity] = useState(null);
     const accessCheck = authModel.roleAccess("admin");
     document.title = 'Admin';
 
     useEffect(() => {
-        setIsHidden(false)
+        setIsHidden(false);
     }, []);
 
-    const handleClick = () => {
+    const handleClick = (city) => {
+        setCurrentCity(city);
         setIsHidden(!isHidden);
-        setToggleButton(!toggleButton)
+        setToggleButton(!toggleButton);
     };
 
     // checks access
@@ -44,26 +47,28 @@ export default function Admin() {
 
         <div style={{ display: isHidden ? "none" : "" }}>
 
-            <Link to="/admin/goteborg" className="city-button" onClick={handleClick}>
+            <Link to="/admin/goteborg" className="city-button" onClick={() => handleClick('Göteborg')}>
             Göteborg
             </Link>
 
-            <Link to="/admin/harnosand" className="city-button" onClick={handleClick}>
+            <Link to="/admin/harnosand" className="city-button" onClick={() => handleClick('Härnösand')}>
             Härnösand
             </Link>
 
-            <Link to="/admin/karlskrona" className="city-button" onClick={handleClick}>
+            <Link to="/admin/karlskrona" className="city-button" onClick={() => handleClick('Karlskrona')}>
             Karlskrona
             </Link>
 
         </div>
         {toggleButton ? (
-            <button className="header-button" onClick={handleClick}>
+            <>
+            <button className="header-button" onClick={() => handleClick('')}>
                 Ändra stad
-            </button>
+            </button> <span className="city-font">{' > '} {currentCity}</span>
+            </>
         ): ''}
         </div>
-
+        <img src={Hamburger} alt="Goteburgare" className="burger" />
             <Outlet />
         </div>
     );
