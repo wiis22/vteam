@@ -4,12 +4,10 @@ FROM node:18
 WORKDIR /frontend/mobileapp
 
 # Copy application files
-COPY . .
+# COPY . .
 
 # Install dependencies
 RUN npm install -g http-server
-
-COPY /frontend/mobileapp /frontend/mobileapp
 
 # Expose port 3001
 EXPOSE 3001

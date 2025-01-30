@@ -40,6 +40,8 @@ services:
     build:
       context: ./frontend/mobileapp
       dockerfile: Dockerfile
+    volumes:
+      - ./frontend/mobileapp:/frontend/mobileapp
     ports:
       - "3001:3001"
     networks:
