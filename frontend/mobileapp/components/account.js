@@ -92,23 +92,11 @@ export default class Account extends HTMLElement {
         tbody.appendChild(emailRow);
         tbody.appendChild(emailRow);
         tbody.appendChild(roleRow);
+        tbody.appendChild(document.createElement("br"));
         tbody.appendChild(balanceRow);
         tbody.appendChild(balanceFormRow);
         table.appendChild(tbody);
         this.appendChild(table);
         this.appendChild(logoutButton);
-
-        // Log session storage
-        console.log("Session Storage:");
-        for (let i = 0; i < sessionStorage.length; i++) {
-            let key = sessionStorage.key(i);
-            console.log(`${key}: ${sessionStorage.getItem(key)}`);
-        }
-        // Log local storage
-        console.log("Local Storage:", localStorage);
-        for (let i = 0; i < localStorage.length; i++) {
-            let key = localStorage.key(i);
-            console.log(`${key}: ${localStorage.getItem(key)}`);
-        }
     }
 }
