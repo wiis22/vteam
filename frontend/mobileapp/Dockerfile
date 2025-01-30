@@ -3,6 +3,9 @@ FROM node:18
 # Set the working directory
 WORKDIR /frontend/mobileapp
 
+# Copy application files
+COPY . .
+
 # Install dependencies
 RUN npm install -g http-server
 
