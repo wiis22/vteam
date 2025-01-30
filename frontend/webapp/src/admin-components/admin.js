@@ -9,6 +9,7 @@ import Hamburger from "../style/images/hamburger.jpg";
 export default function Admin() {
     const [isHidden, setIsHidden] = useState(false);
     const [toggleButton, setToggleButton] = useState(false);
+    const [currentCity, setCurrentCity] = useState(null);
     const accessCheck = authModel.roleAccess("admin");
     document.title = 'Admin';
 
@@ -16,7 +17,8 @@ export default function Admin() {
         setIsHidden(false);
     }, []);
 
-    const handleClick = () => {
+    const handleClick = (city) => {
+        setCurrentCity(city);
         setIsHidden(!isHidden);
         setToggleButton(!toggleButton);
     };
@@ -45,23 +47,25 @@ export default function Admin() {
 
         <div style={{ display: isHidden ? "none" : "" }}>
 
-            <Link to="/admin/goteborg" className="city-button" onClick={handleClick}>
+            <Link to="/admin/goteborg" className="city-button" onClick={() => handleClick('Göteborg')}>
             Göteborg
             </Link>
 
-            <Link to="/admin/harnosand" className="city-button" onClick={handleClick}>
+            <Link to="/admin/harnosand" className="city-button" onClick={() => handleClick('Härnösand')}>
             Härnösand
             </Link>
 
-            <Link to="/admin/karlskrona" className="city-button" onClick={handleClick}>
+            <Link to="/admin/karlskrona" className="city-button" onClick={() => handleClick('Karlskrona')}>
             Karlskrona
             </Link>
 
         </div>
         {toggleButton ? (
-            <button className="header-button" onClick={handleClick}>
+            <>
+            <button className="header-button" onClick={() => handleClick('')}>
                 Ändra stad
-            </button>
+            </button> <span className="city-font">{' > '} {currentCity}</span>
+            </>
         ): ''}
         </div>
         <img src={Hamburger} alt="Goteburgare" className="burger" />

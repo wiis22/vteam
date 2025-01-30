@@ -15,7 +15,7 @@ body {
 }
 
 .map {
-  height: 50vh;
+  height: 80vh;
   width: 100%;
   margin-bottom: 3rem;
 }
@@ -313,6 +313,13 @@ p, input {
   color: #333;
   font-size: 1.25em;
   margin-bottom: 1.75rem;
+  font-weight: 500;
+}
+
+.city-font {
+  font-family: "Open Sans", sans-serif;
+  color: #333;
+  font-size: 1.25em;
   font-weight: 500;
 }
 

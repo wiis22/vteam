@@ -87,7 +87,7 @@ export default function SingleBike() {
             <p>Plats: {bikeDetails.location}</p>
 
             <button className="small-button" onClick={() => handleClickLocation(bikeDetails.id)}>
-                    Ändra plats till {bikeDetails.location === "field" ? "maintenance": 'field'}
+                    Ändra plats till {bikeDetails.location === "maintenance" ? "field": 'maintenance'}
             </button>
 
             <p>På laddning: {bikeDetails.charging ? "Ja": "Nej"}</p>

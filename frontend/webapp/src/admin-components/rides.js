@@ -45,10 +45,11 @@ const Rides = ({ userOrBike, id, receipt }) => {
         doc.text(`Kvitto för resa ${ride._id}`, 10, 10);
 
         doc.setFontSize(12);
-        doc.text(`Starttid: ${ride.startTime}`, 10, 20);
-        doc.text(`Sluttid: ${ride.endTime}`, 10, 30);
-        doc.text(`Total tid: ${ride.rideLengthSeconds} sekunder`, 10, 40);
-        doc.text(`Pris: ${ride.price} Kr`, 10, 50);
+        doc.text(`Datum: ${ride.startTime.slice(0, 10)}`, 10,20)
+        doc.text(`Starttid: ${ride.startTime.slice(11, 19)}`, 10, 30);
+        doc.text(`Sluttid: ${ride.endTime.slice(11, 19)}`, 10, 40);
+        doc.text(`Total tid: ${ride.rideLengthSeconds} sekunder`, 10, 50);
+        doc.text(`Pris: ${ride.price} Kr`, 10, 60);
 
         doc.save(`kvitto_${ride._id}.pdf`);
     };
@@ -62,7 +63,8 @@ const Rides = ({ userOrBike, id, receipt }) => {
                     {currentRides.map((ride) => (
                         <div className="ride-list" key={ride._id}>
                             <p>Ride id: {ride._id}</p>
-                            <p>Start: {ride.startTime}, Slut: {ride.endTime}, Totaltid: {ride.rideLengthSeconds}</p>
+                            <p>Datum: {ride.startTime.slice(0, 10)}</p>
+                            <p>Start: {ride.startTime.slice(11, 19)}, Slut: {ride.endTime.slice(11, 19)}, Totaltid: {ride.rideLengthSeconds}</p>
                             <p>Pris: {ride.price}</p>
                             {receiptButton && (
                                 <button className="button" onClick={() => saveReceipt(ride)}>
