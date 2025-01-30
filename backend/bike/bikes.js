@@ -2,7 +2,7 @@
 require('dotenv').config();
 const bikeBrain = require('./bikeBrain.js');
 
-const API_URL = 'http://localhost:1337';
+const API_URL = 'http://server:1337';
 
 // initializing the bikes from the database
 async function initBikes() {
