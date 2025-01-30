@@ -2,3 +2,46 @@
     height: 92.5vh;
     width: 100%;
 }
+
+.city-selection {
+    visibility: hidden;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 116px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.city-selection-toggle {
+    background-color: #3f9cff;
+    width: 100%;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.city-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+}
+
+.city-list.show {
+    display: block;
+}
+
+.city-list li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.city-list li:hover {
+    background-color: #f0f0f0;
+}

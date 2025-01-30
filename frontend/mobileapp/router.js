@@ -9,9 +9,14 @@ export default class Router extends HTMLElement {
             "": {
                 view: "<map-view></map-view>",
                 name: "Map",
+                hidden: true,
             },
-            "login": {
-                view: "<login-view></login-view>",
+            "map": {
+                view: "<map-view></map-view>",
+                name: "Map",
+            },
+            "account": {
+                view: "<account-view></account-view>",
                 name: "Account",
             },
             "register": {
@@ -63,9 +68,8 @@ export default class Router extends HTMLElement {
             html = this.routes[this.currentRoute].view;
             if (this.wildcard) {
                 html = html.replace("$wildcard", this.wildcard);
-            }
-            console.log(html);
-        }
+            };
+        };
         this.innerHTML = html;
     }
 }

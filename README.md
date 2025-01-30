@@ -23,7 +23,7 @@ Utvecklingen av systemet är baserat på **3.2 Göteburgare**s gemensamma **SDS 
 >
 > SDS:ens syfte är att ge en tydlig och gemensam förståelse för systemets struktur, funktioner och interaktioner mellan dess olika komponenter.
 
-För en djupare förklaring av systemet och kravren som ställs på den, rekommenderas man att läsa repots SDS.
+För en djupare förklaring av systemet och kraven som "kunden" ställt, rekommenderas man att läsa projektets tillhörande SDS.
 
 ## Repo Struktur
 >### Frontend
