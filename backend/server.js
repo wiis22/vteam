@@ -6,6 +6,8 @@ const { Server } = require('socket.io');
 const http = require("http");
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const { MongoClient, ObjectId } = require("mongodb");
 
 const app = express();
 const port = process.env.PORT_API || 1337;
@@ -21,6 +23,10 @@ app.use(cors({
     credentials: true
 }));
 
+// Increase the payload size limit
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
+
 const io = new Server(httpserver, {
     cors: {
         origin: mobileAppURL,
@@ -28,6 +34,43 @@ const io = new Server(httpserver, {
         credentials: true
     }
 });
+
+let updateBikeQueue = [];
+// Update bikes to the database in bulks every x seconds
+setInterval(async () => {
+    if (updateBikeQueue.length > 0) {
+        bikeDataArray = updateBikeQueue;
+        updateBikeQueue = [];
+        let operations = [];
+        for (const bikeData of bikeDataArray) {
+            const { id, ...updateFields } = bikeData
+            // console.log("bikeData", bikeData)
+            const objectId = new ObjectId(String(id));
+            const operation = {
+                updateOne: {
+                    filter: { _id: objectId },
+                    update: { $set: updateFields }
+                }
+            }
+            // console.log(operation);
+            operations.push(operation);
+        }
+
+        try {
+            const startDate = new Date();
+            const result = await database.bulkWrite("bikes", operations);
+            const endDate = new Date();
+            console.log("Time to update bikes: ", (endDate - startDate) / 1000, "seconds");
+            console.log("Number of operations: ", operations.length);
+            console.log("result", result);
+        } catch (error) {
+            console.error('Error updating bikes:', error);
+        }
+    }
+    if (updateBikeQueue.length > 0 && updateBikeQueue.length < 10) {
+        console.log(updateBikeQueue);
+    }
+}, 10000); // 10 seconds
 
 io.sockets.on('connection', (socket) => {
     console.log('Client connected to sockets');
@@ -38,11 +81,11 @@ io.sockets.on('connection', (socket) => {
         console.log(`Socket ${socket.id} joined room: ${data.roomName}`);
     }),
 
-    // used by mobile app when user starts a ride
-    socket.on("startRide", (data) => {
-        // console.log("Socket route: startRide", data)
-        io.to(data.bikeId).emit("startRide", { userId: data.userId });
-    });
+        // used by mobile app when user starts a ride
+        socket.on("startRide", (data) => {
+            // console.log("Socket route: startRide", data)
+            io.to(data.bikeId).emit("startRide", { userId: data.userId });
+        });
 
     // used by bike to confirm if ride was started or not
     socket.on("bikeStartRideResponse", (data) => {
@@ -63,8 +106,8 @@ io.sockets.on('connection', (socket) => {
     // used by bike when ride is ended and should be saved to database
     socket.on("saveRide", async (data) => {
         try {
-            console.log("data in socket route saveRide:");
-            console.log(data);
+            // console.log("data in socket route saveRide:")
+            // console.log(data)
             const price = ride.getPrice(data.log.startLocation, data.log.endLocation, data.log.startTime, data.log.endTime);
             const rideLengthSeconds = ride.getLengthSeconds(data.log.startTime, data.log.endTime);
 
@@ -83,6 +126,7 @@ io.sockets.on('connection', (socket) => {
 
             const result = await database.addOne("rides", rideData);
             io.to(data.userId).emit("rideDone", { ride: rideData });
+            console.log("Ride saved to the database");
         } catch (error) {
             console.error('Error saving ride:', error);
             socket.to(data.userId).emit("rideSaveErorr", { error: error.message });
@@ -97,15 +141,13 @@ io.sockets.on('connection', (socket) => {
 
     // used by bike to save updated values to database
     socket.on('updateBike', async (data) => {
-        try {
-
-            
-
-            const result = await database.updateOne("bikes", data);
-            // console.log("result: ", result);
-        } catch (error) {
-            console.error('Error updating bike:', error);
-        }
+        updateBikeQueue.push(data);
+        // try {
+        //     const result = await database.updateOne("bikes", data);
+        //     // console.log("result: ", result);
+        // } catch (error) {
+        //     console.error('Error updating bike:', error);
+        // }
     });
 
     socket.on("leaveRoom", (roomName) => {
@@ -454,6 +496,72 @@ app.delete('/api/ride/:id', auth.verifyJwt, async (req, res) => {
         res.status(200).json(result);
     } catch (error) {
         console.error('Error deleting ride:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.post('/api/bulk-insert/:collection', auth.verifyJwt, async (req, res) => {
+    const { collection } = req.params;
+    const data = req.body;
+
+    const chunkSize = 350;
+    const chunks = [];
+    for (let i = 0; i < data.length; i += chunkSize) {
+        chunks.push(data.slice(i, i + chunkSize));
+    };
+
+    let insertedIds = [];
+    
+    try {
+        for (const chunk of chunks) {
+            const operations = chunk.map(doc => ({
+                insertOne: { document: { ...doc, _id: new ObjectId() } }
+            }));
+
+            const result = await database.bulkWrite(collection, operations);
+            // console.log("result: ", result);
+            const chunkInsertedIds = operations.map(op => op.insertOne.document._id);
+            insertedIds = insertedIds.concat(chunkInsertedIds);
+        }
+
+        res.status(200).json({message: 'Bulk inserts successful', insertedIds: insertedIds});
+    } catch (error) {
+        console.error('Error performing bulk inserts:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.post('/api/bulk-delete/:collection', auth.verifyJwt, async (req, res) => {
+    const { collection } = req.params;
+    const data = req.body;
+
+    const chunkSize = 350;
+    const chunks = [];
+    for (let i = 0; i < data.length; i += chunkSize) {
+        chunks.push(data.slice(i, i + chunkSize));
+    };
+
+    // console.log("chunks.length: ", chunks.length);
+    // console.log("chunks[0][0]: ", chunks[0][0]);
+
+    let deleteResults = [];
+
+    try {
+        for (const chunk of chunks) {
+            const operations = chunk.map(id => ({
+                deleteOne: { filter: { _id: new ObjectId(String(id)) } }
+            }));
+
+            // console.log("operations: ", operations);
+
+            const result = await database.bulkWrite(collection, operations);
+            // console.log("result: ", result);
+            deleteResults = deleteResults.concat(result);
+        }
+
+        res.status(200).json({message: 'Bulk deletes successful', result: deleteResults});
+    } catch (error) {
+        console.error('Error performing bulk deletes:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });

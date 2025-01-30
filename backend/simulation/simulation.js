@@ -65,13 +65,12 @@ async function simulation(numUsers, lengthInMinutes) {
     const karlskronaUsers = users.slice(halfUsersLength + quarterUsersLength);
     // Simulate each city
     simulateCity(goteborgUsers, "Göteborg");
-    // simulateCity(harnosandUsers, "Härnösand");
-    // simulateCity(karlskronaUsers, "Karlskrona");
+    simulateCity(harnosandUsers, "Härnösand");
+    simulateCity(karlskronaUsers, "Karlskrona");
 
     const lengthInMilliseconds = lengthInMinutes * 60 * 1000;
     // End all rides and delete all users after set minutes
     setTimeout(async () => {
-        console.log("setTimeout started");
         try {
             for (const user of users) {
                 if (user.bikeId !== null) {
@@ -88,7 +87,7 @@ async function simulation(numUsers, lengthInMinutes) {
         process.exit(0);
     }, lengthInMilliseconds);
 
-    console.log("lengthInMilliseconds", lengthInMilliseconds);
+    console.log(`Simulation started with ${numUsers} users and will run for ${lengthInMinutes} minutes`);
 }
 
 // Simulation for one city
@@ -96,23 +95,28 @@ const simulateCity = async (users, city) => {
     // Get available bikes for the city
     let availableBikes = await getAvailableBikesCity(city);
 
+    console.log("Available bikes in", city, availableBikes.length);
+
     // Get the geolocations for the city border
     const citiesFilePath = path.join(__dirname, '../db/mongodb/src/cities.JSON');
     const citiesData = JSON.parse(fs.readFileSync(citiesFilePath, 'utf8')).cities;
     const cityData = citiesData.find(c => c.name.toLowerCase() === city.toLowerCase());
-    const cityPolygon = cityData.borders;
 
     // Simulate a user completing rides on loop
     const simulateUser = async (user) => {
         while (true) {
-            await new Promise(resolve => setTimeout(resolve, 60 * 1000 * Math.random())); // Random pause 0-60 sec before each ride
+            await new Promise(resolve => setTimeout(resolve, 100 * 1000 * Math.random())) // Random pause 0-100 sec before each ride
             // Pick a random bike
             const randomIndex = Math.floor(Math.random() * availableBikes.length);
             const bike = availableBikes[randomIndex];
+            if (!bike) {
+                console.log("bike is undefined, reuturning and user will simulate a new ride");
+                return;;
+            }
             // Remove picked bike from available bikes
             availableBikes.splice(randomIndex, 1);
-            // Get a random end position of the ride
-            const endPosition = randomPositionInPolygon(cityPolygon);
+            // Get end position of the ride
+            const endPosition = getEndPosition(cityData);
             const route = getRoute(bike.position, endPosition);
             // Simulate the ride
             await simulateRide(user, bike._id, route);
@@ -128,14 +132,15 @@ const simulateCity = async (users, city) => {
 // Simulate one ride
 const simulateRide = async (user, bikeId, route) => {
     // Seconds between each position update (10 sec results in reasonable speed)
-    const intervalSec = 20;
-    console.log(`Starting ride. UserId: ${user.userId}. BikeId: ${bikeId}. The ride should take ${intervalSec * route.length} seconds.`);
+    const intervalSec = 20
+    // console.log(`Starting ride. UserId: ${user.userId}. BikeId: ${bikeId}. The ride should take ${intervalSec * route.length} seconds.`)
     // Start the ride
     user.startRide(bikeId);
     // Sleep for 10 sec
-    await new Promise(resolve => setTimeout(resolve, 10 * 1000));
+    await new Promise(resolve => setTimeout(resolve, 5 * 1000))
     // Check if user has bike, i.e. if ride was started
     if (user.bike === null) {
+        console.log("User does not have a bike which means ride never started, returning");
         return;
     }
     // Update positions from route on loop
@@ -143,8 +148,8 @@ const simulateRide = async (user, bikeId, route) => {
         user.sendPosition(position);
         await new Promise(resolve => setTimeout(resolve, intervalSec * 1000)); // Pause intervalSec sec
     }
-    console.log(`Ending ride. UserId: ${user.userId}. BikeId: ${bikeId}`);
     // End ride
+    // console.log(`Ending ride. UserId: ${user.userId}. BikeId: ${bikeId}`)
     user.endRide();
 };
 
@@ -184,65 +189,111 @@ const getAvailableBikesCity = async (city) => {
     });
 
     const bikes = await response.json();
+
     const availableBikes = bikes.filter(bike => bike.available);
     return availableBikes;
 };
 
 // Add users
 const addUsers = async (numUsers) => {
-    let users = [];
+    // Create data for users
+    const batchSize = 500;
+    let usersRegisterData = [];
 
-    // Create users and associate registration promises with them
-    const registerPromises = Array.from({ length: numUsers }, (_, i) => {
-        const user = new User(i);
-        users.push(user);
-        return user.getRegisterPromise()
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                console.log("data", data);
-                console.log("setUserId() called with ", data.userId);
-                user.setUserId(data.userId);
-            })
-            .catch(error => {
-                console.error(`Error registering user ${i}:`, error);
-            });
-    });
+    for (let i = 0; i < numUsers; i++) {
+        const registerData = {
+            email: `user${i}@gmail.com`,
+            password: `password${i}`,
+            firstName: `John${i}`,
+            lastName: `Doe${i}`,
+            role: "user",
+            balance: 0
+        };
 
-    for (let i = 0; i < Math.ceil(registerPromises.length / 100); i++) {
-        if (i !== 0) {
-            console.log("Batch of 100 users registered");
+        usersRegisterData.push(registerData);
+    };
+
+    let userIds = [];
+
+    for (let i = 0; i < usersRegisterData.length; i += batchSize) {
+        const batch = usersRegisterData.slice(i, i + batchSize);
+
+
+        console.log(`Trying to add batch of ${batch.length} users`);
+
+        // Post users to save to the database
+        const registerResponse = await fetch(`${API_URL}/api/bulk-insert/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer 1337`
+            },
+            body: JSON.stringify(batch)
+        });
+
+        const result = await registerResponse.json();
+
+        if (result.insertedIds.length !== batch.length) {
+            console.error('Failed to add users');
+            return;
         }
-        const start = i * 100;
-        const end = start + 100;
-        const promisesChunk = registerPromises.slice(start, end);
-        await Promise.all(promisesChunk);
+
+        console.log(`Added batch of ${batch.length} users`);
+
+        const newUserIds = result.insertedIds;
+        userIds = userIds.concat(newUserIds);
     }
 
-    console.log("All users registered");
+    // Create instances of User class and set userId
+    let users = [];
 
-    globalUsers = users;
+    for (let i = 0; i < userIds.length; i++) {
+        const user = new User(i);
+        user.setUserId(userIds[i])
+        users.push(user);
+    }
+
+    console.log(`Added all ${users.length} users`);
 
     return users;
 };
 
 // Delete users
 const deleteUsers = async (users) => {
-    let deletePromises = [];
+    const userIds = users.map(user => user.userId);
 
-    for (const user of users) {
-        deletePromises.push(user.delete());
-    }
+    const deleteResponse = await fetch(`${API_URL}/api/bulk-delete/users`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer 1337`
+        },
+        body: JSON.stringify(userIds)
+    });
 
-    for (let i = 0; i < Math.ceil(deletePromises.length / 100); i++) {
-        const start = i * 100;
-        const end = start + 100;
-        const promisesChunk = deletePromises.slice(start, end);
-        await Promise.all(promisesChunk);
+    if (deleteResponse.status === 200) {
+        console.log(`Deleted ${numUsers} users`);
+    } else {
+        console.error('Failed to delete users');
     }
-    console.log("All users deleted successfully");
-};
+}
+
+// Get end position of the ride
+const getEndPosition = (cityData) => {
+    const randomNum = Math.random();
+    // 50% chance to get a random position in the city (field)
+    if (randomNum < 0.5) {
+        return randomPositionInPolygon(cityData.borders);
+    }
+    // 25% chance to get a random parking zone position
+    if (randomNum < 0.75) {
+        const randomIndex = Math.floor(Math.random() * cityData.parkingZones.length);
+        return cityData.parkingZones[randomIndex];
+    }
+    // 25% chance to get a random charging station position
+    const randomIndex = Math.floor(Math.random() * cityData.chargingStations.length);
+    return cityData.chargingStations[randomIndex];
+}
 
 // Get "random" position in polygon
 const randomPositionInPolygon = (cityPolygon) => {

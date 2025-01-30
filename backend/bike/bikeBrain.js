@@ -45,7 +45,7 @@ class bikeBrain {
         }
 
         this.currentCustomer = customer;
-        this.available = false;
+        this.updateAvailable(false);
 
         const startLog = {
             startPosition: this.position,
@@ -109,23 +109,19 @@ class bikeBrain {
             clearInterval(this.batteryDrainInter);
             this.batteryDrainInter = null;
 
-            this.socket.emit("updateBike", {id: this.id, batteryPercentage: this.batteryPercentage});
-            return;
             // this.endRide(); // not used here as mobile app/user gets emit above and will end it like normal
+            this.batteryPercentage = Math.max(this.batteryPercentage, 0);
         }
 
-        this.batteryPercentage = Math.max(this.batteryPercentage, 0);
-
-        console.log(`Cykel ${this.id}. Batterinivå: ${this.batteryPercentage.toFixed(1)}%`);
-        console.log("userId", this.currentCustomer);
+        // console.log(`Cykel ${this.id}. Batterinivå: ${this.batteryPercentage.toFixed(1)}%`);
         this.socket.emit("updateBike", {id: this.id, batteryPercentage: this.batteryPercentage});
         return;
     }
 
     locationInDistance(refPoint) {
         for (let point of refPoint) {
-            const distance = geolib.getDistance(this.position, point);
-            if (distance <= 20) { // 20 m runt punkt
+            const distance = geolib.getDistance(this.position, point)
+            if (distance <= 50) { // 50 m runt punkt
                 return true;
             }
         }
@@ -151,7 +147,7 @@ class bikeBrain {
         console.log("Bike: updatePosition() called with newPosition: ", newPosition);
         this.position = newPosition;
         this.socket.emit("updateBike", {id: this.id, position: this.position});
-        console.log(`Cykeln ${this.id} position uppdaterad till ${newPosition}`);
+        console.log(`Cykeln ${this.id} position uppupdateBikedaterad till ${newPosition}`);
         return;
     }
 
@@ -188,6 +184,7 @@ class bikeBrain {
     chargingBattery(){
         this.batteryPercentage = 100;
         this.socket.emit("updateBike", {id: this.id, batteryPercentage: this.batteryPercentage});
+        this.updateCharging(false);
         return;
     }
 
