@@ -243,6 +243,7 @@ router-outlet {
   width: 100%; }
 
 .city-selection {
+  visibility: hidden;
   position: absolute;
   top: 10px;
   right: 10px;
@@ -254,7 +255,8 @@ router-outlet {
   z-index: 1000; }
 
 .city-selection-toggle {
-  background-color: #007bff;
+  background-color: #3f9cff;
+  width: 100%;
   color: white;
   border: none;
   padding: 10px;
