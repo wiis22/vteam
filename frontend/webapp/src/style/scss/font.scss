@@ -33,6 +33,13 @@ p, input {
     font-weight: var.$font-weight;
 }
 
+.city-font {
+    font-family: var.$font;
+    color: var.$font-color;
+    font-size: 1.25em;
+    font-weight: var.$font-weight;
+} 
+
 @media (min-width: 64em) {
     html {
         font-size: 112.5%;
