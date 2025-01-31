@@ -2,6 +2,10 @@ FROM node:20
 
 WORKDIR /frontend/webapp
 
-COPY package*.json ./
+# COPY package*.json ./
 
-CMD [ "npm", "install" ]
+COPY ./ ./
+
+RUN npm install
+
+CMD [ "npm", "start" ]
