@@ -19,7 +19,12 @@ services:
       - "1337"
     command: node server.js
     networks:
-      vteam:
+      - vteam
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1337/test2"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: always
 
   bikes:
@@ -33,6 +38,9 @@ services:
       - ./.env:/backend/.env
     networks:
       - vteam
+    depends_on:
+      server:
+        condition: service_healthy
     restart: always
 
   mobile_app:
@@ -59,7 +67,7 @@ services:
       - ./.env:/frontend/webapp/.env
     ports:
       - "3000:3000"
-    command: npm start
+    # command: npm start
     networks:
       - vteam
     restart: always
