@@ -1,7 +1,7 @@
 const geolib = require('geolib');
 const io = require('socket.io-client');
 
-const API_URL = 'http://localhost:1337';
+const API_URL = 'http://server:1337';
 
 class bikeBrain {
     constructor(bikeData) {
