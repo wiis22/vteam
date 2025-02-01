@@ -1,3 +1,5 @@
+/** global: HTMLElement */
+
 import authModel from "../models/auth.js";
 import { toast, badToast } from "../utils.js";
 

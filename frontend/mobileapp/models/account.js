@@ -1,3 +1,5 @@
+/* global: localStorage */
+
 import { toast } from '../utils.js';
 import authModel from './auth.js';
 

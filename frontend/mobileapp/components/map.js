@@ -1,4 +1,5 @@
 /* global L */
+/** global: HTMLElement, localStorage */
 import getUserLocation from "../models/geolocation.js";
 import icons from "../models/icons.js";
 import citiesModel from "../models/cities.js";
@@ -198,7 +199,7 @@ export default class MapComponent extends HTMLElement {
                             if (data.bikeId === bike._id && data.started) {
                                 this.gainControl(bike);
                                 this.createBikeControls();
-                                toast("Ride started");
+                                toast("Ride successfully started");
                             } else {
                                 badToast("Connection refused: bad bike");
                             }

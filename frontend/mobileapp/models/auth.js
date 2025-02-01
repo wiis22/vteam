@@ -1,3 +1,5 @@
+/* global: localStorage */
+
 import { baseURL, toast, badToast } from '../utils.js';
 
 const auth = {

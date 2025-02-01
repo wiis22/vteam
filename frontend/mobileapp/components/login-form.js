@@ -1,5 +1,7 @@
+/** global: HTMLElement, localStorage */
+
 import authModel from "../models/auth.js";
-import { toast, badToast } from "../utils.js";
+import { badToast } from "../utils.js";
 
 export default class LoginForm extends HTMLElement {
     constructor() {
