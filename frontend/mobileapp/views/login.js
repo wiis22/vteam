@@ -1,3 +1,5 @@
+/** global: HTMLElement */
+
 export default class LoginView extends HTMLElement {
     // connect component
     connectedCallback() {

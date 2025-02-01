@@ -1,3 +1,5 @@
+/** global: HTMLElement */
+
 export default class RegisterView extends HTMLElement {
     // connect component
     connectedCallback() {
