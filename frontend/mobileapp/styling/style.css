@@ -188,7 +188,8 @@ header {
   right: 0;
   transform: translateY(100%);
   opacity: 0;
-  transition: opacity 500ms, transform 500ms; }
+  transition: opacity 500ms, transform 500ms;
+  pointer-events: none; }
 
 .toast.visible {
   transform: translateY(0);
@@ -198,6 +199,26 @@ header {
   margin: 28px;
   padding: 20px 24px;
   background-color: #93e9ff;
+  color: #3a3a3a;
+  border-radius: 4px; }
+
+.bad-toast {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  opacity: 0;
+  transition: opacity 500ms, transform 500ms;
+  pointer-events: none; }
+
+.bad-toast.visible {
+  transform: translate(-50%, 0);
+  opacity: 1; }
+
+.bad-toast-body {
+  margin: 28px;
+  padding: 20px 24px;
+  background-color: #ff9393;
   color: #3a3a3a;
   border-radius: 4px; }
 
