@@ -7,9 +7,47 @@ Detta projekt har skapats som en del av kursen **Programutveckling i virtuella t
 - **REST API**    
 - **Databas**
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wiis22/vteam/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/?branch=main)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wiis22/vteam/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/?branch=main) [![Build Status](https://scrutinizer-ci.com/g/wiis22/vteam/badges/build.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/build-status/main)
 
-[![Build Status](https://scrutinizer-ci.com/g/wiis22/vteam/badges/build.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/build-status/main)
+## Setup
+
+### Installera Docker
+1. Se till att Docker är installerat på din maskin. Du kan ladda ner det från [Dockers officiella webbplats](https://www.docker.com/get-started).
+
+### Kör Projektet:
+1. Klona repot:
+    ```
+    git clone https://github.com/wiis22/vteam.git
+    ```
+2. Navigera till projektets rotkatalog:
+    ```
+    cd vteam
+    ```
+3. Starta tjänsterna med Docker Compose:
+    ```
+    docker-compose up
+    ```
+
+    ## Applikationer
+
+    ### Webbapplikation
+    <b>Webbapplikationen</b> byggd med React och kan nås via följande URL:
+    ```
+    http://localhost:3000
+    ```
+
+    ### Mobilapp
+    <b>Mobilappen</b> är en standard JavaScript-webbapplikation som stilitiskt anpassats för mobila enheter och kan nås via följande länk:
+    ```
+    http://localhost:3001
+    ```
+
+    ### REST API
+    <b>REST API:t</b> byggt mer Node.js och Express är tillgängligt på följande URL:
+    ```
+    http://localhost:1337/api
+    ```
+
 
 ## [vTeam Kurs](https://dbwebb.se/kurser/vteam-v1)
 > Kursen **Programutveckling i virtuella team**, a.k.a. **vteam**, lär ut avancerad programmering med webbteknologier och låter studenten fördjupa sig i ett flertal teknikområden inom nischen. Studenten får hantera verktyg och tekniker för att jobba med kodkvalitet och hur begrepp som “snygg kod” hanteras.
@@ -23,14 +61,14 @@ Utvecklingen av systemet är baserat på **3.2 Göteburgare**s gemensamma **SDS 
 >
 > SDS:ens syfte är att ge en tydlig och gemensam förståelse för systemets struktur, funktioner och interaktioner mellan dess olika komponenter.
 
-För en djupare förklaring av systemet och kraven som "kunden" ställt, rekommenderas man att läsa projektets tillhörande SDS.
+För en djupare förklaring av systemet och kraven som <em>"kunden"</em> ställt, rekommenderas man att läsa projektets tillhörande SDS.
 
 ## Repo Struktur
 >### Frontend
 >- **Webbapplikation**
 React app
 >- **Mobilapp**
-React Native app
+Standard JS application
 >
 >### Backend
 >- **REST API**
