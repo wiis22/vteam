@@ -28,22 +28,22 @@ Detta projekt har skapats som en del av kursen **Programutveckling i virtuella t
     docker-compose up
     ```
 
-    ## Applikationer
+    ### Applikationer
 
-    ### Webbapplikation
-    <b>Webbapplikationen</b> byggd med React och kan nås via följande URL:
+    #### Webbapplikation
+    en React-app och kan nås via:
     ```
     http://localhost:3000
     ```
 
-    ### Mobilapp
-    <b>Mobilappen</b> är en standard JavaScript-webbapplikation som stilitiskt anpassats för mobila enheter och kan nås via följande länk:
+    #### Mobilapp
+    en standard JavaScript-webbapplikation som stilitiskt anpassats för mobila enheter, kan nås via:
     ```
     http://localhost:3001
     ```
 
-    ### REST API
-    <b>REST API:t</b> byggt mer Node.js och Express är tillgängligt på följande URL:
+    #### REST API
+    en Node.js, Express app, kan nås via:
     ```
     http://localhost:1337/api
     ```
