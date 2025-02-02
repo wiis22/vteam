@@ -1,9 +1,10 @@
 /* global L */
+/** global: HTMLElement, localStorage */
 import getUserLocation from "../models/geolocation.js";
 import icons from "../models/icons.js";
 import citiesModel from "../models/cities.js";
 import bikesModel from "../models/bikes.js";
-import { toast } from "../utils.js";
+import { toast, badToast } from "../utils.js";
 import socket from "../socket.js";
 import getCoordinates from "../models/nominatim.js";
 
@@ -11,29 +12,23 @@ import getCoordinates from "../models/nominatim.js";
 export default class MapComponent extends HTMLElement {
     constructor() {
         super();
-        this.map = null;
-        this.bikes = {};
         this.token = localStorage.getItem("jwtToken");
+        this.user = JSON.parse(localStorage.getItem("user"));
+        this.map = null;
         this.userMarker = null;
         this.city = null;
         this.cities = {};
         this.chargingZones = [];
         this.parkingZones = [];
         this.cityName = "";
-        this.user = localStorage.getItem("user");
         this.socket = null;
+        this.bikes = {};
         this.bikeCluster = new L.MarkerClusterGroup();
         this.rentedBike = null;
     }
 
-    static get observedAttributes() {
-        return ["bikes"];
-    }
-
+    // Observe changes class properties
     attributeChangedCallback(property, oldValue, newValue) {
-        if (property === "bikes") {
-            this.updateBikeMarkers(JSON.parse(newValue));
-        }
         if (oldValue === newValue) {
             return;
         } else {
@@ -70,14 +65,11 @@ export default class MapComponent extends HTMLElement {
         * and cancel the rest of function.
         */
         const response = await this.createCitySelection();
-        if (response) {
-            toast(response);
-            return;
+        if (!response) {
+            this.userId = this.user._id;
+            this.socket = new socket(this.userId);
+            this.socket.setupSocket();
         }
-
-        this.userId = JSON.parse(this.user)._id;
-        this.socket = new socket(this.userId);
-        this.socket.setupSocket();
     }
 
     /*
@@ -90,6 +82,7 @@ export default class MapComponent extends HTMLElement {
         const cities = await citiesModel.fetchCities(this.token);
         let citiesArray = [];
         if (cities.message === 'Token invalid or expired') {
+            badToast('Token invalid or expired, please log in');
             return 'Token invalid or expired';
         }
         cities.forEach(city => {
@@ -130,7 +123,7 @@ export default class MapComponent extends HTMLElement {
         }
         // Create map with user location
         this.map = L.map('map', {
-            minZoom: 14,
+            minZoom: 14, // Prevent zooming out too far, remove this line to allow zooming out further
         }).setView([coordinates.lat, coordinates.lon], 18);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -143,18 +136,24 @@ export default class MapComponent extends HTMLElement {
             .openPopup();
     }
 
-    // Render bikes on the map as markers
+    /*
+    * Fetches bikes from the API and ships them along
+    * to renderBikes() to render them on the map
+    */
     async renderBikes() {
         const coords = await getCoordinates(this.cityName);
         this.map.setView([coords[0].lat, coords[0].lon], 14);
 
         const bikes = await bikesModel.fetchBikes(this.token, this.cityName);
+
         this.bikes = bikes;
-        this.setAttribute("bikes", JSON.stringify(this.bikes));
         this.updateBikeMarkers(bikes);
     };
 
-    // Update bike markers on the map
+    /*
+    * Removes existing bike markers and adds new bike markers
+    * @param {Array} bikes - The bikes to render on the map
+    */
     updateBikeMarkers(bikes) {
         // Clear existing bike markers
         this.bikeCluster.clearLayers();
@@ -162,7 +161,8 @@ export default class MapComponent extends HTMLElement {
         // Add new bike markers with popups
         bikes.forEach((bike) => {
             const { latitude, longitude } = bike.position;
-            if (latitude && longitude && bike.available) {
+
+            if (latitude && longitude && bike.available && bike.operational) {
                 this.bikeCluster.addLayer(L.marker([latitude, longitude], { icon: icons.bike, opacity: 0.8 }).bindPopup(`
                     <b>Bike ID:</b> ${bike._id}<br>
                     <b>Charging:</b> ${bike.charging}<br>
@@ -177,6 +177,8 @@ export default class MapComponent extends HTMLElement {
         });
         this.map.addLayer(this.bikeCluster);
         this.map.off('popupopen'); // Remove any existing event listeners
+        // Add event listener to rent button
+        // When clicked, start ride and gain control of the bike
         this.map.on('popupopen', (e) => {
             const button = e.popup._contentNode.querySelector('.red-button');
             if (button) {
@@ -186,18 +188,33 @@ export default class MapComponent extends HTMLElement {
                     this.map.setView([bike.position.latitude, bike.position.longitude], 18);
                     this.map.panTo([bike.position.latitude, bike.position.longitude]);
                     if (bike) {
-                        this.gainControl(bike);
-                        this.createBikeControls();
+                        this.socket.startRide(bike._id);
+                        const timeout = setTimeout(() => {
+                            badToast("Connection refused: failed to start bike");
+                            return;
+                        }, 3000);
+
+                        this.socket.socket.on("bikeStartRideResponse", (data) => {
+                            clearTimeout(timeout);
+                            if (data.bikeId === bike._id && data.started) {
+                                this.gainControl(bike);
+                                this.createBikeControls();
+                                toast("Ride successfully started");
+                            } else {
+                                badToast("Connection refused: bad bike");
+                            }
+                        });
                     }
-                    console.log('Renting bike:', bikeId);
                 });
             }
         });
     };
 
     /*
-   * 
-   */
+    * Create bike controls
+    * Create a button to end the ride
+    * Remove all other buttons from the bottom nav
+    */
     createBikeControls() {
         let bottomNav = document.getElementById('bottom-nav');
         for (let i = 0; i < bottomNav.children.length; i++) {
@@ -211,15 +228,21 @@ export default class MapComponent extends HTMLElement {
         button.style.height = '90%';
         button.addEventListener('click', () => {
             this.socket.endRide();
+            // this.socket.socket.on("rideDone", (data) => {
+            // if (data.bikeId === this.bikes._id) {
             this.map.removeLayer(this.rentedBike);
             this.rentedBike = null;
             this.renderBikes();
-            bottomNav.removeChild(button);
             for (let i = 0; i < bottomNav.children.length; i++) {
                 bottomNav.children[i].style.width = '';
                 bottomNav.children[i].style.display = 'block';
             }
         });
+        // else {
+        //     badToast("Failed to end ride");
+
+        // });
+        // });
         bottomNav.appendChild(button);
     }
 
@@ -300,7 +323,14 @@ export default class MapComponent extends HTMLElement {
             this.stopControl(); // Ensure previous bike control is stopped
         }
 
-        this.socket.startRide(bike._id);
+        this.socket.socket.on("bikeEndRide", (data) => {
+            console.log("End ride event received with data: ", data);
+            if (data.bikeId === bike._id) {
+                this.stopControl();
+                toast("Ride ended");
+            }
+        });
+
         this.rentedBike = L.marker([bike.position.latitude, bike.position.longitude], { icon: icons.bike, opacity: 0.8 }).addTo(this.map);
         this.map.removeLayer(this.bikeCluster);
 

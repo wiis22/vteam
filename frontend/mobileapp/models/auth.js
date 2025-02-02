@@ -1,4 +1,6 @@
-import { baseURL, toast } from '../utils.js';
+/* global: localStorage */
+
+import { baseURL, toast, badToast } from '../utils.js';
 
 const auth = {
     token: '',
@@ -11,7 +13,7 @@ const auth = {
         * @returns {string} - The error message if the login request fails
     */
     login: async function login(username, password) {
-        const response = await fetch(`${baseURL}/api/login`, {
+        const response = await fetch(`${baseURL}/login`, {
             body: JSON.stringify({ email: username, password: password }),
             headers: {
                 'content-type': 'application/json',
@@ -34,7 +36,6 @@ const auth = {
                 let key = localStorage.key(i);
                 console.log(`${key}: ${localStorage.getItem(key)}`);
             }
-            location.hash = 'account';
             location.reload();
             return 'ok';
         }
@@ -54,7 +55,7 @@ const auth = {
             firstName: firstName,
             lastName: lastName
         };
-        const response = await fetch(`${baseURL}/api/user`, {
+        const response = await fetch(`${baseURL}/user`, {
             body: JSON.stringify(user),
             headers: {
                 'content-type': 'application/json',
@@ -67,7 +68,7 @@ const auth = {
             auth.login(username, password);
         }
         if (result.error) {
-            toast(result.error);
+            badToast(result.error);
         } else {
             toast(result.message);
         }
@@ -87,7 +88,7 @@ const auth = {
             user.balance = (user.balance || 0) + amount;
 
             console.log('User:', user);
-            const response = await fetch(`${baseURL}/api/user/${userId}`, {
+            const response = await fetch(`${baseURL}/user/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',
@@ -106,13 +107,13 @@ const auth = {
                     location.reload();
                 }, 1400);
             } else {
-                toast(result.message || 'Failed to update balance');
+                badToast(result.message || 'Failed to update balance');
                 console.error('Failed to update balance:', result);
             }
             return result;
         } catch (error) {
             console.error('Error updating balance:', error);
-            toast('Error updating balance');
+            badToast('Error updating balance');
             return error;
         }
     },

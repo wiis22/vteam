@@ -1,5 +1,7 @@
+/** global: HTMLElement */
+
 import authModel from "../models/auth.js";
-import { toast } from "../utils.js";
+import { toast, badToast } from "../utils.js";
 
 export default class RegisterForm extends HTMLElement {
     constructor() {
@@ -42,7 +44,7 @@ export default class RegisterForm extends HTMLElement {
         email.setAttribute("type", "email");
         email.setAttribute("required", "required");
         email.classList.add("input");
-        email.addEventListener("input", (event) =>{
+        email.addEventListener("input", (event) => {
             this.credentials = {
                 ...this.credentials,
                 email: event.target.value,
@@ -127,7 +129,7 @@ export default class RegisterForm extends HTMLElement {
 
     async register() {
         if (this.credentials.password !== this.credentials.confirmPassword) {
-            toast("Passwords do not match");
+            badToast("Passwords do not match");
             return;
         }
         const result = await authModel.register(

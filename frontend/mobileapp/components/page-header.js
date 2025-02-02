@@ -1,3 +1,5 @@
+/** global: HTMLElement */
+
 export default class PageHeader extends HTMLElement {
     constructor() {
         super();
