@@ -5,7 +5,7 @@ async function deleteAllRides() {
     let deletePromises = [];
 
     try {
-        const response = await fetch(`http://localhost:1337/api/rides`, {
+        const response = await fetch(`http://localhost:1337/api/v2/rides`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ async function deleteAllRides() {
         const rides = await response.json();
 
         for (const ride of rides) {
-            const deletePromise = fetch(`http://localhost:1337/api/ride/${ride._id}`, {
+            const deletePromise = fetch(`http://localhost:1337/api/v2/ride/${ride._id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
