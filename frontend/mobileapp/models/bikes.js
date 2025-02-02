@@ -2,7 +2,7 @@ import { baseURL } from '../utils.js';
 
 const bikes = {
     fetchBikes: async (token, city) => {
-        const bikeResponse = await fetch(`${baseURL}/api/bikes/${city}`, {
+        const bikeResponse = await fetch(`${baseURL}/bikes/${city}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
