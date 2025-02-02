@@ -15,7 +15,7 @@ app.use(express.json());
 const httpserver = http.createServer(app);
 
 const webAppURL = 'http://localhost:3000';
-const mobileAppURL = 'http://mobile_app:3001';
+const mobileAppURL = 'http://localhost:3001';
 
 app.use(cors({
     origin: [webAppURL, mobileAppURL],
@@ -85,7 +85,7 @@ io.sockets.on('connection', (socket) => {
 
         // used by mobile app when user starts a ride
         socket.on("startRide", (data) => {
-            // console.log("Socket route: startRide", data)
+            console.log("Socket route: startRide", data)
             io.to(data.bikeId).emit("startRide", { userId: data.userId });
         });
 

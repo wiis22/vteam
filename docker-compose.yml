@@ -8,7 +8,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-
     working_dir: /backend
     volumes:
       - ./backend:/backend
@@ -19,7 +18,12 @@ services:
       - "1337"
     command: node server.js
     networks:
-      vteam:
+      - vteam
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1337/test2"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: always
 
   bikes:
@@ -33,6 +37,9 @@ services:
       - ./.env:/backend/.env
     networks:
       - vteam
+    depends_on:
+      server:
+        condition: service_healthy
     restart: always
 
   mobile_app:
@@ -53,11 +60,13 @@ services:
     build:
       context: ./frontend/webapp
       dockerfile: Dockerfile
+    working_dir: /frontend/webapp
     volumes:
-      # - ./frontend/webapp:/frontend/webapp
+      - ./frontend/webapp:/frontend/webapp
       - ./.env:/frontend/webapp/.env
     ports:
       - "3000:3000"
+    # command: npm start
     networks:
       - vteam
     restart: always
