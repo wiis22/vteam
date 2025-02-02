@@ -228,20 +228,21 @@ export default class MapComponent extends HTMLElement {
         button.style.height = '90%';
         button.addEventListener('click', () => {
             this.socket.endRide();
-            this.socket.socket.on("rideDone", (data) => {
-                if (data.bikeId === this.bikes._id) {
-                    this.map.removeLayer(this.rentedBike);
-                    this.rentedBike = null;
-                    this.renderBikes();
-                    for (let i = 0; i < bottomNav.children.length; i++) {
-                        bottomNav.children[i].style.width = '';
-                        bottomNav.children[i].style.display = 'block';
-                    }
-                } else {
-                    badToast("Failed to end ride");
-                }
-            });
+            // this.socket.socket.on("rideDone", (data) => {
+            // if (data.bikeId === this.bikes._id) {
+            this.map.removeLayer(this.rentedBike);
+            this.rentedBike = null;
+            this.renderBikes();
+            for (let i = 0; i < bottomNav.children.length; i++) {
+                bottomNav.children[i].style.width = '';
+                bottomNav.children[i].style.display = 'block';
+            }
         });
+        // else {
+        //     badToast("Failed to end ride");
+
+        // });
+        // });
         bottomNav.appendChild(button);
     }
 
