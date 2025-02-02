@@ -8,7 +8,7 @@ class Socket {
         this.serverURL = serverURL;
         this.socket = null;
         this.bikeId = null;
-        this.debug = false;
+        this.debug = true;
         this.onRideDone = null;
     }
 
