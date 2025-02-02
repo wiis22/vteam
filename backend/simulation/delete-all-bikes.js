@@ -7,7 +7,7 @@ deleteAllBikes(cities);
 async function deleteAllBikes(cities) {
     for (const city of cities) {
         try {
-            const response = await fetch(`http://localhost:1337/api/bikes/${city}`, {
+            const response = await fetch(`http://localhost:1337/api/v2/bikes/${city}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ async function deleteAllBikes(cities) {
 
             // Delete bikes in batches of 500
             for (const chunk of chunks) {
-                const deleteResponse = await fetch(`http://localhost:1337/api/bulk-delete/bikes/`, {
+                const deleteResponse = await fetch(`http://localhost:1337/api/v2/bulk-delete/bikes/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
