@@ -1,3 +1,5 @@
+/** global: HTMLElement, localStorage */
+
 import accountModel from "../models/account.js";
 import auth from "../models/auth.js";
 import { toast } from "../utils.js";

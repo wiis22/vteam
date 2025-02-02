@@ -1,5 +1,7 @@
+/** global: HTMLElement, localStorage */
+
 import authModel from "../models/auth.js";
-import { toast } from "../utils.js";
+import { badToast } from "../utils.js";
 
 export default class LoginForm extends HTMLElement {
     constructor() {
@@ -13,16 +15,17 @@ export default class LoginForm extends HTMLElement {
             this.credentials.password
         );
 
+        console.log("Result of login request: " + JSON.stringify(result));
+
         if (result === "ok") {
             console.log("Logged in");
             localStorage.setItem("setItem", true);
             document.body.classList.add("slide-out");
             setTimeout(() => {
                 document.body.classList.remove("slide-out");
-                location.hash = "map";
             }, 250);
         } else {
-            toast(result);
+            badToast(result);
             console.log("Issue logging in");
         }
     }
@@ -54,7 +57,7 @@ export default class LoginForm extends HTMLElement {
         username.setAttribute("type", "email");
         username.setAttribute("required", "required");
         username.classList.add("input");
-        username.addEventListener("input", (event) =>{
+        username.addEventListener("input", (event) => {
             this.credentials = {
                 ...this.credentials,
                 username: event.target.value,
@@ -80,9 +83,15 @@ export default class LoginForm extends HTMLElement {
         registerButton.setAttribute("value", "Register");
         registerButton.classList.add("button", "blue-button");
         registerButton.style.marginTop = "10px";
-        registerButton.addEventListener("click", (event) =>{
+        registerButton.addEventListener("click", (event) => {
             event.preventDefault();
-            location.hash = "register";
+            const routerOutlet = document.querySelector('router-outlet');
+
+            routerOutlet.classList.add("slide-out");
+            setTimeout(() => {
+                routerOutlet.classList.remove("slide-out");
+                window.location.hash = "register";
+            }, 300);
         });
 
         form.appendChild(usernameLabel);

@@ -1,4 +1,6 @@
-import { baseURL, toast } from '../utils.js';
+/* global: localStorage */
+
+import { baseURL, toast, badToast } from '../utils.js';
 
 const auth = {
     token: '',
@@ -34,7 +36,6 @@ const auth = {
                 let key = localStorage.key(i);
                 console.log(`${key}: ${localStorage.getItem(key)}`);
             }
-            location.hash = 'account';
             location.reload();
             return 'ok';
         }
@@ -67,7 +68,7 @@ const auth = {
             auth.login(username, password);
         }
         if (result.error) {
-            toast(result.error);
+            badToast(result.error);
         } else {
             toast(result.message);
         }
@@ -106,13 +107,13 @@ const auth = {
                     location.reload();
                 }, 1400);
             } else {
-                toast(result.message || 'Failed to update balance');
+                badToast(result.message || 'Failed to update balance');
                 console.error('Failed to update balance:', result);
             }
             return result;
         } catch (error) {
             console.error('Error updating balance:', error);
-            toast('Error updating balance');
+            badToast('Error updating balance');
             return error;
         }
     },

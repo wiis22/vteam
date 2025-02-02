@@ -5,6 +5,7 @@
     transform: translateY(100%);
     opacity: 0;
     transition: opacity 500ms, transform 500ms;
+    pointer-events: none;
 }
 
 .toast.visible {
@@ -16,6 +17,29 @@
     margin: 28px;
     padding: 20px 24px;
     background-color: rgb(147, 233, 255);
+    color: rgb(58, 58, 58);
+    border-radius: 4px;
+}
+
+.bad-toast {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    opacity: 0;
+    transition: opacity 500ms, transform 500ms;
+    pointer-events: none;
+}
+
+.bad-toast.visible {
+    transform: translate(-50%, 0);
+    opacity: 1;
+}
+
+.bad-toast-body {
+    margin: 28px;
+    padding: 20px 24px;
+    background-color: rgb(255, 147, 147);
     color: rgb(58, 58, 58);
     border-radius: 4px;
 }
