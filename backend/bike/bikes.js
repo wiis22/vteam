@@ -7,7 +7,7 @@ const API_URL = 'http://server:1337';
 // initializing the bikes from the database
 async function initBikes() {
     try {
-        const bikesResponse = await fetch(`${API_URL}/api/bikes`, {
+        const bikesResponse = await fetch(`${API_URL}/api/v2/bikes`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ async function initBikes() {
 
         console.log(`${bikes.length} bikes found`);
 
-        const citiesResponse = await fetch(`${API_URL}/api/cities`, {
+        const citiesResponse = await fetch(`${API_URL}/api/v2/cities`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -180,7 +180,7 @@ const getRoute = (startPosition, endPosition) => {
 
 // Get all available bikes for a city
 const getAvailableBikesCity = async (city) => {
-    const response = await fetch(`${API_URL}/api/bikes/${city}`, {
+    const response = await fetch(`${API_URL}/api/v2/bikes/${city}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ const addUsers = async (numUsers) => {
         console.log(`Trying to add batch of ${batch.length} users`);
 
         // Post users to save to the database
-        const registerResponse = await fetch(`${API_URL}/api/bulk-insert/users`, {
+        const registerResponse = await fetch(`${API_URL}/api/v2/bulk-insert/users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -262,7 +262,7 @@ const addUsers = async (numUsers) => {
 const deleteUsers = async (users) => {
     const userIds = users.map(user => user.userId);
 
-    const deleteResponse = await fetch(`${API_URL}/api/bulk-delete/users`, {
+    const deleteResponse = await fetch(`${API_URL}/api/v2/bulk-delete/users`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

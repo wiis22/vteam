@@ -73,7 +73,7 @@ class User {
 }
 
 async function fetchDelete(userId) {
-    const promise = fetch(`${API_URL}/api/user/${userId}`, {
+    const promise = fetch(`${API_URL}/api/v2/user/${userId}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ async function fetchRegister(userIndex, returnPromise = false) {
     };
 
     if (returnPromise) {
-        const promise = fetch(`${API_URL}/api/user`, {
+        const promise = fetch(`${API_URL}/api/v2/user`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ async function fetchRegister(userIndex, returnPromise = false) {
         return promise;
     }
 
-    const response = await fetch(`${API_URL}/api/user`, {
+    const response = await fetch(`${API_URL}/api/v2/user`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -5,7 +5,7 @@ async function deleteAllUsers() {
     let deletePromises = [];
 
     try {
-        const response = await fetch(`http://localhost:1337/api/users`, {
+        const response = await fetch(`http://localhost:1337/api/v2/users`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ async function deleteAllUsers() {
 
         const userIds = users.map(user => user._id);
 
-        const result = await fetch(`http://localhost:1337/api/bulk-delete/users/`, {
+        const result = await fetch(`http://localhost:1337/api/bulk-delete/v2/users/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
