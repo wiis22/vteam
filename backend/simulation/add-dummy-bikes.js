@@ -108,7 +108,7 @@ const addBikes = async (cityData, numBikes) => {
     // // resolve all promises in the array
     // await Promise.all(bikePromises);
 
-    const response = await fetch('http://localhost:1337/api/bulk-insert/bikes', {
+    const response = await fetch('http://localhost:1337/api/v2/bulk-insert/bikes', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

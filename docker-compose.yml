@@ -61,13 +61,10 @@ services:
     build:
       context: ./frontend/webapp
       dockerfile: Dockerfile
-    working_dir: /frontend/webapp
     volumes:
-      - ./frontend/webapp:/frontend/webapp
       - ./.env:/frontend/webapp/.env
     ports:
       - "3000:3000"
-    # command: npm start
     networks:
       - vteam
     restart: always
