@@ -11,7 +11,7 @@ const auth = {
         * @returns {string} - The error message if the login request fails
     */
     login: async function login(username, password) {
-        const response = await fetch(`${baseURL}/api/login`, {
+        const response = await fetch(`${baseURL}/api/v2/login`, {
             body: JSON.stringify({ email: username, password: password }),
             headers: {
                 'content-type': 'application/json',
@@ -54,7 +54,7 @@ const auth = {
             firstName: firstName,
             lastName: lastName
         };
-        const response = await fetch(`${baseURL}/api/user`, {
+        const response = await fetch(`${baseURL}/api/v2/user`, {
             body: JSON.stringify(user),
             headers: {
                 'content-type': 'application/json',
@@ -87,7 +87,7 @@ const auth = {
             user.balance = (user.balance || 0) + amount;
 
             console.log('User:', user);
-            const response = await fetch(`${baseURL}/api/user/${userId}`, {
+            const response = await fetch(`${baseURL}/api/v2/user/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',

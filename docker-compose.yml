@@ -20,7 +20,7 @@ services:
     networks:
       - vteam
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:1337/test2"]
+      test: ["CMD", "curl", "-f", "http://localhost:1337/api/v2/test2"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -54,6 +54,8 @@ services:
     networks:
       - vteam
     restart: always
+    extra_hosts:
+      - "server:host-gateway"
 
   web_app:
     container_name: web_app
@@ -67,3 +69,5 @@ services:
     networks:
       - vteam
     restart: always
+    extra_hosts:
+      - "server:host-gateway"

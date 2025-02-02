@@ -7,7 +7,7 @@ const user = {
             ...userObject,
         };
 
-        const result = await fetch(`${serverURL}/api/user/${authModel.userId}`, {
+        const result = await fetch(`${serverURL}/user/${authModel.userId}`, {
             body: JSON.stringify(updatedUser),
             headers: {
                 'content-type': 'application/json',
@@ -23,7 +23,7 @@ const user = {
             ...NewPassword
         };
 
-        const result = await fetch(`${serverURL}/api/user/password/${authModel.userId}`, {
+        const result = await fetch(`${serverURL}/user/password/${authModel.userId}`, {
             body: JSON.stringify(updatedPassword),
             headers: {
                 'content-type': 'application/json',
@@ -36,7 +36,7 @@ const user = {
     },
 
     getOneUser: async function getOneUser() {
-        const response = await fetch(`${serverURL}/api/user/${authModel.userId}`, {
+        const response = await fetch(`${serverURL}/user/${authModel.userId}`, {
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
             },

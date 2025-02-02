@@ -15,7 +15,7 @@ const auth = {
             password: password,
         };
 
-        const response = await fetch(`${serverURL}/api/login`, {
+        const response = await fetch(`${serverURL}/login`, {
             body: JSON.stringify(user),
             headers: {
                 'content-type': 'application/json'
@@ -47,7 +47,7 @@ const auth = {
             lastName: lastName
         };
 
-        const response = await fetch(`${serverURL}/api/user`, {
+        const response = await fetch(`${serverURL}/user`, {
             body: JSON.stringify(user),
             headers: {
                 'content-type': 'application/json'
