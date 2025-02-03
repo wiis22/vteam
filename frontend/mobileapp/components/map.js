@@ -183,6 +183,7 @@ export default class MapComponent extends HTMLElement {
             const button = e.popup._contentNode.querySelector('.red-button');
             if (button) {
                 button.addEventListener('click', () => {
+                    button.disabled = true;
                     const bikeId = button.getAttribute('data-bike-id');
                     const bike = bikes.find(b => b._id === bikeId);
                     this.map.setView([bike.position.latitude, bike.position.longitude], 18);
@@ -190,21 +191,24 @@ export default class MapComponent extends HTMLElement {
                     if (bike) {
                         this.socket.startRide(bike._id);
                         const timeout = setTimeout(() => {
-                            badToast("Connection refused: failed to start bike");
+                            badToast("Bad Connection: failure to start bike");
+                            button.disabled = false;
                             return;
                         }, 3000);
-
                         this.socket.socket.on("bikeStartRideResponse", (data) => {
+                            const citySelection = document.getElementById("city-selection");
+                            citySelection.style.visibility = "hidden";
                             clearTimeout(timeout);
                             if (data.bikeId === bike._id && data.started) {
                                 this.gainControl(bike);
                                 this.createBikeControls();
-                                toast("Ride successfully started");
-                            } else {
-                                badToast("Connection refused: bad bike");
+                                toast("Ride started");
                             }
+                            return;
                         });
-                    }
+                    } else {
+                        badToast("Bad Connection: bike not found");
+                    };
                 });
             }
         });
@@ -227,22 +231,23 @@ export default class MapComponent extends HTMLElement {
         button.style.width = '99%';
         button.style.height = '90%';
         button.addEventListener('click', () => {
+            button.disabled = true;
+            setTimeout(() => {
+                button.disabled = false;
+            }, 3000);
             this.socket.endRide();
-            // this.socket.socket.on("rideDone", (data) => {
-            // if (data.bikeId === this.bikes._id) {
-            this.map.removeLayer(this.rentedBike);
-            this.rentedBike = null;
-            this.renderBikes();
-            for (let i = 0; i < bottomNav.children.length; i++) {
-                bottomNav.children[i].style.width = '';
-                bottomNav.children[i].style.display = 'block';
-            }
+            this.socket.socket.on('rideDone', (data) => {
+                toast(`Ride ended, price: ${data.ride.price} kr`);
+                this.map.removeLayer(this.rentedBike);
+                this.rentedBike = null;
+                this.renderBikes();
+                for (let i = 0; i < bottomNav.children.length; i++) {
+                    bottomNav.children[i].style.width = '';
+                    bottomNav.children[i].style.display = 'block';
+                };
+                bottomNav.removeChild(button);
+            });
         });
-        // else {
-        //     badToast("Failed to end ride");
-
-        // });
-        // });
         bottomNav.appendChild(button);
     }
 
@@ -377,6 +382,9 @@ export default class MapComponent extends HTMLElement {
     * Stop controlling the bike
     */
     stopControl() {
+        const citySelection = document.getElementById("city-selection");
+        citySelection.style.visibility = "visible";
+
         if (this.keydownListener) {
             document.removeEventListener('keydown', this.keydownListener);
             this.keydownListener = null;

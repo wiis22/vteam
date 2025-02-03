@@ -1,4 +1,4 @@
-/** global: HTMLElement */
+/** global: HTMLElement, localStorage */
 
 export default class AccountView extends HTMLElement {
     // connect component

@@ -1,3 +1,5 @@
+/** global: customElements */
+
 // Base components
 import Router from "./router.js";
 import Navigation from "./navigation.js";
