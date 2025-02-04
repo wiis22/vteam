@@ -1,7 +1,7 @@
 /** global: HTMLElement, localStorage */
 
 import authModel from "../models/auth.js";
-import { badToast } from "../utils.js";
+import { badToast, toast } from "../utils.js";
 
 export default class LoginForm extends HTMLElement {
     constructor() {
@@ -19,11 +19,14 @@ export default class LoginForm extends HTMLElement {
 
         if (result === "ok") {
             console.log("Logged in");
-            localStorage.setItem("setItem", true);
-            document.body.classList.add("slide-out");
+            toast("Login Successful");
             setTimeout(() => {
-                document.body.classList.remove("slide-out");
-            }, 250);
+                document.body.classList.add("slide-out");
+                setTimeout(() => {
+                    document.body.classList.remove("slide-out");
+                    location.hash = "#map";
+                }, 250);
+            }, 2000);
         } else {
             badToast(result);
             console.log("Issue logging in");

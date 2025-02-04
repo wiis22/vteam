@@ -86,6 +86,7 @@ class Socket {
     // Disconnect the socket and remove event listeners
     disconnect() {
         this.log("Disconnecting socket...");
+        this.endRide();
         this.socket.off('bikeStartRideResponse');
         this.socket.off('bikeEndRide');
         this.socket.off('rideDone');

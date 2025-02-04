@@ -1,6 +1,7 @@
 /* global: localStorage */
 
 import { baseURL, toast, badToast } from '../utils.js';
+import accountModel from './account.js';
 
 const auth = {
     token: '',
@@ -24,19 +25,20 @@ const auth = {
         console.log('Result of login request: ' + JSON.stringify(result));
 
         if ('error' in result) {
+            badToast(result.error);
             return result.message;
         } else {
             auth.token = result.jwtToken;
             result.email = username;
             localStorage.setItem('user', JSON.stringify(result));
             localStorage.setItem('jwtToken', result.jwtToken);
+            accountModel.refreshAccount();
             console.log('jwtToken: ' + localStorage.getItem('jwtToken'));
             console.log('All local storage items:');
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
                 console.log(`${key}: ${localStorage.getItem(key)}`);
             }
-            location.reload();
             return 'ok';
         }
     },
@@ -71,6 +73,13 @@ const auth = {
             badToast(result.error);
         } else {
             toast(result.message);
+            setTimeout(() => {
+                document.body.classList.add('slide-out');
+                setTimeout(() => {
+                    document.body.classList.remove('slide-out');
+                    location.hash = '#account';
+                }, 250);
+            }, 2000);
         }
     },
 
@@ -87,7 +96,6 @@ const auth = {
             // Update the balance
             user.balance = (user.balance || 0) + amount;
 
-            console.log('User:', user);
             const response = await fetch(`${baseURL}/api/v2/user/${userId}`, {
                 method: 'PUT',
                 headers: {
@@ -103,9 +111,6 @@ const auth = {
                 localStorage.setItem('user', JSON.stringify(user));
                 toast('Balance updated successfully');
                 console.log('Balance updated successfully:', result);
-                setTimeout(() => {
-                    location.reload();
-                }, 1400);
             } else {
                 badToast(result.message || 'Failed to update balance');
                 console.error('Failed to update balance:', result);

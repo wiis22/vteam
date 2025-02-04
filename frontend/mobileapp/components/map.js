@@ -22,6 +22,7 @@ export default class MapComponent extends HTMLElement {
         this.parkingZones = [];
         this.cityName = "";
         this.socket = null;
+        this.rentedBikeId = null;
         this.bikes = {};
         this.bikeCluster = new L.MarkerClusterGroup();
         this.rentedBike = null;
@@ -186,6 +187,7 @@ export default class MapComponent extends HTMLElement {
                     button.disabled = true;
                     const bikeId = button.getAttribute('data-bike-id');
                     const bike = bikes.find(b => b._id === bikeId);
+                    this.rentedBikeId = bike._id;
                     this.map.setView([bike.position.latitude, bike.position.longitude], 18);
                     this.map.panTo([bike.position.latitude, bike.position.longitude]);
                     if (bike) {
@@ -196,14 +198,18 @@ export default class MapComponent extends HTMLElement {
                             return;
                         }, 3000);
                         this.socket.socket.on("bikeStartRideResponse", (data) => {
-                            const citySelection = document.getElementById("city-selection");
-                            citySelection.style.visibility = "hidden";
+                            console.log("Socket:  Received bikeStartRideResponse", data);
                             clearTimeout(timeout);
-                            if (data.bikeId === bike._id && data.started) {
+                            if (data.bikeId === bike._id && data.started && this.rentedBikeId === bike._id) {
+                                const citySelection = document.getElementById("city-selection");
+                                citySelection.style.visibility = "hidden";
                                 this.gainControl(bike);
                                 this.createBikeControls();
                                 toast("Ride started");
+                            } else {
+                                badToast("Bike not available");
                             }
+                            this.socket.socket.off("bikeStartRideResponse");
                             return;
                         });
                     } else {
@@ -238,14 +244,15 @@ export default class MapComponent extends HTMLElement {
             this.socket.endRide();
             this.socket.socket.on('rideDone', (data) => {
                 toast(`Ride ended, price: ${data.ride.price} kr`);
-                this.map.removeLayer(this.rentedBike);
-                this.rentedBike = null;
+                this.stopControl();
                 this.renderBikes();
                 for (let i = 0; i < bottomNav.children.length; i++) {
                     bottomNav.children[i].style.width = '';
                     bottomNav.children[i].style.display = 'block';
                 };
-                bottomNav.removeChild(button);
+                const buttonsToRemove = bottomNav.querySelectorAll('.red-button.full-width-button');
+                buttonsToRemove.forEach(btn => bottomNav.removeChild(btn));
+                this.socket.socket.off('rideDone');
             });
         });
         bottomNav.appendChild(button);
@@ -330,7 +337,7 @@ export default class MapComponent extends HTMLElement {
 
         this.socket.socket.on("bikeEndRide", (data) => {
             console.log("End ride event received with data: ", data);
-            if (data.bikeId === bike._id) {
+            if (data.bikeId === bike._id && this.rentedBikeId === bike._id) {
                 this.stopControl();
                 toast("Ride ended");
             }
