@@ -1,6 +1,6 @@
 
-# Elcykeluthyrnings projekt
-### av 3.2 Göteburgare
+# Elcykeluthyrningsprojekt
+### av 3.2 Göteburgare - vTeam06
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wiis22/vteam/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/?branch=main) [![Build Status](https://scrutinizer-ci.com/g/wiis22/vteam/badges/build.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/build-status/main)
 
