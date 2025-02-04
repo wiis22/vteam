@@ -8,13 +8,13 @@ class Socket {
         this.serverURL = serverURL;
         this.socket = null;
         this.bikeId = null;
-        this.debug = true;
+        this.logMessages = true;
         this.onRideDone = null;
     }
 
     // Log messages if debug mode is enabled
     log(message, data = null) {
-        if (this.debug) {
+        if (this.logMessages) {
             console.log("Socket: ", message, data);
         }
     }
@@ -86,6 +86,7 @@ class Socket {
     // Disconnect the socket and remove event listeners
     disconnect() {
         this.log("Disconnecting socket...");
+        this.endRide();
         this.socket.off('bikeStartRideResponse');
         this.socket.off('bikeEndRide');
         this.socket.off('rideDone');

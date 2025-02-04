@@ -1,3 +1,5 @@
+/** global: HTMLElement */
+
 export default class Router extends HTMLElement {
     constructor() {
         super();

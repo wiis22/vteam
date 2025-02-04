@@ -1,16 +1,12 @@
-# Grupp 3.2 Göteburgare Projekt
 
-Detta projekt har skapats som en del av kursen **Programutveckling i virtuella team** vid BTH. Målet med projektet är att utveckla ett komplett system för elcykeluthyrning, bestående av flera delsystem:
-
-- **Webbapplikation**  
-- **Mobilapp**
-- **REST API**    
-- **Databas**
+# Elcykeluthyrningsprojekt
+### av 3.2 Göteburgare - vTeam06
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wiis22/vteam/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/?branch=main) [![Build Status](https://scrutinizer-ci.com/g/wiis22/vteam/badges/build.png?b=main)](https://scrutinizer-ci.com/g/wiis22/vteam/build-status/main)
 
 ## [BTH Kurs](https://dbwebb.se/kurser/vteam-v1)
-Detta projekt har skapats som en del av kursen Programutveckling i virtuella team vid BTH. Målet med projektet är att utveckla ett komplett system för elcykeluthyrning, bestående av flera delsystem:
+Detta projekt har skapats som en del av kursen Programutveckling i virtuella team vid BTH. Målet med projektet är att utveckla ett komplett system för elcykeluthyrning.
+
 > Kursen **Programutveckling i virtuella team**, a.k.a. **vteam**, lär ut avancerad programmering med webbteknologier och låter studenten fördjupa sig i ett flertal teknikområden inom nischen. Studenten får hantera verktyg och tekniker för att jobba med kodkvalitet och hur begrepp som “snygg kod” hanteras.
 >
 > Kursen syftar även till att lära ut programutveckling i grupp där studenter på campus och distans kan blandas i samma grupp. Arbetssätt och metoder introduceras för att stödja arbetet i grupp. Kursen syftar också till att hantera förutsättningar för “vad är ett gott och gynnsamt gruppklimat”.
@@ -36,6 +32,8 @@ Detta projekt har skapats som en del av kursen Programutveckling i virtuella tea
 
     ### Applikationer
 
+    Systemet av flera delar:
+
     #### Webbapplikation
     en React-app och kan nås via:
     ```
@@ -54,6 +52,9 @@ Detta projekt har skapats som en del av kursen Programutveckling i virtuella tea
     http://localhost:1337/api
     ```
 
+    #### Databas
+    En MongoDB databas hostad på atlas
+
 
 ## Utveckling:
 
@@ -69,15 +70,11 @@ För en djupare förklaring av systemet och kraven som <em>"kunden"</em> ställt
 ### Repo Struktur
 >### Frontend
 >- **Webbapplikation**
-React app
 >- **Mobilapp**
-Standard JS application
 >
 >### Backend
 >- **REST API**
-Node.js (express) app
 >- **Databas**
-MongoDB Atlas database
 
 
 ## Länkar:
