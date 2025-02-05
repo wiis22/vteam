@@ -1,3 +1,5 @@
+/** global: HTMLElement */
+
 export default class NotFoundView extends HTMLElement {
     // connect component
     connectedCallback() {

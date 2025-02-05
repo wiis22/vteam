@@ -8,7 +8,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-
     working_dir: /backend
     volumes:
       - ./backend:/backend
@@ -55,6 +54,8 @@ services:
     networks:
       - vteam
     restart: always
+    extra_hosts:
+      - "server:host-gateway"
 
   web_app:
     container_name: web_app
@@ -68,3 +69,5 @@ services:
     networks:
       - vteam
     restart: always
+    extra_hosts:
+      - "server:host-gateway"

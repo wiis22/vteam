@@ -4,7 +4,7 @@ import authModel from "./auth";
 const city = {
     //City get request function.
     getCities: async function getCities() {
-        const response = await fetch(`${serverURL}/api/cities`, {
+        const response = await fetch(`${serverURL}/cities`, {
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
             },
@@ -15,7 +15,7 @@ const city = {
         return result;
         },
     getOneCity: async function getOneCity(cityId) {
-        const response = await fetch(`${serverURL}/api/city/${cityId}`, {
+        const response = await fetch(`${serverURL}/city/${cityId}`, {
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
             },
@@ -26,7 +26,7 @@ const city = {
         return result;
         },
     getBikes: async function getAllBikes(cityName) {
-        const response = await fetch(`${serverURL}/api/bikes/${cityName}`, {
+        const response = await fetch(`${serverURL}/bikes/${cityName}`, {
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
             },
@@ -37,7 +37,7 @@ const city = {
         return result;
         },
     getOneBike: async function getOneBike(bikeId) {
-        const response = await fetch(`${serverURL}/api/bike/${bikeId}`, {
+        const response = await fetch(`${serverURL}/bike/${bikeId}`, {
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
             },
@@ -51,7 +51,7 @@ const city = {
         const newOperationalStatus = {
             "operational": setNewStatus
         };
-        const result = await fetch(`${serverURL}/api/bike/${bikeId}`, {
+        const result = await fetch(`${serverURL}/bike/${bikeId}`, {
             body: JSON.stringify(newOperationalStatus),
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
@@ -66,7 +66,7 @@ const city = {
         const newAvailableStatus = {
             "available": setNewStatus
         };
-        const result = await fetch(`${serverURL}/api/bike/${bikeId}`, {
+        const result = await fetch(`${serverURL}/bike/${bikeId}`, {
             body: JSON.stringify(newAvailableStatus),
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
@@ -81,7 +81,7 @@ const city = {
         const newLocationStatus = {
             "location": setNewLocation
         };
-        const result = await fetch(`${serverURL}/api/bike/${bikeId}`, {
+        const result = await fetch(`${serverURL}/bike/${bikeId}`, {
             body: JSON.stringify(newLocationStatus),
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
@@ -93,7 +93,7 @@ const city = {
         return result;
         },
     getUsers: async function getAllUsers() {
-        const response = await fetch(`${serverURL}/api/users`, {
+        const response = await fetch(`${serverURL}/users`, {
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
             },
@@ -107,7 +107,7 @@ const city = {
         const newRole = {
             "role": setNewRoll
         };
-        const result = await fetch(`${serverURL}/api/user/${userId}`, {
+        const result = await fetch(`${serverURL}/user/${userId}`, {
             body: JSON.stringify(newRole),
             headers: {
                 'Authorization': `Bearer ${authModel.token}`,
