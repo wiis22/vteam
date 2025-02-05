@@ -1,6 +1,6 @@
 require('dotenv').config({ debug: true });
 // const database = require("./db/mongodb/src/database.js");;
-// const auth = require('./auth/auth.js');
+const auth = require('./auth/auth.js');
 const { Server } = require('socket.io');
 const http = require("http");
 const express = require('express');
@@ -15,18 +15,31 @@ const app = express();
 const port = process.env.PORT_API || 1337;
 const webAppURL = 'http://localhost:3000';
 const mobileAppURL = 'http://localhost:3001';
+const mobileAppContainerName = 'http://localhost:3001';
+const mobileAppURLContainerName = 'http://localhost:3001';
 
 app.use(express.json());
 const httpserver = http.createServer(app);
 
-// Allow CORS
-app.use(cors({
-    origin: [webAppURL, mobileAppURL],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
-}));
+app.use((req, res, next) => {
+    console.log(`Request received from Origin: ${req.headers.origin || 'Unknown'}`);
+    console.log(`Request Method: ${req.method}`);
+    console.log(`Request URL: ${req.originalUrl}`);
+    next();
+});
 
-app.options('*', cors());
+// Allow CORS
+
+const corseOptions = {
+    origin: [webAppURL, mobileAppURL, mobileAppContainerName, mobileAppURLContainerName],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
+
+app.use(cors(corseOptions));
+
+app.options('*', cors(corseOptions));
 
 // Increase the payload size limit
 app.use(bodyParser.json({ limit: '100mb' }));
@@ -47,6 +60,17 @@ setupSocket(io);
 app.use('/api/v1', v1Routes);
 app.use('/api/v2', v2Routes);
 
+
+app.get('/api/v1cities', auth.verifyJwt, async (req, res) => {
+    try {
+        const result = await database.getAll("cities");
+        // console.log("result: ", result);
+        res.json(result);
+    } catch (error) {
+        console.error('Error fetching cities:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
 
 const server = httpserver.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
