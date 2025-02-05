@@ -2,6 +2,7 @@ import React from "react";
 import authModel from "../models/auth";
 import Rides from "../admin-components/rides";
 import Navbar from "./navbar";
+import Header from "./header"
 
 export default function History() {
     const accessCheck = authModel.roleAccess("user");
@@ -14,6 +15,7 @@ export default function History() {
 
     return (
         <>
+        <Header />
         <Navbar />
         <div className="dashboard">
             <h1>Historik & kvitto</h1>

@@ -1,6 +1,7 @@
 import React from 'react';
 import authModel from '../models/auth';
 import Navbar from "./navbar";
+import Header from "./header"
 
 export default function Home() {
     const accessCheck = authModel.roleAccess("user");
@@ -13,6 +14,7 @@ export default function Home() {
 
     return (
         <>
+        <Header />
         <Navbar />
         <div className="dashboard">
             <h1>Hem</h1>
