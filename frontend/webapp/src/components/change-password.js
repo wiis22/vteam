@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import userModel from '../models/user';
 import Navbar from "./navbar";
 import authModel from '../models/auth';
+import Header from "./header"
 
 export default function ChangePassword() {
     const [password, setPassword] = useState('');
@@ -42,6 +43,7 @@ export default function ChangePassword() {
 
     return (
         <>
+        <Header />
         <Navbar />
         <div className="dashboard">
         <h1>Ändra lösenord</h1>

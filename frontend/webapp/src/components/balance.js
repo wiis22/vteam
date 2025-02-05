@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import authModel from '../models/auth';
 import userModel from "../models/user";
-import Login from './login';
 import Navbar from "./navbar";
+import Header from "./header"
 
 export default function Balance() {
     const [balance, setBalance] = useState(authModel.balance);
@@ -43,6 +43,7 @@ export default function Balance() {
 
     return (
         <>
+        <Header />
         <Navbar />
         <div className="dashboard">
             <h1>Saldo</h1>

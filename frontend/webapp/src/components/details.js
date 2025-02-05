@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import userModel from "../models/user";
 import { Link } from 'react-router-dom';
 import authModel from "../models/auth";
-import Login from './login';
 import Navbar from "./navbar";
+import Header from "./header"
 
 export default function AccountDetails() {
     //all user details.
@@ -36,6 +36,7 @@ export default function AccountDetails() {
 
     return (
         <>
+        <Header />
         <Navbar />
         <div className="dashboard">
             <h1>Användar-uppgifter</h1>
