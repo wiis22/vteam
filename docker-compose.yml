@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
     working_dir: /backend
     volumes:
-      - ./backend:/backend
+      # - ./backend:/backend
       - ./.env:/backend/.env
     ports:
       - "1337:1337"
@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
     working_dir: /backend/bike
     volumes:
-      - ./backend:/backend
+      # - ./backend:/backend
       - ./.env:/backend/.env
     networks:
       - vteam

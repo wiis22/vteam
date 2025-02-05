@@ -2,7 +2,7 @@ FROM node:18
 
 WORKDIR /backend/bike
 
-COPY package*.json ./
+COPY . .
 
 RUN npm install
 
