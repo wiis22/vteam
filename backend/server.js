@@ -1,4 +1,4 @@
-require('dotenv').config({ debug: true });
+require('dotenv').config(); //{ debug: true }
 // const database = require("./db/mongodb/src/database.js");;
 const auth = require('./auth/auth.js');
 const { Server } = require('socket.io');
@@ -21,12 +21,12 @@ const mobileAppURLContainerName = 'http://localhost:3001';
 app.use(express.json());
 const httpserver = http.createServer(app);
 
-app.use((req, res, next) => {
-    console.log(`Request received from Origin: ${req.headers.origin || 'Unknown'}`);
-    console.log(`Request Method: ${req.method}`);
-    console.log(`Request URL: ${req.originalUrl}`);
-    next();
-});
+// app.use((req, res, next) => {
+//     console.log(`Request received from Origin: ${req.headers.origin || 'Unknown'}`);
+//     console.log(`Request Method: ${req.method}`);
+//     console.log(`Request URL: ${req.originalUrl}`);
+//     next();
+// });
 
 // Allow CORS
 

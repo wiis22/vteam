@@ -1,4 +1,4 @@
-require('dotenv').config({ debug: true });
+require('dotenv').config(); // { debug: true }
 const database = require("../db/mongodb/src/database.js");;
 const auth = require('../auth/auth.js');
 const express = require('express');

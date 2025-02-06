@@ -4,6 +4,11 @@ const database = require("../db/mongodb/src/database.js");
 
 function setupSocket(io) {
     let updateBikeQueue = [];
+    // let connectCounter = 0;
+    let counters = {
+        connect: 0,
+        rooms: 0
+    };
     // Update bikes to the database in bulks every x seconds
     setInterval(async () => {
         if (updateBikeQueue.length > 0) {
@@ -41,12 +46,16 @@ function setupSocket(io) {
     }, 10000); // 10 seconds
 
     io.sockets.on('connection', (socket) => {
-        console.log('Client connected to sockets');
+        counters.connect++;
+        console.log('Client connected to socket id: ', socket.id, '. The number of clients connected: ', counters.connect);
+
 
         // used by mobile app and bike to join a room
         socket.on('joinRoom', (data) => {
             socket.join(data.roomName);
-            console.log(`Socket ${socket.id} joined room: ${data.roomName}`);
+            counters.rooms++;
+            console.log(`Socket nr: ${counters.rooms} id: ${socket.id} joined room: ${data.roomName}.`);
+            // console.log(`Socket ${socket.id} joined room: ${data.roomName}`);
         }),
 
             // used by mobile app when user starts a ride
@@ -120,11 +129,14 @@ function setupSocket(io) {
 
         socket.on("leaveRoom", (roomName) => {
             socket.leave(roomName);
-            console.log(`Socket ${socket.id} left room: ${roomName}`);
+            counters.rooms--;
+            console.log(`Number of rooms: ${counters.rooms}`);
+            // console.log(`Socket ${socket.id} left room: ${roomName}`);
         });
 
         socket.on('disconnect', () => {
-            console.log('Client disconnected from sockets');
+            counters.connect--;
+            console.log('Client disconnected from sockets', ' number of connected clients: ', counters.connect);
         });
     });
 
