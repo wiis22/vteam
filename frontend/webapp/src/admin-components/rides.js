@@ -14,6 +14,7 @@ const Rides = ({ userOrBike, id, receipt }) => {
     useEffect(() => {
         //fetching data
         fetchRides();
+        // eslint-disable-next-line
     }, []);
 
     //sets start index
@@ -60,7 +61,7 @@ const Rides = ({ userOrBike, id, receipt }) => {
                 <p>Ingen historik att visa</p>
             ) : (
                 <div>
-                    {currentRides.map((ride) => (
+                    {currentRides.slice().reverse().map((ride) => (
                         <div className="ride-list" key={ride._id}>
                             <p>Ride id: {ride._id}</p>
                             <p>Datum: {ride.startTime.slice(0, 10)}</p>

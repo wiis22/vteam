@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import authModel from "../models/auth";
 
 export default function Navbar() {
@@ -24,8 +24,6 @@ export default function Navbar() {
                 <NavLink to="/history" className={({ isActive }) => (isActive ? "active" : undefined)}>Historik & kvitton</NavLink>
                 {adminLink}
             </nav>
-
-            <Outlet />
         </div>
     );
 };

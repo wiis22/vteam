@@ -1,7 +1,8 @@
 import React from 'react';
 import authModel from '../models/auth';
 import Navbar from "./navbar";
-import Header from "./header"
+import Header from "./header";
+import Footer from "./footer";
 
 export default function Home() {
     const accessCheck = authModel.roleAccess("user");
@@ -20,6 +21,7 @@ export default function Home() {
             <h1>Hem</h1>
             <p>Välkommen tillbaka {authModel.username}</p>
         </div>
+        <Footer />
         </>
     );
 };
