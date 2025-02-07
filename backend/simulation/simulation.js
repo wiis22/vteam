@@ -105,13 +105,13 @@ const simulateCity = async (users, city) => {
     // Simulate a user completing rides on loop
     const simulateUser = async (user) => {
         while (true) {
-            await new Promise(resolve => setTimeout(resolve, 100 * 1000 * Math.random())) // Random pause 0-100 sec before each ride
+            await new Promise(resolve => setTimeout(resolve, 60 * 1000 * Math.random())) // Random pause 0-100 sec before each ride
             // Pick a random bike
             const randomIndex = Math.floor(Math.random() * availableBikes.length);
             const bike = availableBikes[randomIndex];
             if (!bike) {
                 console.log("bike is undefined, reuturning and user will simulate a new ride");
-                return;;
+                return;
             }
             // Remove picked bike from available bikes
             availableBikes.splice(randomIndex, 1);
@@ -120,6 +120,8 @@ const simulateCity = async (users, city) => {
             const route = getRoute(bike.position, endPosition);
             // Simulate the ride
             await simulateRide(user, bike._id, route);
+            // Add the bike back to available bikes
+            availableBikes.push(bike);
         }
     };
 
@@ -132,7 +134,7 @@ const simulateCity = async (users, city) => {
 // Simulate one ride
 const simulateRide = async (user, bikeId, route) => {
     // Seconds between each position update (10 sec results in reasonable speed)
-    const intervalSec = 20
+    const intervalSec = 2
     // console.log(`Starting ride. UserId: ${user.userId}. BikeId: ${bikeId}. The ride should take ${intervalSec * route.length} seconds.`)
     // Start the ride
     user.startRide(bikeId);

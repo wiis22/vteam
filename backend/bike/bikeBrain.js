@@ -96,14 +96,15 @@ class bikeBrain {
             console.log("Bike not available");
             return;
         }
-        const speed = 15;
-        const batteryLoss = (speed / 15) / 10;
-        this.batteryPercentage -= Number(batteryLoss.toPrecision(2));
+        // const speed = 15;
+        // const batteryLoss = (speed / 15) / 10;
+        // this.batteryPercentage -= Number(batteryLoss.toPrecision(2));
+        this.batteryPercentage -= 2;
 
         if (this.batteryPercentage <= 10) {
             console.log("Cykeln måste laddas och stängs av.");
             this.socket.emit("bikeEndRide", { userId: this.currentCustomer });
-            this.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
+            // this.updateOperational(false); //cykeln är fortfarande unAvailable det är operational som är borde sättas till false
 
             //tar bort intervallet så att den inte fortsätter att dra batteri
             clearInterval(this.batteryDrainInter);
@@ -118,8 +119,8 @@ class bikeBrain {
         return;
     }
 
-    locationInDistance(refPoint) {
-        for (let point of refPoint) {
+    locationInDistance(refPoints) {
+        for (let point of refPoints) {
             const distance = geolib.getDistance(this.position, point)
             if (distance <= 50) { // 50 m runt punkt
                 return true;
@@ -131,8 +132,6 @@ class bikeBrain {
     findLocation() {
         if (this.locationInDistance(this.cityData.chargingStations)) {
             this.updateLocation("chargingStation");
-            this.updateCharging(true);
-            setTimeout(() => this.chargingBattery(), 60000);
             return;
         }
         if (this.locationInDistance(this.cityData.parkingZones)) {
@@ -144,10 +143,10 @@ class bikeBrain {
     }
 
     updatePosition(newPosition) {
-        console.log("Bike: updatePosition() called with newPosition: ", newPosition);
+        // console.log("Bike: updatePosition() called with newPosition: ", newPosition);
         this.position = newPosition;
         this.socket.emit("updateBike", { id: this.id, position: this.position });
-        console.log(`Cykeln ${this.id} position uppdaterad till ${newPosition}`);
+        // console.log(`Cykeln ${this.id} position uppdaterad till ${newPosition}`);
         return;
     }
 
@@ -155,7 +154,6 @@ class bikeBrain {
         this.location = newLocation;
         if (this.location == "chargingStation") {
             this.updateCharging(true);
-            setTimeout(() => this.chargingBattery(), 60000);
         }
         this.socket.emit("updateBike", { id: this.id, location: this.location });
         return;
@@ -174,7 +172,15 @@ class bikeBrain {
     }
 
     updateCharging(status) {
+        if (this.charging == status) {
+            console.log("Cykeln är redan i detta tillstånd. Bör aldrig hända.");
+            return;
+        }
+
         this.charging = status;
+        if (this.charging && this.location == "chargingStation") {
+            setTimeout(() => this.chargingBattery(), 60000);
+        }
         this.socket.emit("updateBike", { id: this.id, charging: this.charging });
         this.updateAvailable(!status);
         console.log(`Cykeln ${this.id} : ${status ? "laddar" : "avslutar laddningen"}`);
@@ -184,10 +190,11 @@ class bikeBrain {
     chargingBattery() {
         this.batteryPercentage = 100;
         this.socket.emit("updateBike", { id: this.id, batteryPercentage: this.batteryPercentage });
-        this.updateCharging(false);
-        return;
+        if (this.location == "chargingStation") {
+            this.updateCharging(false);
+        }
+        console.log("Calling chargingBattery() with false");
     }
-
 }
 //test
 module.exports = bikeBrain;

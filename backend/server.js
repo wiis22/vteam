@@ -61,17 +61,6 @@ app.use('/api/v1', v1Routes);
 app.use('/api/v2', v2Routes);
 
 
-app.get('/api/v1cities', auth.verifyJwt, async (req, res) => {
-    try {
-        const result = await database.getAll("cities");
-        // console.log("result: ", result);
-        res.json(result);
-    } catch (error) {
-        console.error('Error fetching cities:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
 const server = httpserver.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
