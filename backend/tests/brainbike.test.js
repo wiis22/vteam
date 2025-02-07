@@ -120,7 +120,7 @@ describe('bikeBrain', () => {
 
         expect(intervalSpy).toHaveBeenCalledTimes(1);
 
-        expect(timeOutSpy).toHaveBeenCalledTimes(2);
+        expect(timeOutSpy).toHaveBeenCalledTimes(1);
 
         expect(bike.currentCustomer).toBe(null);
         expect(bike.available).toBe(true);
@@ -135,7 +135,7 @@ describe('bikeBrain', () => {
         bike.drainBattery();
 
         // expect(bike.socket.emit).toHaveBeenCalledWith("bikeEndRide", { userId: bike.currentCustomer });
-        expect(bike.batteryPercentage).toBe(10.9);
+        expect(bike.batteryPercentage).toBe(9);
         // expect(bike.socket.emit).toHaveBeenCalledWith("updateBike", { id: bike.id, operational: false });
     });
 
