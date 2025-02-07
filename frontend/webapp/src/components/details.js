@@ -3,7 +3,8 @@ import userModel from "../models/user";
 import { Link } from 'react-router-dom';
 import authModel from "../models/auth";
 import Navbar from "./navbar";
-import Header from "./header"
+import Header from "./header";
+import Footer from "./footer";
 
 export default function AccountDetails() {
     //all user details.
@@ -51,6 +52,7 @@ export default function AccountDetails() {
 
             <Link to="/change-password" className="button">Ändra lösenord</Link>
         </div>
+        <Footer />
         </>
     );
 };

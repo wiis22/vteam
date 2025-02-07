@@ -2,7 +2,8 @@ import React from "react";
 import authModel from "../models/auth";
 import Rides from "../admin-components/rides";
 import Navbar from "./navbar";
-import Header from "./header"
+import Header from "./header";
+import Footer from "./footer";
 
 export default function History() {
     const accessCheck = authModel.roleAccess("user");
@@ -21,6 +22,7 @@ export default function History() {
             <h1>Historik & kvitto</h1>
             <Rides userOrBike={ 'user' } id={authModel.userId} receipt={true} />
         </div>
+        <Footer />
         </>
     );
 };

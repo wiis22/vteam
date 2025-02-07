@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import userModel from '../models/user';
 import Navbar from "./navbar";
 import authModel from '../models/auth';
-import Header from "./header"
+import Header from "./header";
+import Footer from "./footer";
 
 export default function ChangePassword() {
     const [password, setPassword] = useState('');
@@ -77,6 +78,7 @@ export default function ChangePassword() {
                 </p>
             </form>
         </div>
+        <Footer />
         </>
     );
 };

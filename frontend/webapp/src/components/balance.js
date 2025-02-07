@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import authModel from '../models/auth';
 import userModel from "../models/user";
 import Navbar from "./navbar";
-import Header from "./header"
+import Header from "./header";
+import Footer from "./footer";
 
 export default function Balance() {
     const [balance, setBalance] = useState(authModel.balance);
@@ -62,6 +63,7 @@ export default function Balance() {
                 <button type="submit" className="button">Lägg till</button>
             </form>
         </div>
+        <Footer />
         </>
     );
 };
